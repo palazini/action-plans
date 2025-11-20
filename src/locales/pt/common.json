@@ -1,0 +1,91 @@
+{
+  "app": {
+    "title": "OPEX Action Plans"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "backlog": "Backlog de Planos",
+    "actionPlans": "Planos de ação"
+  },
+  "filters": {
+    "status": "Status",
+    "pillar": "Pilar",
+    "owner": "Responsável",
+    "status_all": "Todos"
+  },
+  "status": {
+    "PLANNED": "Planejado",
+    "IN_PROGRESS": "Em andamento",
+    "DONE": "Concluído",
+    "CANCELLED": "Cancelado"
+  },
+  "table": {
+    "pillar": "Pilar",
+    "element": "Elemento",
+    "status": "Status",
+    "problem": "Problema",
+    "action": "Ação",
+    "owner": "Responsável",
+    "dueDate": "Prazo",
+    "actions": "Ações",
+    "noPlans": "Nenhum plano de ação cadastrado ainda.",
+    "noPlansForFilter": "Nenhum plano encontrado para os filtros selecionados.",
+    "foundation": "FOUNDATION",
+    "plans": "Planos"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Visão geral"
+    },
+    "backlog": {
+      "title": "Backlog de planos de ação",
+      "description": "Lista dos elementos com FOUNDATION < 100. Use o botão \"Criar plano\" para registrar problema, ação e responsável. O número de planos existentes aparece na coluna \"Planos\".",
+      "filterByPillar": "Filtrar por pilar",
+      "noElements": "Não há elementos com FOUNDATION abaixo de 100 cadastrados.",
+      "noElementsForFilter": "Nenhum elemento encontrado para o filtro selecionado.",
+      "modalTitle": "Plano de ação",
+      "existingActionsTitle": "Ações já cadastradas para este elemento"
+    },
+    "actionPlans": {
+      "title": "Planos de ação"
+    }
+  },
+  "actions": {
+    "edit": "Editar plano",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "saveChanges": "Salvar alterações",
+    "createPlan": "Salvar plano"
+  },
+  "form": {
+    "pillar": "Pilar",
+    "element": "Elemento",
+    "foundation": "FOUNDATION",
+    "problem": "Problema",
+    "problem_placeholder": "Descreva qual é o problema atual...",
+    "action": "Ação",
+    "action_placeholder": "O que será feito para resolver o problema?",
+    "owner": "Responsável",
+    "owner_placeholder": "Nome do responsável pela ação",
+    "dueDate": "Prazo (opcional)",
+    "dueDate_placeholder": "Selecione uma data"
+  },
+  "backlog": {
+    "loadError": "Não foi possível carregar o backlog.",
+    "noPlanBadge": "Sem plano",
+    "planCountSuffix": "plano(s)",
+    "createPlan": "Criar plano",
+    "addAnotherPlan": "Adicionar outro plano"
+  },
+  "dashboard": {
+    "loadError": "Não foi possível carregar os indicadores.",
+    "totalElements": "Elementos totais",
+    "gapElements": "Elementos com FOUNDATION < 100",
+    "elementsWithoutPlan": "Elementos sem plano de ação",
+    "perPillarTitle": "Resumo por pilar",
+    "noPillarStats": "Não há elementos com FOUNDATION abaixo de 100 para compor o resumo por pilar.",
+    "gapElementsColumn": "Elementos com gap",
+    "withPlanColumn": "Com plano",
+    "withoutPlanColumn": "Sem plano"
+  }
+}

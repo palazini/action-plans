@@ -1,0 +1,91 @@
+{
+  "app": {
+    "title": "OPEX Action Plans"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "backlog": "Action Plan Backlog",
+    "actionPlans": "Action Plans"
+  },
+  "filters": {
+    "status": "Status",
+    "pillar": "Pillar",
+    "owner": "Owner",
+    "status_all": "All"
+  },
+  "status": {
+    "PLANNED": "Planned",
+    "IN_PROGRESS": "In progress",
+    "DONE": "Done",
+    "CANCELLED": "Cancelled"
+  },
+  "table": {
+    "pillar": "Pillar",
+    "element": "Element",
+    "status": "Status",
+    "problem": "Problem",
+    "action": "Action",
+    "owner": "Owner",
+    "dueDate": "Due date",
+    "actions": "Actions",
+    "noPlans": "No action plans registered yet.",
+    "noPlansForFilter": "No plans found for the selected filters.",
+    "foundation": "FOUNDATION",
+    "plans": "Plans"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Overview"
+    },
+    "backlog": {
+      "title": "Action Plan Backlog",
+      "description": "List of elements with FOUNDATION < 100. Use the \"Create plan\" button to register problem, action and owner. The number of existing plans appears in the \"Plans\" column.",
+      "filterByPillar": "Filter by pillar",
+      "noElements": "There are no elements registered with FOUNDATION below 100.",
+      "noElementsForFilter": "No elements found for the selected filter.",
+      "modalTitle": "Action plan",
+      "existingActionsTitle": "Actions already registered for this element"
+    },
+    "actionPlans": {
+      "title": "Action Plans"
+    }
+  },
+  "backlog": {
+    "loadError": "Could not load backlog.",
+    "noPlanBadge": "No plan",
+    "planCountSuffix": "plan(s)",
+    "createPlan": "Create plan",
+    "addAnotherPlan": "Add another plan"
+  },
+  "actions": {
+    "edit": "Edit plan",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saveChanges": "Save changes",
+    "createPlan": "Save plan"
+  },
+  "form": {
+    "pillar": "Pillar",
+    "element": "Element",
+    "foundation": "FOUNDATION",
+    "problem": "Problem",
+    "problem_placeholder": "Describe the current problem...",
+    "action": "Action",
+    "action_placeholder": "What will be done to solve the problem?",
+    "owner": "Owner",
+    "owner_placeholder": "Person responsible for the action",
+    "dueDate": "Due date (optional)",
+    "dueDate_placeholder": "Select a date"
+  },
+  "dashboard": {
+    "loadError": "Could not load indicators.",
+    "totalElements": "Total elements",
+    "gapElements": "Elements with FOUNDATION < 100",
+    "elementsWithoutPlan": "Elements without action plan",
+    "perPillarTitle": "Summary by pillar",
+    "noPillarStats": "There are no elements with FOUNDATION below 100 to build the per-pillar summary.",
+    "gapElementsColumn": "Elements with gap",
+    "withPlanColumn": "With plan",
+    "withoutPlanColumn": "Without plan"
+  }
+}
