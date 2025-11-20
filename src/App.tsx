@@ -3,6 +3,7 @@ import { MainLayout } from './layout/MainLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { BacklogPage } from './pages/BacklogPage';
 import { ActionPlansPage } from './pages/ActionPlansPage';
+import { StructurePage } from './pages/StructurePage';
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
         <Route index element={<DashboardPage />} />
         <Route path="backlog" element={<BacklogPage />} />
         <Route path="plans" element={<ActionPlansPage />} />
+        <Route path="/structure" element={<StructurePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

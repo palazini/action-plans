@@ -373,3 +373,173 @@ export async function updateActionPlanStatus(
     throw error;
   }
 }
+
+// --- ADMIN: Pilares & Elementos ---------------------------------------------
+
+export type AdminElement = {
+  id: string;
+  code: string | null;
+  name: string;
+  foundation_score: number;
+  notes: string | null;
+  pillar_id: string;
+  name_pt: string | null;
+  name_en: string | null;
+  notes_pt: string | null;
+  notes_en: string | null;
+};
+
+export type AdminPillar = {
+  id: string;
+  code: string | null;
+  name: string;
+  description: string | null;
+  name_pt: string | null;
+  name_en: string | null;
+  description_pt: string | null;
+  description_en: string | null;
+  elements: AdminElement[];
+};
+
+/**
+ * Lista todos os pilares com seus elementos (para administração)
+ */
+export async function fetchPillarsWithElements(): Promise<AdminPillar[]> {
+  const { data, error } = await supabase
+    .from('pillars')
+    .select(`
+      id,
+      code,
+      name,
+      name_pt,
+      name_en,
+      description,
+      description_pt,
+      description_en,
+      elements (
+        id,
+        code,
+        name,
+        name_pt,
+        name_en,
+        foundation_score,
+        notes,
+        notes_pt,
+        notes_en,
+        pillar_id
+      )
+    `)
+    .order('code', { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+
+  const rows = (data ?? []) as any[];
+
+  return rows.map((row) => ({
+    id: row.id,
+    code: row.code,
+    name: row.name,
+    description: row.description,
+    name_pt: row.name_pt ?? row.name,
+    name_en: row.name_en ?? null,
+    description_pt: row.description_pt ?? row.description,
+    description_en: row.description_en ?? null,
+    elements: (row.elements ?? []).map((el: any) => ({
+      id: el.id,
+      code: el.code,
+      name: el.name,
+      foundation_score: el.foundation_score,
+      notes: el.notes,
+      pillar_id: el.pillar_id,
+      name_pt: el.name_pt ?? el.name,
+      name_en: el.name_en ?? null,
+      notes_pt: el.notes_pt ?? el.notes,
+      notes_en: el.notes_en ?? null,
+    })),
+  }));
+}
+
+/**
+ * Cria um novo pilar
+ */
+export async function createPillar(input: {
+  code?: string;
+  namePt: string;
+  nameEn?: string;
+  descriptionPt?: string;
+  descriptionEn?: string;
+}): Promise<void> {
+  const payload: any = {
+    code: input.code ?? null,
+    name: input.namePt,
+    name_pt: input.namePt,
+    name_en: input.nameEn ?? null,
+    description: input.descriptionPt ?? null,
+    description_pt: input.descriptionPt ?? null,
+    description_en: input.descriptionEn ?? null,
+  };
+
+  const { error } = await supabase.from('pillars').insert(payload);
+  if (error) throw error;
+}
+
+/**
+ * Cria um novo elemento dentro de um pilar
+ */
+export async function createElement(input: {
+  pillarId: string;
+  code?: string;
+  namePt: string;
+  nameEn?: string;
+  foundationScore: number;
+  notesPt?: string;
+  notesEn?: string;
+}): Promise<void> {
+  const payload: any = {
+    pillar_id: input.pillarId,
+    code: input.code ?? null,
+    name: input.namePt,
+    name_pt: input.namePt,
+    name_en: input.nameEn ?? null,
+    foundation_score: input.foundationScore,
+    notes: input.notesPt ?? null,
+    notes_pt: input.notesPt ?? null,
+    notes_en: input.notesEn ?? null,
+  };
+
+  const { error } = await supabase.from('elements').insert(payload);
+  if (error) throw error;
+}
+
+/**
+ * Atualiza um elemento (inclui mudança de FOUNDATION)
+ */
+export async function updateElement(input: {
+  id: string;
+  code?: string;
+  namePt: string;
+  nameEn?: string;
+  foundationScore: number;
+  notesPt?: string | null;
+  notesEn?: string | null;
+}): Promise<void> {
+  const payload: any = {
+    code: input.code ?? null,
+    name: input.namePt,
+    name_pt: input.namePt,
+    name_en: input.nameEn ?? null,
+    foundation_score: input.foundationScore,
+    notes: input.notesPt ?? null,
+    notes_pt: input.notesPt ?? null,
+    notes_en: input.notesEn ?? null,
+  };
+
+  const { error } = await supabase
+    .from('elements')
+    .update(payload)
+    .eq('id', input.id);
+
+  if (error) throw error;
+}

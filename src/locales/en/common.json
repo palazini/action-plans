@@ -5,7 +5,8 @@
   "nav": {
     "dashboard": "Dashboard",
     "backlog": "Action Plan Backlog",
-    "actionPlans": "Action Plans"
+    "actionPlans": "Action plans",
+    "structure": "Pillars & Elements"
   },
   "filters": {
     "status": "Status",
@@ -48,6 +49,16 @@
     },
     "actionPlans": {
       "title": "Action Plans"
+    },
+    "structure": {
+      "title": "Pillars & elements",
+      "description": "Manage assessment pillars and elements, including codes, names and FOUNDATION score.",
+      "pillarsCardTitle": "Pillars",
+      "pillarsCardSubtitle": "Create and maintain foundation pillars.",
+      "elementsCardTitle": "Elements",
+      "elementsCardSubtitle": "Create elements and adjust FOUNDATION score.",
+      "noPillarSelected": "Select a pillar to view and edit its elements.",
+      "noElementsInPillar": "There are no elements registered for this pillar."
     }
   },
   "backlog": {
@@ -87,5 +98,22 @@
     "gapElementsColumn": "Elements with gap",
     "withPlanColumn": "With plan",
     "withoutPlanColumn": "Without plan"
+  },
+  "structure": {
+    "newPillar": "New pillar",
+    "editPillar": "Edit pillar",
+    "newElement": "New element",
+    "editElement": "Edit element",
+    "code": "Code",
+    "namePt": "Name (PT)",
+    "nameEn": "Name (EN)",
+    "descriptionPt": "Description (PT)",
+    "descriptionEn": "Description (EN)",
+    "notesPt": "Notes (PT)",
+    "notesEn": "Notes (EN)",
+    "foundationScore": "FOUNDATION",
+    "elementsCount": "Elements",
+    "save": "Save",
+    "cancel": "Cancel"
   }
 }

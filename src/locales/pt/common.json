@@ -5,7 +5,8 @@
   "nav": {
     "dashboard": "Dashboard",
     "backlog": "Backlog de Planos",
-    "actionPlans": "Planos de ação"
+    "actionPlans": "Planos de ação",
+    "structure": "Pilares & Elementos"
   },
   "filters": {
     "status": "Status",
@@ -48,6 +49,16 @@
     },
     "actionPlans": {
       "title": "Planos de ação"
+    },
+    "structure": {
+      "title": "Pilares & elementos",
+      "description": "Gerencie os pilares e elementos da avaliação, incluindo códigos, nomes e pontuação FOUNDATION.",
+      "pillarsCardTitle": "Pilares",
+      "pillarsCardSubtitle": "Cadastre e mantenha os pilares da fundação.",
+      "elementsCardTitle": "Elementos",
+      "elementsCardSubtitle": "Cadastre elementos e ajuste a pontuação FOUNDATION.",
+      "noPillarSelected": "Selecione um pilar para ver e editar os elementos.",
+      "noElementsInPillar": "Não há elementos cadastrados para este pilar."
     }
   },
   "actions": {
@@ -87,5 +98,22 @@
     "gapElementsColumn": "Elementos com gap",
     "withPlanColumn": "Com plano",
     "withoutPlanColumn": "Sem plano"
+  },
+  "structure": {
+    "newPillar": "Novo pilar",
+    "editPillar": "Editar pilar",
+    "newElement": "Novo elemento",
+    "editElement": "Editar elemento",
+    "code": "Código",
+    "namePt": "Nome (PT)",
+    "nameEn": "Name (EN)",
+    "descriptionPt": "Descrição (PT)",
+    "descriptionEn": "Description (EN)",
+    "notesPt": "Observações (PT)",
+    "notesEn": "Notes (EN)",
+    "foundationScore": "FOUNDATION",
+    "elementsCount": "Elementos",
+    "save": "Salvar",
+    "cancel": "Cancelar"
   }
 }

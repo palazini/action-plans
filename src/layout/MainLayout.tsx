@@ -14,27 +14,17 @@ import {
   IconDashboard,
   IconChecklist,
   IconListCheck,
+  IconHierarchy2,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import logoGroup from '../assets/group-logo-16x9.png'; // ajuste o caminho/nome se precisar
 
 const NAV_ITEMS = [
-  {
-    labelKey: 'nav.dashboard',
-    path: '/',
-    icon: IconDashboard,
-  },
-  {
-    labelKey: 'nav.backlog',
-    path: '/backlog',
-    icon: IconChecklist,
-  },
-  {
-    labelKey: 'nav.actionPlans',
-    path: '/plans',
-    icon: IconListCheck,
-  },
+  { labelKey: 'nav.dashboard', path: '/', icon: IconDashboard },
+  { labelKey: 'nav.backlog', path: '/backlog', icon: IconChecklist },
+  { labelKey: 'nav.actionPlans', path: '/plans', icon: IconListCheck },
+  { labelKey: 'nav.structure', path: '/structure', icon: IconHierarchy2 },
 ];
 
 export function MainLayout() {
