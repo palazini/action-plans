@@ -4,12 +4,10 @@ import {
     Card,
     Text,
     UnstyledButton,
-    Group,
     Title,
     Stack,
     Box,
     Image,
-    rem,
     Badge,
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 const COUNTRIES = [
     { code: 'GL', name: 'Global', flagCode: 'un', lang: 'en', region: 'World' },
     { code: 'BR', name: 'Brazil', flagCode: 'br', lang: 'pt', region: 'Americas' },
-    { code: 'BR-H', name: 'Brazil (Hiter)', flagCode: 'br', lang: 'pt', region: 'Americas', badge: 'Hiter' }, 
+    { code: 'BR-H', name: 'Brazil (Hiter)', flagCode: 'br', lang: 'pt', region: 'Americas', badge: 'Hiter' },
     { code: 'USA', name: 'USA', flagCode: 'us', lang: 'en', region: 'Americas' },
     { code: 'AR', name: 'Argentina', flagCode: 'ar', lang: 'es', region: 'Americas' },
     { code: 'UK', name: 'UK', flagCode: 'gb', lang: 'en', region: 'Europe' },
@@ -49,29 +47,21 @@ export function LandingPage() {
     };
 
     return (
-        <Box bg="gray.0" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <Box component="header" py="md" px="xl" bg="white" style={{ borderBottom: `1px solid ${rem('#e9ecef')}` }}>
-                <Group justify="space-between">
-                    <Text fw={900} size="xl" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }}>
-                        ActionPlans.io
-                    </Text>
-                </Group>
-            </Box>
+        <Box bg="gray.0" style={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
-            <Container size="lg" py={80} style={{ flex: 1 }}>
-                <Stack align="center" gap="xl" mb={60}>
-                    <Badge variant="light" size="lg" radius="sm">Portal Corporativo</Badge>
-                    
+            <Container size="lg" py="xl" style={{ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <Stack align="center" gap="xl" mb="xl">
+
                     <Title order={1} ta="center" style={{ fontSize: '3.5rem', fontWeight: 800, lineHeight: 1.1, color: '#1a1b1e' }}>
                         {t('landing.selectRegion', 'Selecione sua Região')}
                     </Title>
-                    
+
                     <Text c="dimmed" size="xl" ta="center" maw={600}>
                         {t('landing.chooseCountry', 'Acesse o ambiente dedicado à sua filial para gerenciar planos de ação e backlogs.')}
                     </Text>
                 </Stack>
 
-                <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="lg">
+                <SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }} spacing="lg">
                     {COUNTRIES.map((country) => (
                         <UnstyledButton
                             key={country.code}
@@ -101,12 +91,12 @@ export function LandingPage() {
                             >
                                 <Stack align="center" justify="center" gap="md">
                                     <div style={{ position: 'relative' }}>
-                                        <div style={{ 
-                                            borderRadius: '50%', 
-                                            overflow: 'hidden', 
-                                            width: '64px', 
+                                        <div style={{
+                                            borderRadius: '50%',
+                                            overflow: 'hidden',
+                                            width: '64px',
                                             height: '64px',
-                                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)' 
+                                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                         }}>
                                             <Image
                                                 src={`https://flagcdn.com/w160/${country.flagCode}.png`}
@@ -118,17 +108,17 @@ export function LandingPage() {
                                         </div>
                                         {/* Badge especial para diferenciar unidades do mesmo país */}
                                         {country.badge && (
-                                            <Badge 
-                                                size="xs" 
-                                                variant="filled" 
-                                                color="blue" 
+                                            <Badge
+                                                size="xs"
+                                                variant="filled"
+                                                color="blue"
                                                 style={{ position: 'absolute', bottom: -5, right: -10, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
                                             >
                                                 {country.badge}
                                             </Badge>
                                         )}
                                     </div>
-                                    
+
                                     <Stack gap={2} align="center">
                                         <Text fw={700} size="lg" c="dark.8" ta="center">
                                             {country.name}
@@ -143,9 +133,9 @@ export function LandingPage() {
                     ))}
                 </SimpleGrid>
             </Container>
-            
+
             <Box py="lg" ta="center" c="dimmed" fz="sm">
-                © 2024 Action Plans Inc. Todos os direitos reservados.
+                © 2025 Action Plans - Brazil Continuous Improvement
             </Box>
         </Box>
     );
