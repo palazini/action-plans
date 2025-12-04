@@ -6,8 +6,10 @@ import {
   Textarea,
   Group,
   Text,
+  Badge,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
+import { useTranslation } from 'react-i18next';
 import type { ElementWithRelations } from '../../types';
 import { createActionPlan } from '../../services/api';
 
@@ -19,35 +21,36 @@ type Props = {
 };
 
 export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props) {
-  // PT
-  const [problemPt, setProblemPt] = useState('');
-  const [actionPt, setActionPt] = useState('');
-  // EN (opcional)
+  const { t } = useTranslation();
+
+  // LOCAL (Principal)
+  const [problemLocal, setProblemLocal] = useState('');
+  const [actionLocal, setActionLocal] = useState('');
+  
+  // ENGLISH (Opcional/Secundário)
   const [problemEn, setProblemEn] = useState('');
   const [actionEn, setActionEn] = useState('');
 
   const [ownerName, setOwnerName] = useState('');
-  const [dueDate, setDueDate] = useState<string | null>(null);
+  const [dueDate, setDueDate] = useState<Date | null>(null);
   const [saving, setSaving] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!problemPt.trim() || !actionPt.trim() || !ownerName.trim()) {
+    if (!problemLocal.trim() || !actionLocal.trim() || !ownerName.trim()) {
       return;
     }
 
     setSaving(true);
     try {
-      const parsedDueDate =
-        dueDate && dueDate.trim().length > 0 ? new Date(dueDate) : null;
-
       await createActionPlan({
         elementId: element.id,
-        problem: problemPt,
-        solution: actionPt,
+        // Envia o texto local para as colunas principais (problem/solution)
+        problem: problemLocal,
+        solution: actionLocal, 
         ownerName,
-        dueDate: parsedDueDate ?? undefined,
+        dueDate: dueDate ?? undefined,
         problemEn: problemEn.trim() ? problemEn : undefined,
         actionEn: actionEn.trim() ? actionEn : undefined,
         country,
@@ -64,79 +67,93 @@ export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props)
   return (
     <form onSubmit={handleSubmit}>
       <Stack gap="sm">
-        <TextInput label="Pilar" value={element.pillar?.name ?? ''} readOnly />
-        <TextInput label="Elemento" value={element.name} readOnly />
+        <TextInput label={t('form.pillar')} value={element.pillar?.name ?? ''} readOnly disabled />
+        <TextInput label={t('form.element')} value={element.name} readOnly disabled />
         <TextInput
-          label="FOUNDATION"
+          label={t('form.foundation')}
           value={String(element.foundation_score)}
           readOnly
+          disabled
         />
 
-        {/* Bloco PT */}
-        <Text fw={600} mt="xs">
-          Português
-        </Text>
+        {/* Bloco IDIOMA LOCAL */}
+        <Group mt="md" mb={0}>
+            <Badge variant="filled" color="blue" size="sm">
+                {country}
+            </Badge>
+            <Text size="xs" c="dimmed" fw={600}>
+                (Nativo / Local)
+            </Text>
+        </Group>
 
         <Textarea
-          label="Problema (PT)"
-          placeholder="Descreva qual é o problema atual..."
+          label={t('form.problem')}
+          placeholder={t('form.problem_placeholder')}
           minRows={3}
-          value={problemPt}
-          onChange={(e) => setProblemPt(e.currentTarget.value)}
+          value={problemLocal}
+          onChange={(e) => setProblemLocal(e.currentTarget.value)}
+          required
+          data-autofocus
+        />
+
+        <Textarea
+          label={t('form.action')}
+          placeholder={t('form.action_placeholder')}
+          minRows={3}
+          value={actionLocal}
+          onChange={(e) => setActionLocal(e.currentTarget.value)}
           required
         />
 
-        <Textarea
-          label="Ação (PT)"
-          placeholder="O que será feito para resolver o problema?"
-          minRows={3}
-          value={actionPt}
-          onChange={(e) => setActionPt(e.currentTarget.value)}
-          required
-        />
-
-        {/* Bloco EN */}
-        <Text fw={600} mt="xs">
-          English (optional)
-        </Text>
+        {/* Bloco INGLÊS */}
+        <Group mt="md" mb={0}>
+            <Badge variant="outline" color="gray" size="sm">
+                English
+            </Badge>
+            <Text size="xs" c="dimmed" fw={600}>
+                (Global / Optional)
+            </Text>
+        </Group>
 
         <Textarea
-          label="Problem (EN)"
+          label="Problem (English)"
           placeholder="Describe the current problem..."
-          minRows={3}
+          minRows={2}
           value={problemEn}
           onChange={(e) => setProblemEn(e.currentTarget.value)}
         />
 
         <Textarea
-          label="Action (EN)"
+          label="Action (English)"
           placeholder="What will be done to solve the problem?"
-          minRows={3}
+          minRows={2}
           value={actionEn}
           onChange={(e) => setActionEn(e.currentTarget.value)}
         />
 
         <TextInput
-          label="Responsável"
-          placeholder="Nome do responsável pela ação"
+          mt="md"
+          label={t('form.owner')}
+          placeholder={t('form.owner_placeholder')}
           value={ownerName}
           onChange={(e) => setOwnerName(e.currentTarget.value)}
           required
         />
 
         <DateInput
-          label="Prazo (opcional)"
-          placeholder="Selecione uma data"
+          label={t('form.dueDate')}
+          placeholder={t('form.dueDate_placeholder')}
           value={dueDate}
-          onChange={setDueDate}
+          onChange={(val) => setDueDate(val ? new Date(val) : null)}
+          clearable
         />
 
-        <Group justify="flex-end" mt="sm">
-          <Button variant="subtle" onClick={onCancel} disabled={saving}>
-            Cancelar
+        <Group justify="flex-end" mt="lg">
+          <Button variant="subtle" onClick={onCancel} disabled={saving} color="gray">
+            {t('actions.cancel')}
           </Button>
           <Button type="submit" loading={saving}>
-            Salvar plano
+            {t('actions.createPlan')}
           </Button>
         </Group>
       </Stack>
