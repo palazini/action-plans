@@ -18,8 +18,7 @@ import {
   Stack,
   ThemeIcon,
   Badge,
-  rem,
-  Box,
+  rem
 } from '@mantine/core';
 import { 
   IconAlertCircle, 
