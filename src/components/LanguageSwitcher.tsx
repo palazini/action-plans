@@ -5,8 +5,10 @@ import { useAuth } from '../contexts/AuthContext';
 // Mapeamento para saber qual língua e bandeira usar para cada país selecionado
 // A chave deve bater exatamente com o nome salvo no banco de dados/contexto
 const COUNTRY_CONFIG: Record<string, { lang: string; flag: string; label: string }> = {
+  'Global': { lang: 'en', flag: 'un', label: 'EN' },
   'Brazil': { lang: 'pt', flag: 'br', label: 'PT' },
   'Brazil (Hiter)': { lang: 'pt', flag: 'br', label: 'PT' },
+  'Germany (Gestra)': { lang: 'de', flag: 'de', label: 'DE' },
   'USA': { lang: 'en', flag: 'us', label: 'EN' },
   'UK': { lang: 'en', flag: 'gb', label: 'EN' },
   'France': { lang: 'fr', flag: 'fr', label: 'FR' },
@@ -30,7 +32,6 @@ export function LanguageSwitcher() {
   const isLocalEnglish = currentConfig.lang === 'en';
 
   // Função para checar se o idioma está ativo (para destacar o botão)
-  // CORREÇÃO: Usar !! para garantir que o retorno seja sempre booleano ou o operador ?
   const isActive = (lang: string) => !!(i18n.language && i18n.language.startsWith(lang));
 
   // Estilo dinâmico dos botões (semelhante ao SegmentedControl mas mais customizável)
@@ -54,7 +55,7 @@ export function LanguageSwitcher() {
       p={3} 
       style={{ borderRadius: rem(6), border: `1px solid ${rem('#e9ecef')}` }}
     >
-      {/* Botão do Idioma Local (Ex: IT se for Itália, FR se for França) */}
+      {/* Botão do Idioma Local (Ex: IT se for Itália, DE se for Alemanha) */}
       <UnstyledButton 
         onClick={() => i18n.changeLanguage(currentConfig.lang)}
         style={getButtonStyle(isActive(currentConfig.lang))}

@@ -1,0 +1,163 @@
+{
+    "app": {
+        "title": "Aktionspläne",
+        "subtitle": "Portal für kontinuierliche Verbesserung"
+    },
+    "nav": {
+        "dashboard": "Übersicht",
+        "actionPlans": "Aktionspläne",
+        "backlog": "Backlog",
+        "structure": "Struktur",
+        "mainMenu": "Hauptmenü",
+        "account": "Konto",
+        "settings": "Einstellungen",
+        "logout": "Abmelden",
+        "version": "Version",
+        "viewDataFrom": "Daten anzeigen von:"
+    },
+    "landing": {
+        "selectRegion": "Region auswählen",
+        "chooseCountry": "Greifen Sie auf die Umgebung Ihrer lokalen Niederlassung zu, um Aktionspläne und Backlogs zu verwalten.",
+        "viewConsolidatedPlans": "Konsolidierte Aktionspläne aller Einheiten anzeigen.",
+        "selectSpecificUnit": "Oder wählen Sie eine bestimmte Einheit aus:"
+    },
+    "auth": {
+        "welcomeBack": "Willkommen zurück!",
+        "accessingEnvironment": "Zugriff auf Umgebung:",
+        "loggingInTo": "Anmeldung für {{country}}",
+        "username": "Benutzername",
+        "password": "Passwort",
+        "signIn": "Anmelden",
+        "rememberMe": "Angemeldet bleiben",
+        "forgotPassword": "Passwort vergessen?",
+        "changeCountry": "Region wechseln",
+        "createAccount": "Konto erstellen",
+        "firstUser": "Erster Benutzer für {{country}}!",
+        "fullName": "Vollständiger Name",
+        "confirmPassword": "Passwort bestätigen",
+        "register": "Registrieren",
+        "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+        "successRegistration": "Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails.",
+        "error": "Authentifizierungsfehler",
+        "generatedUsername": "Erzeugter Benutzername",
+        "loginWithThis": "Diesen werden Sie zur Anmeldung verwenden",
+        "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein",
+        "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein",
+        "usernameTooShort": "Der Benutzername muss mindestens 3 Zeichen lang sein"
+    },
+    "dashboard": {
+        "subtitle": "Überwachung der Maßnahmen für {{country}}",
+        "loadError": "Dashboard-Statistiken konnten nicht geladen werden.",
+        "totalElements": "Elemente insgesamt",
+        "gapElements": "Elemente mit GAP",
+        "elementsWithoutPlan": "Ohne Aktionsplan",
+        "perPillarTitle": "Übersicht nach Säule",
+        "noPillarStats": "Nicht genügend Daten für die Säulenübersicht.",
+        "gapElementsColumn": "GAPs",
+        "withPlanColumn": "Mit Plan",
+        "withoutPlanColumn": "Ohne Plan",
+        "monitoredItems": "Im Backlog überwachte Elemente",
+        "immediateAttention": "Benötigen sofortige Aufmerksamkeit",
+        "percentWithoutPlan": "{{percent}}% des Gesamtbestands ohne Plan"
+    },
+    "pages": {
+        "dashboard": {
+            "title": "Dashboard"
+        },
+        "backlog": {
+            "title": "Plan-Backlog",
+            "description": "Verwalten Sie Elemente mit Grundlagenbewertungen unterhalb des Zielwerts.",
+            "filterByPillar": "Nach Säule filtern",
+            "noElements": "Keine Elemente im Backlog.",
+            "noElementsForFilter": "Für diesen Filter wurden keine Elemente gefunden.",
+            "modalTitle": "Plan verwalten",
+            "existingActionsTitle": "Bestehende Maßnahmen",
+            "allClear": "Alles in Ordnung!"
+        },
+        "actionPlans": {
+            "title": "Aktionspläne",
+            "description": "Alle erfassten Pläne und deren Status verwalten."
+        },
+        "structure": {
+            "title": "Organisationsstruktur",
+            "description": "Stammdatenverwaltung der Bewertungssäulen und -elemente.",
+            "pillarsCardTitle": "Säulen",
+            "pillarsCardSubtitle": "Bewertungsbereiche",
+            "elementsCardTitle": "Elemente",
+            "elementsCardSubtitle": "In der Säule bewertete Elemente",
+            "noPillarSelected": "Wählen Sie eine Säule aus, um Details anzuzeigen",
+            "noElementsInPillar": "Diese Säule enthält keine Elemente"
+        }
+    },
+    "table": {
+        "pillar": "Säule",
+        "element": "Element",
+        "status": "Status",
+        "problem": "Problem",
+        "action": "Maßnahme",
+        "owner": "Verantwortlicher",
+        "dueDate": "Fälligkeitsdatum",
+        "actions": "Aktionen",
+        "noPlans": "Keine Einträge gefunden.",
+        "noPlansForFilter": "Ihre Suche ergab keine Treffer.",
+        "foundation": "Punktzahl",
+        "plans": "Pläne"
+    },
+    "filters": {
+        "status": "Status",
+        "status_all": "Alle",
+        "pillar": "Säule",
+        "owner": "Verantwortlicher"
+    },
+    "status": {
+        "PLANNED": "Geplant",
+        "IN_PROGRESS": "In Bearbeitung",
+        "DONE": "Abgeschlossen",
+        "CANCELLED": "Abgebrochen"
+    },
+    "backlog": {
+        "loadError": "Fehler beim Laden des Backlogs.",
+        "noPlanBadge": "Ausstehend",
+        "planCountSuffix": "Plan(e)",
+        "createPlan": "Plan erstellen",
+        "addAnotherPlan": "+ Plan"
+    },
+    "structure": {
+        "newPillar": "Neue Säule",
+        "editPillar": "Bearbeiten",
+        "newElement": "Neues Element",
+        "editElement": "Bearbeiten",
+        "code": "Code",
+        "namePt": "Name (lokal)",
+        "nameEn": "Name (Englisch)",
+        "descriptionPt": "Beschreibung (lokal)",
+        "descriptionEn": "Beschreibung (Englisch)",
+        "notesPt": "Notizen (lokal)",
+        "notesEn": "Notizen (Englisch)",
+        "foundationScore": "Punktzahl",
+        "elementsCount": "Positionen",
+        "save": "Speichern",
+        "cancel": "Abbrechen"
+    },
+    "actions": {
+        "edit": "Bearbeiten",
+        "cancel": "Abbrechen",
+        "save": "Speichern",
+        "saveChanges": "Änderungen speichern",
+        "createPlan": "Plan erfassen",
+        "error": "Es ist ein Fehler aufgetreten"
+    },
+    "form": {
+        "pillar": "Säule",
+        "element": "Element",
+        "foundation": "Aktuelle Punktzahl",
+        "problem": "Identifiziertes Problem",
+        "problem_placeholder": "Beschreiben Sie die festgestellte Lücke...",
+        "action": "Vorgeschlagene Maßnahme",
+        "action_placeholder": "Was wird unternommen, um sie zu beheben?",
+        "owner": "Verantwortlicher",
+        "owner_placeholder": "Wer führt dies aus?",
+        "dueDate": "Frist",
+        "dueDate_placeholder": "Datum auswählen"
+    }
+}

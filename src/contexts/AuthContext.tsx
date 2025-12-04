@@ -44,8 +44,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data && !error) {
         setUserRole(data.role || 'user');
-        // Opcional: Se o usuário não tiver país selecionado no localStorage, usa o do perfil
-        if (!localStorage.getItem('selectedCountry') && data.country) {
+        
+        // LÓGICA IMPORTANTE:
+        // Só forçamos o país do perfil se o usuário NÃO tiver selecionado nada ainda (localStorage vazio)
+        // Isso permite que um usuário Brasileiro clique em "Global" na Landing Page e navegue como Global
+        const storedCountry = localStorage.getItem('selectedCountry');
+        
+        if (!storedCountry && data.country) {
             setSelectedCountry(data.country);
         }
       }

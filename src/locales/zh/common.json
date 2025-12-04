@@ -53,9 +53,9 @@
     "gapElementsColumn": "差距 (Gaps)",
     "withPlanColumn": "有計畫",
     "withoutPlanColumn": "無計畫",
-    "monitoredItems": "积压中监控的项目",
+    "monitoredItems": "積壓中監控的項目",
     "immediateAttention": "需要立即注意",
-    "percentWithoutPlan": "总数的 {{percent}}% 无计划"
+    "percentWithoutPlan": "總數的 {{percent}}% 無計畫"
   },
   "pages": {
     "dashboard": {
@@ -73,7 +73,7 @@
     },
     "actionPlans": {
       "title": "行動計畫",
-      "description": "管理所有注册计划及其状态。"
+      "description": "管理所有註冊計畫及其狀態。"
     },
     "structure": {
       "title": "組織結構",

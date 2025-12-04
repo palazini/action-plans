@@ -12,11 +12,14 @@
     "account": "Conta",
     "settings": "Configurações",
     "logout": "Sair",
-    "version": "Versão"
+    "version": "Versão",
+    "viewDataFrom": "Visualizar dados de:"
   },
   "landing": {
     "selectRegion": "Selecione sua Região",
-    "chooseCountry": "Acesse o ambiente dedicado à sua filial para gerenciar planos de ação e backlogs."
+    "chooseCountry": "Acesse o ambiente dedicado à sua filial para gerenciar planos de ação e backlogs.",
+    "viewConsolidatedPlans": "Visualizar planos de ação consolidados de todas as unidades.",
+    "selectSpecificUnit": "Ou selecione uma unidade específica:"
   },
   "auth": {
     "welcomeBack": "Bem-vindo de volta!",

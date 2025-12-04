@@ -7,6 +7,7 @@ import fr from './locales/fr/common.json';
 import it from './locales/it/common.json';
 import zh from './locales/zh/common.json';
 import hi from './locales/hi/common.json';
+import de from './locales/de/common.json';
 
 const stored =
   typeof window !== 'undefined'
@@ -29,6 +30,7 @@ i18n
       it: { translation: it },
       zh: { translation: zh },
       hi: { translation: hi },
+      de: { translation: de },
     },
     lng: stored || browserLang,
     fallbackLng: 'en',

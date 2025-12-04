@@ -12,11 +12,14 @@
     "account": "Account",
     "settings": "Settings",
     "logout": "Logout",
-    "version": "Version"
+    "version": "Version",
+    "viewDataFrom": "View data from:"
   },
   "landing": {
     "selectRegion": "Select Region",
-    "chooseCountry": "Access your local branch environment to manage action plans and backlogs."
+    "chooseCountry": "Access your local branch environment to manage action plans and backlogs.",
+    "viewConsolidatedPlans": "View consolidated action plans from all units.",
+    "selectSpecificUnit": "Or select a specific unit:"
   },
   "auth": {
     "welcomeBack": "Welcome Back!",
