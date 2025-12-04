@@ -15,9 +15,10 @@ type Props = {
   element: ElementWithRelations;
   onSuccess: () => void;
   onCancel: () => void;
+  country: string;
 };
 
-export function ActionPlanForm({ element, onSuccess, onCancel }: Props) {
+export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props) {
   // PT
   const [problemPt, setProblemPt] = useState('');
   const [actionPt, setActionPt] = useState('');
@@ -49,6 +50,7 @@ export function ActionPlanForm({ element, onSuccess, onCancel }: Props) {
         dueDate: parsedDueDate ?? undefined,
         problemEn: problemEn.trim() ? problemEn : undefined,
         actionEn: actionEn.trim() ? actionEn : undefined,
+        country,
       });
 
       onSuccess();

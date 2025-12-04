@@ -1,24 +1,90 @@
 {
   "app": {
-    "title": "OPEX Action Plans"
+    "title": "Planos de Ação",
+    "subtitle": "Portal Corporativo"
   },
   "nav": {
-    "dashboard": "Dashboard",
-    "backlog": "Backlog de Planos",
-    "actionPlans": "Planos de ação",
-    "structure": "Pilares & Elementos"
+    "dashboard": "Visão Geral",
+    "actionPlans": "Planos de Ação",
+    "backlog": "Backlog",
+    "structure": "Estrutura",
+    "mainMenu": "Menu Principal",
+    "account": "Conta",
+    "settings": "Configurações",
+    "logout": "Sair",
+    "version": "Versão"
   },
-  "filters": {
-    "status": "Status",
-    "pillar": "Pilar",
-    "owner": "Responsável",
-    "status_all": "Todos"
+  "landing": {
+    "selectRegion": "Selecione sua Região",
+    "chooseCountry": "Acesse o ambiente dedicado à sua filial para gerenciar planos de ação e backlogs."
   },
-  "status": {
-    "PLANNED": "Planejado",
-    "IN_PROGRESS": "Em andamento",
-    "DONE": "Concluído",
-    "CANCELLED": "Cancelado"
+  "auth": {
+    "welcomeBack": "Bem-vindo de volta!",
+    "accessingEnvironment": "Acessando ambiente:",
+    "loggingInTo": "Entrando em {{country}}",
+    "username": "Nome de Usuário",
+    "password": "Senha",
+    "signIn": "Entrar",
+    "rememberMe": "Lembrar de mim",
+    "forgotPassword": "Esqueceu a senha?",
+    "changeCountry": "Mudar País",
+    "createAccount": "Criar uma conta",
+    "firstUser": "Primeiro usuário para {{country}}!",
+    "fullName": "Nome Completo",
+    "confirmPassword": "Confirmar Senha",
+    "register": "Registrar",
+    "passwordsDoNotMatch": "As senhas não coincidem",
+    "successRegistration": "Registro realizado com sucesso! Verifique seu email para confirmar.",
+    "error": "Erro de Autenticação",
+    "generatedUsername": "Nome de Usuário Gerado",
+    "loginWithThis": "Você usará isso para entrar",
+    "nameTooShort": "O nome deve ter pelo menos 2 caracteres",
+    "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
+    "usernameTooShort": "O nome de usuário deve ter pelo menos 3 caracteres"
+  },
+  "dashboard": {
+    "subtitle": "Monitoramento de ações para {{country}}",
+    "loadError": "Não foi possível carregar os indicadores.",
+    "totalElements": "Total de elementos",
+    "gapElements": "Elementos com GAP",
+    "elementsWithoutPlan": "Sem plano de ação",
+    "perPillarTitle": "Resumo por pilar",
+    "noPillarStats": "Não há dados suficientes para o resumo por pilar.",
+    "gapElementsColumn": "Gaps",
+    "withPlanColumn": "Com plano",
+    "withoutPlanColumn": "Sem plano",
+    "monitoredItems": "Itens monitorados no backlog",
+    "immediateAttention": "Requerem atenção imediata",
+    "percentWithoutPlan": "{{percent}}% do total sem plano"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Dashboard"
+    },
+    "backlog": {
+      "title": "Backlog de Planos",
+      "description": "Gerenciamento de elementos com nota de fundação abaixo do esperado.",
+      "filterByPillar": "Filtrar por pilar",
+      "noElements": "Não há elementos cadastrados no backlog.",
+      "noElementsForFilter": "Nenhum elemento encontrado para este filtro.",
+      "modalTitle": "Gerenciar Plano",
+      "existingActionsTitle": "Ações Existentes",
+      "allClear": "Tudo em dia!"
+    },
+    "actionPlans": {
+      "title": "Planos de Ação",
+      "description": "Gerencie todos os planos registrados e seus status."
+    },
+    "structure": {
+      "title": "Estrutura Organizacional",
+      "description": "Gerenciamento mestre de pilares e elementos de avaliação.",
+      "pillarsCardTitle": "Pilares",
+      "pillarsCardSubtitle": "Áreas de avaliação",
+      "elementsCardTitle": "Elementos",
+      "elementsCardSubtitle": "Itens avaliados dentro do pilar",
+      "noPillarSelected": "Selecione um pilar para visualizar",
+      "noElementsInPillar": "Este pilar não possui elementos"
+    }
   },
   "table": {
     "pillar": "Pilar",
@@ -28,92 +94,67 @@
     "action": "Ação",
     "owner": "Responsável",
     "dueDate": "Prazo",
-    "actions": "Ações",
-    "noPlans": "Nenhum plano de ação cadastrado ainda.",
-    "noPlansForFilter": "Nenhum plano encontrado para os filtros selecionados.",
-    "foundation": "FOUNDATION",
+    "actions": "Opções",
+    "noPlans": "Nenhum registro encontrado.",
+    "noPlansForFilter": "Sua busca não retornou resultados.",
+    "foundation": "Nota",
     "plans": "Planos"
   },
-  "pages": {
-    "dashboard": {
-      "title": "Visão geral"
-    },
-    "backlog": {
-      "title": "Backlog de planos de ação",
-      "description": "Lista dos elementos com FOUNDATION < 100. Use o botão \"Criar plano\" para registrar problema, ação e responsável. O número de planos existentes aparece na coluna \"Planos\".",
-      "filterByPillar": "Filtrar por pilar",
-      "noElements": "Não há elementos com FOUNDATION abaixo de 100 cadastrados.",
-      "noElementsForFilter": "Nenhum elemento encontrado para o filtro selecionado.",
-      "modalTitle": "Plano de ação",
-      "existingActionsTitle": "Ações já cadastradas para este elemento"
-    },
-    "actionPlans": {
-      "title": "Planos de ação"
-    },
-    "structure": {
-      "title": "Pilares & elementos",
-      "description": "Gerencie os pilares e elementos da avaliação, incluindo códigos, nomes e pontuação FOUNDATION.",
-      "pillarsCardTitle": "Pilares",
-      "pillarsCardSubtitle": "Cadastre e mantenha os pilares da fundação.",
-      "elementsCardTitle": "Elementos",
-      "elementsCardSubtitle": "Cadastre elementos e ajuste a pontuação FOUNDATION.",
-      "noPillarSelected": "Selecione um pilar para ver e editar os elementos.",
-      "noElementsInPillar": "Não há elementos cadastrados para este pilar."
-    }
+  "filters": {
+    "status": "Status",
+    "status_all": "Todos",
+    "pillar": "Pilar",
+    "owner": "Responsável"
+  },
+  "status": {
+    "PLANNED": "Planejado",
+    "IN_PROGRESS": "Em Andamento",
+    "DONE": "Concluído",
+    "CANCELLED": "Cancelado"
+  },
+  "backlog": {
+    "loadError": "Erro ao carregar backlog.",
+    "noPlanBadge": "Pendente",
+    "planCountSuffix": "plano(s)",
+    "createPlan": "Criar Plano",
+    "addAnotherPlan": "+ Plano"
+  },
+  "structure": {
+    "newPillar": "Novo Pilar",
+    "editPillar": "Editar",
+    "newElement": "Novo Elemento",
+    "editElement": "Editar",
+    "code": "Cód.",
+    "namePt": "Nome (Local)",
+    "nameEn": "Nome (Inglês)",
+    "descriptionPt": "Descrição (Local)",
+    "descriptionEn": "Descrição (Inglês)",
+    "notesPt": "Notas (Local)",
+    "notesEn": "Notas (Inglês)",
+    "foundationScore": "Score",
+    "elementsCount": "Qtd. Itens",
+    "save": "Salvar",
+    "cancel": "Cancelar"
   },
   "actions": {
-    "edit": "Editar plano",
+    "edit": "Editar",
     "cancel": "Cancelar",
     "save": "Salvar",
-    "saveChanges": "Salvar alterações",
-    "createPlan": "Salvar plano"
+    "saveChanges": "Salvar Alterações",
+    "createPlan": "Registrar Plano",
+    "error": "Ocorreu um erro"
   },
   "form": {
     "pillar": "Pilar",
     "element": "Elemento",
-    "foundation": "FOUNDATION",
-    "problem": "Problema",
-    "problem_placeholder": "Descreva qual é o problema atual...",
-    "action": "Ação",
-    "action_placeholder": "O que será feito para resolver o problema?",
+    "foundation": "Nota Atual",
+    "problem": "Problema Identificado",
+    "problem_placeholder": "Descreva a lacuna encontrada...",
+    "action": "Ação Proposta",
+    "action_placeholder": "O que será feito para corrigir?",
     "owner": "Responsável",
-    "owner_placeholder": "Nome do responsável pela ação",
-    "dueDate": "Prazo (opcional)",
-    "dueDate_placeholder": "Selecione uma data"
-  },
-  "backlog": {
-    "loadError": "Não foi possível carregar o backlog.",
-    "noPlanBadge": "Sem plano",
-    "planCountSuffix": "plano(s)",
-    "createPlan": "Criar plano",
-    "addAnotherPlan": "Adicionar outro plano"
-  },
-  "dashboard": {
-    "loadError": "Não foi possível carregar os indicadores.",
-    "totalElements": "Elementos totais",
-    "gapElements": "Elementos com FOUNDATION < 100",
-    "elementsWithoutPlan": "Elementos sem plano de ação",
-    "perPillarTitle": "Resumo por pilar",
-    "noPillarStats": "Não há elementos com FOUNDATION abaixo de 100 para compor o resumo por pilar.",
-    "gapElementsColumn": "Elementos com gap",
-    "withPlanColumn": "Com plano",
-    "withoutPlanColumn": "Sem plano"
-  },
-  "structure": {
-    "newPillar": "Novo pilar",
-    "editPillar": "Editar pilar",
-    "newElement": "Novo elemento",
-    "editElement": "Editar elemento",
-    "code": "Código",
-    "namePt": "Nome (PT)",
-    "nameEn": "Name (EN)",
-    "descriptionPt": "Descrição (PT)",
-    "descriptionEn": "Description (EN)",
-    "notesPt": "Observações (PT)",
-    "notesEn": "Notes (EN)",
-    "foundationScore": "FOUNDATION",
-    "elementsCount": "Elementos",
-    "save": "Salvar",
-    "cancel": "Cancelar"
+    "owner_placeholder": "Quem executará?",
+    "dueDate": "Prazo Limite",
+    "dueDate_placeholder": "Selecione a data"
   }
 }

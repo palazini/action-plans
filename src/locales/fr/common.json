@@ -1,0 +1,160 @@
+{
+  "app": {
+    "title": "Action Plans",
+    "subtitle": "Portail d'entreprise"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "actionPlans": "Plans d'action",
+    "backlog": "Backlog",
+    "structure": "Structure",
+    "mainMenu": "Menu Principal",
+    "account": "Compte",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter",
+    "version": "Version"
+  },
+  "landing": {
+    "selectRegion": "Sélectionnez votre région",
+    "chooseCountry": "Choisissez votre pays pour accéder à la plateforme dédiée à votre succursale."
+  },
+  "auth": {
+    "welcomeBack": "Bon retour !",
+    "accessingEnvironment": "Accès à l'environnement :",
+    "loggingInTo": "Connexion à {{country}}",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié ?",
+    "changeCountry": "Changer de pays",
+    "createAccount": "Créer un compte",
+    "firstUser": "Premier utilisateur pour {{country}} !",
+    "fullName": "Nom complet",
+    "confirmPassword": "Confirmer le mot de passe",
+    "register": "S'inscrire",
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+    "successRegistration": "Inscription réussie ! Veuillez vérifier votre e-mail pour confirmer.",
+    "error": "Erreur d'authentification",
+    "generatedUsername": "Nom d'utilisateur généré",
+    "loginWithThis": "Vous utiliserez ceci pour vous connecter",
+    "nameTooShort": "Le nom doit comporter au moins 2 caractères",
+    "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères",
+    "usernameTooShort": "Le nom d'utilisateur doit comporter au moins 3 caractères"
+  },
+  "dashboard": {
+    "subtitle": "Suivi des actions pour {{country}}",
+    "loadError": "Impossible de charger les indicateurs.",
+    "totalElements": "Total des éléments",
+    "gapElements": "Éléments avec GAP",
+    "elementsWithoutPlan": "Sans plan d'action",
+    "perPillarTitle": "Résumé par pilier",
+    "noPillarStats": "Données insuffisantes pour le résumé par pilier.",
+    "gapElementsColumn": "Écarts",
+    "withPlanColumn": "Avec plan",
+    "withoutPlanColumn": "Sans plan",
+    "monitoredItems": "Éléments surveillés dans le backlog",
+    "immediateAttention": "Nécessitent une attention immédiate",
+    "percentWithoutPlan": "{{percent}}% du total sans plan"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Aperçu"
+    },
+    "backlog": {
+      "title": "Backlog des plans",
+      "description": "Gestion des éléments avec un score de fondation inférieur à l'objectif.",
+      "filterByPillar": "Filtrer par pilier",
+      "noElements": "Aucun élément enregistré dans le backlog.",
+      "noElementsForFilter": "Aucun élément trouvé pour ce filtre.",
+      "modalTitle": "Gérer le plan",
+      "existingActionsTitle": "Actions existantes",
+      "allClear": "Tout est à jour !"
+    },
+    "actionPlans": {
+      "title": "Plans d'action",
+      "description": "Gérez tous les plans enregistrés et leur statut."
+    },
+    "structure": {
+      "title": "Structure Organisationnelle",
+      "description": "Gestion maître des piliers et éléments d'évaluation.",
+      "pillarsCardTitle": "Piliers",
+      "pillarsCardSubtitle": "Domaines d'évaluation",
+      "elementsCardTitle": "Éléments",
+      "elementsCardSubtitle": "Items évalués dans le pilier",
+      "noPillarSelected": "Sélectionnez un pilier pour voir les détails",
+      "noElementsInPillar": "Ce pilier n'a aucun élément"
+    }
+  },
+  "table": {
+    "pillar": "Pilier",
+    "element": "Élément",
+    "status": "Statut",
+    "problem": "Problème",
+    "action": "Action",
+    "owner": "Propriétaire",
+    "dueDate": "Échéance",
+    "actions": "Options",
+    "noPlans": "Aucun enregistrement trouvé.",
+    "noPlansForFilter": "Votre recherche n'a donné aucun résultat.",
+    "foundation": "Note",
+    "plans": "Plans"
+  },
+  "filters": {
+    "status": "Statut",
+    "status_all": "Tous",
+    "pillar": "Pilier",
+    "owner": "Propriétaire"
+  },
+  "status": {
+    "PLANNED": "Prévu",
+    "IN_PROGRESS": "En cours",
+    "DONE": "Fait",
+    "CANCELLED": "Annulé"
+  },
+  "backlog": {
+    "loadError": "Impossible de charger le backlog.",
+    "noPlanBadge": "En attente",
+    "planCountSuffix": "plan(s)",
+    "createPlan": "Créer un plan",
+    "addAnotherPlan": "+ Plan"
+  },
+  "structure": {
+    "newPillar": "Nouveau pilier",
+    "editPillar": "Modifier",
+    "newElement": "Nouvel élément",
+    "editElement": "Modifier",
+    "code": "Code",
+    "namePt": "Nom (Local)",
+    "nameEn": "Nom (Anglais)",
+    "descriptionPt": "Desc. (Local)",
+    "descriptionEn": "Desc. (Anglais)",
+    "notesPt": "Notes (Local)",
+    "notesEn": "Notes (Anglais)",
+    "foundationScore": "Score",
+    "elementsCount": "Items",
+    "save": "Enregistrer",
+    "cancel": "Annuler"
+  },
+  "actions": {
+    "edit": "Modifier",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saveChanges": "Enregistrer les modifications",
+    "createPlan": "Enregistrer le plan",
+    "error": "Une erreur est survenue"
+  },
+  "form": {
+    "pillar": "Pilier",
+    "element": "Élément",
+    "foundation": "Note Actuelle",
+    "problem": "Problème Identifié",
+    "problem_placeholder": "Décrivez l'écart constaté...",
+    "action": "Action Proposée",
+    "action_placeholder": "Que sera-t-il fait pour corriger ?",
+    "owner": "Responsable",
+    "owner_placeholder": "Qui exécutera ?",
+    "dueDate": "Date Limite",
+    "dueDate_placeholder": "Sélectionnez la date"
+  }
+}

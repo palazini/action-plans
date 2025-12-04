@@ -15,9 +15,23 @@ import {
   TextInput,
   Textarea,
   Title,
+  Stack,
+  ThemeIcon,
+  Badge,
+  rem,
+  Box,
 } from '@mantine/core';
-import { IconAlertCircle, IconPencil, IconPlus } from '@tabler/icons-react';
+import { 
+  IconAlertCircle, 
+  IconPencil, 
+  IconPlus, 
+  IconLayoutKanban, 
+  IconComponents, 
+  IconArrowRight,
+  IconDatabaseOff 
+} from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
 import {
   createElement,
   createPillar,
@@ -29,6 +43,7 @@ import {
 
 export function StructurePage() {
   const { t } = useTranslation();
+  const { selectedCountry } = useAuth();
 
   const [pillars, setPillars] = useState<AdminPillar[]>([]);
   const [selectedPillarId, setSelectedPillarId] = useState<string | null>(null);
@@ -47,7 +62,8 @@ export function StructurePage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchPillarsWithElements();
+      if (!selectedCountry) return;
+      const data = await fetchPillarsWithElements(selectedCountry);
       setPillars(data);
       if (!selectedPillarId && data.length > 0) {
         setSelectedPillarId(data[0].id);
@@ -61,47 +77,62 @@ export function StructurePage() {
   }
 
   useEffect(() => {
-    load();
+    if (selectedCountry) {
+      load();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedCountry]);
+
+  // Helper para cor do score
+  const getScoreColor = (score: number) => {
+    if (score < 50) return 'red';
+    if (score < 80) return 'orange';
+    return 'green';
+  };
 
   return (
-    <>
-      <Title order={2} mb="xs">
-        {t('pages.structure.title')}
-      </Title>
-      <Text size="sm" c="dimmed" mb="md">
-        {t('pages.structure.description')}
-      </Text>
+    <Stack gap="lg">
+      <Group justify="space-between" align="center">
+        <div>
+          <Title order={2} c="dark.8">{t('pages.structure.title')}</Title>
+          <Text c="dimmed" size="sm">
+            {t('pages.structure.description')}
+          </Text>
+        </div>
+      </Group>
 
       {error && (
         <Alert
-          mb="md"
           icon={<IconAlertCircle size={16} />}
           color="red"
           title={t('actions.error', { defaultValue: 'Erro' })}
+          variant="filled"
         >
           {error}
         </Alert>
       )}
 
       {loading ? (
-        <Center>
-          <Loader />
+        <Center h={200}>
+          <Loader size="lg" type="dots" />
         </Center>
       ) : (
-        <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
+        <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
           {/* Coluna de Pilares */}
-          <Card withBorder radius="md" shadow="xs">
-            <Group justify="space-between" mb="sm">
-              <div>
-                <Text fw={600}>{t('pages.structure.pillarsCardTitle')}</Text>
-                <Text size="xs" c="dimmed">
-                  {t('pages.structure.pillarsCardSubtitle')}
-                </Text>
-              </div>
+          <Card withBorder radius="md" shadow="sm" p="lg">
+            <Group justify="space-between" mb="lg">
+              <Group gap="xs">
+                <ThemeIcon variant="light" color="violet" size="md">
+                    <IconLayoutKanban style={{ width: rem(18), height: rem(18) }} />
+                </ThemeIcon>
+                <div>
+                    <Text fw={600} size="sm">{t('pages.structure.pillarsCardTitle')}</Text>
+                    <Text size="xs" c="dimmed">{t('pages.structure.pillarsCardSubtitle')}</Text>
+                </div>
+              </Group>
               <Button
                 size="xs"
+                variant="light"
                 leftSection={<IconPlus size={14} />}
                 onClick={() => setCreatePillarOpen(true)}
               >
@@ -110,16 +141,22 @@ export function StructurePage() {
             </Group>
 
             {pillars.length === 0 ? (
-              <Text size="sm" c="dimmed">
-                {t('pages.structure.noPillarSelected')}
-              </Text>
+              <Center p="xl" bg="gray.0" style={{ borderRadius: 8 }}>
+                <Stack align="center" gap="xs">
+                    <IconDatabaseOff size={30} color="gray" style={{ opacity: 0.5 }} />
+                    <Text size="sm" c="dimmed">
+                        {t('pages.structure.noPillarSelected')}
+                    </Text>
+                </Stack>
+              </Center>
             ) : (
-              <Table highlightOnHover verticalSpacing="xs">
+              <Table highlightOnHover verticalSpacing="sm" striped>
                 <Table.Thead>
                   <Table.Tr>
                     <Table.Th>{t('structure.code')}</Table.Th>
                     <Table.Th>{t('structure.namePt')}</Table.Th>
-                    <Table.Th>{t('structure.elementsCount')}</Table.Th>
+                    <Table.Th style={{textAlign: 'center'}}>{t('structure.elementsCount')}</Table.Th>
+                    <Table.Th />
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -133,17 +170,25 @@ export function StructurePage() {
                           backgroundColor: isSelected
                             ? 'var(--mantine-color-blue-0)'
                             : undefined,
+                          transition: 'background-color 0.2s',
                         }}
                         onClick={() => setSelectedPillarId(pillar.id)}
                       >
-                        <Table.Td style={{ whiteSpace: 'nowrap' }}>
-                          {pillar.code ?? '-'}
+                        <Table.Td>
+                            <Badge variant="outline" color="gray" size="sm">
+                                {pillar.code ?? '-'}
+                            </Badge>
                         </Table.Td>
                         <Table.Td>
-                          {pillar.name_pt || pillar.name}
+                          <Text size="sm" fw={500}>{pillar.name_pt || pillar.name}</Text>
                         </Table.Td>
-                        <Table.Td style={{ whiteSpace: 'nowrap' }}>
-                          {pillar.elements.length}
+                        <Table.Td style={{ textAlign: 'center' }}>
+                          <Badge size="sm" circle variant={isSelected ? 'filled' : 'light'}>
+                            {pillar.elements.length}
+                          </Badge>
+                        </Table.Td>
+                        <Table.Td>
+                            {isSelected && <IconArrowRight size={14} color="var(--mantine-color-blue-6)" />}
                         </Table.Td>
                       </Table.Tr>
                     );
@@ -154,17 +199,21 @@ export function StructurePage() {
           </Card>
 
           {/* Coluna de Elementos */}
-          <Card withBorder radius="md" shadow="xs">
-            <Group justify="space-between" mb="sm">
-              <div>
-                <Text fw={600}>{t('pages.structure.elementsCardTitle')}</Text>
-                <Text size="xs" c="dimmed">
-                  {t('pages.structure.elementsCardSubtitle')}
-                </Text>
-              </div>
+          <Card withBorder radius="md" shadow="sm" p="lg">
+            <Group justify="space-between" mb="lg">
+              <Group gap="xs">
+                <ThemeIcon variant="light" color="cyan" size="md">
+                    <IconComponents style={{ width: rem(18), height: rem(18) }} />
+                </ThemeIcon>
+                <div>
+                    <Text fw={600} size="sm">{t('pages.structure.elementsCardTitle')}</Text>
+                    <Text size="xs" c="dimmed">{t('pages.structure.elementsCardSubtitle')}</Text>
+                </div>
+              </Group>
 
               <Button
                 size="xs"
+                variant="light"
                 leftSection={<IconPlus size={14} />}
                 onClick={() => setCreateElementOpen(true)}
                 disabled={!selectedPillar}
@@ -174,15 +223,22 @@ export function StructurePage() {
             </Group>
 
             {!selectedPillar ? (
-              <Text size="sm" c="dimmed">
-                {t('pages.structure.noPillarSelected')}
-              </Text>
+              <Center h={200} bg="gray.0" style={{ borderRadius: 8 }}>
+                <Text size="sm" c="dimmed">
+                  {t('pages.structure.noPillarSelected')}
+                </Text>
+              </Center>
             ) : selectedPillar.elements.length === 0 ? (
-              <Text size="sm" c="dimmed">
-                {t('pages.structure.noElementsInPillar')}
-              </Text>
+              <Center h={200} bg="gray.0" style={{ borderRadius: 8 }}>
+                 <Stack align="center" gap="xs">
+                    <IconDatabaseOff size={30} color="gray" style={{ opacity: 0.5 }} />
+                    <Text size="sm" c="dimmed">
+                        {t('pages.structure.noElementsInPillar')}
+                    </Text>
+                </Stack>
+              </Center>
             ) : (
-              <Table highlightOnHover verticalSpacing="xs">
+              <Table highlightOnHover verticalSpacing="sm">
                 <Table.Thead>
                   <Table.Tr>
                     <Table.Th>{t('structure.code')}</Table.Th>
@@ -195,15 +251,21 @@ export function StructurePage() {
                   {selectedPillar.elements.map((el) => (
                     <Table.Tr key={el.id}>
                       <Table.Td style={{ whiteSpace: 'nowrap' }}>
-                        {el.code ?? '-'}
+                        <Text size="xs" c="dimmed" fw={700}>{el.code ?? '-'}</Text>
                       </Table.Td>
-                      <Table.Td>{el.name_pt || el.name}</Table.Td>
-                      <Table.Td style={{ whiteSpace: 'nowrap' }}>
-                        {el.foundation_score}
+                      <Table.Td>
+                        <Text size="sm" fw={500}>{el.name_pt || el.name}</Text>
                       </Table.Td>
-                      <Table.Td align="right" style={{ width: 40 }}>
+                      <Table.Td>
+                        <Badge variant="dot" color={getScoreColor(el.foundation_score)}>
+                            {el.foundation_score}%
+                        </Badge>
+                      </Table.Td>
+                      <Table.Td align="right">
                         <ActionIcon
                           variant="subtle"
+                          color="blue"
+                          size="sm"
                           onClick={() => setEditingElement(el)}
                           aria-label={t('structure.editElement')}
                         >
@@ -224,6 +286,7 @@ export function StructurePage() {
         opened={createPillarOpen}
         onClose={() => setCreatePillarOpen(false)}
         onSaved={load}
+        country={selectedCountry!}
       />
 
       {/* Modal: criar elemento */}
@@ -233,6 +296,7 @@ export function StructurePage() {
           onClose={() => setCreateElementOpen(false)}
           onSaved={load}
           pillar={selectedPillar}
+          country={selectedCountry!}
         />
       )}
 
@@ -247,7 +311,7 @@ export function StructurePage() {
           }}
         />
       )}
-    </>
+    </Stack>
   );
 }
 
@@ -257,12 +321,14 @@ type CreatePillarModalProps = {
   opened: boolean;
   onClose: () => void;
   onSaved: () => void;
+  country: string;
 };
 
 function CreatePillarModal({
   opened,
   onClose,
   onSaved,
+  country,
 }: CreatePillarModalProps) {
   const { t } = useTranslation();
 
@@ -285,6 +351,7 @@ function CreatePillarModal({
         nameEn: nameEn.trim() || undefined,
         descriptionPt: descriptionPt.trim() || undefined,
         descriptionEn: descriptionEn.trim() || undefined,
+        country,
       });
       onClose();
       onSaved();
@@ -304,59 +371,62 @@ function CreatePillarModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={t('structure.newPillar')}
+      title={<Text fw={700}>{t('structure.newPillar')}</Text>}
       centered
       size="lg"
+      overlayProps={{ blur: 3 }}
     >
       <form onSubmit={handleSubmit}>
-        <Group grow gap="sm" mb="sm">
-          <TextInput
-            label={t('structure.code')}
-            value={code}
-            onChange={(e) => setCode(e.currentTarget.value)}
-          />
-          <TextInput
-            label={t('structure.namePt')}
-            required
-            value={namePt}
-            onChange={(e) => setNamePt(e.currentTarget.value)}
-          />
-        </Group>
+        <Stack gap="sm">
+            <Group grow>
+            <TextInput
+                label={t('structure.code')}
+                placeholder="EX: SAF"
+                value={code}
+                onChange={(e) => setCode(e.currentTarget.value)}
+            />
+            <TextInput
+                label={t('structure.namePt')}
+                placeholder="Ex: Segurança"
+                required
+                value={namePt}
+                onChange={(e) => setNamePt(e.currentTarget.value)}
+            />
+            </Group>
 
-        <TextInput
-          label={t('structure.nameEn')}
-          value={nameEn}
-          onChange={(e) => setNameEn(e.currentTarget.value)}
-          mb="sm"
-        />
+            <TextInput
+            label={t('structure.nameEn')}
+            placeholder="Ex: Safety"
+            value={nameEn}
+            onChange={(e) => setNameEn(e.currentTarget.value)}
+            />
 
-        <Textarea
-          label={t('structure.descriptionPt')}
-          value={descriptionPt}
-          onChange={(e) => setDescriptionPt(e.currentTarget.value)}
-          minRows={2}
-          mb="sm"
-        />
-        <Textarea
-          label={t('structure.descriptionEn')}
-          value={descriptionEn}
-          onChange={(e) => setDescriptionEn(e.currentTarget.value)}
-          minRows={2}
-          mb="sm"
-        />
+            <Textarea
+            label={t('structure.descriptionPt')}
+            value={descriptionPt}
+            onChange={(e) => setDescriptionPt(e.currentTarget.value)}
+            minRows={2}
+            />
+            <Textarea
+            label={t('structure.descriptionEn')}
+            value={descriptionEn}
+            onChange={(e) => setDescriptionEn(e.currentTarget.value)}
+            minRows={2}
+            />
 
-        <Group justify="flex-end" mt="md">
-          <Button
-            variant="subtle"
-            onClick={onClose}
-            disabled={saving}
-          >
-            {t('structure.cancel')}
-          </Button>
-          <Button type="submit" loading={saving}>
-            {t('structure.save')}
-          </Button>
-        </Group>
+            <Group justify="flex-end" mt="md">
+            <Button
+                variant="subtle"
+                onClick={onClose}
+                disabled={saving}
+            >
+                {t('structure.cancel')}
+            </Button>
+            <Button type="submit" loading={saving}>
+                {t('structure.save')}
+            </Button>
+            </Group>
+        </Stack>
       </form>
     </Modal>
   );
@@ -367,6 +437,7 @@ type CreateElementModalProps = {
   onClose: () => void;
   onSaved: () => void;
   pillar: AdminPillar;
+  country: string;
 };
 
 function CreateElementModal({
@@ -374,6 +445,7 @@ function CreateElementModal({
   onClose,
   onSaved,
   pillar,
+  country,
 }: CreateElementModalProps) {
   const { t } = useTranslation();
 
@@ -399,6 +471,7 @@ function CreateElementModal({
         foundationScore,
         notesPt: notesPt.trim() || undefined,
         notesEn: notesEn.trim() || undefined,
+        country,
       });
       onClose();
       onSaved();
@@ -419,71 +492,70 @@ function CreateElementModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={t('structure.newElement')}
+      title={<Text fw={700}>{t('structure.newElement')}</Text>}
       centered
       size="lg"
+      overlayProps={{ blur: 3 }}
     >
       <form onSubmit={handleSubmit}>
-        <Text size="xs" c="dimmed" mb={4}>
-          {t('table.pillar')}: {pillar.code ?? '-'} —{' '}
-          {pillar.name_pt || pillar.name}
-        </Text>
+        <Stack gap="sm">
+            <Alert variant="light" color="blue" title="Contexto" icon={<IconLayoutKanban size={16} />}>
+                {t('table.pillar')}: <Text span fw={700}>{pillar.code ?? '-'}</Text> — {pillar.name_pt || pillar.name}
+            </Alert>
 
-        <Group grow gap="sm" mb="sm">
-          <TextInput
-            label={t('structure.code')}
-            value={code}
-            onChange={(e) => setCode(e.currentTarget.value)}
-          />
-          <NumberInput
-            label={t('structure.foundationScore')}
-            value={foundationScore}
-            onChange={(val) => setFoundationScore(Number(val) || 0)}
-            min={0}
-            max={100}
-          />
-        </Group>
+            <Group grow>
+            <TextInput
+                label={t('structure.code')}
+                value={code}
+                onChange={(e) => setCode(e.currentTarget.value)}
+            />
+            <NumberInput
+                label={t('structure.foundationScore')}
+                value={foundationScore}
+                onChange={(val) => setFoundationScore(Number(val) || 0)}
+                min={0}
+                max={100}
+            />
+            </Group>
 
-        <TextInput
-          label={t('structure.namePt')}
-          required
-          value={namePt}
-          onChange={(e) => setNamePt(e.currentTarget.value)}
-          mb="sm"
-        />
-        <TextInput
-          label={t('structure.nameEn')}
-          value={nameEn}
-          onChange={(e) => setNameEn(e.currentTarget.value)}
-          mb="sm"
-        />
+            <TextInput
+            label={t('structure.namePt')}
+            required
+            value={namePt}
+            onChange={(e) => setNamePt(e.currentTarget.value)}
+            />
+            <TextInput
+            label={t('structure.nameEn')}
+            value={nameEn}
+            onChange={(e) => setNameEn(e.currentTarget.value)}
+            />
 
-        <Textarea
-          label={t('structure.notesPt')}
-          value={notesPt}
-          onChange={(e) => setNotesPt(e.currentTarget.value)}
-          minRows={2}
-          mb="sm"
-        />
-        <Textarea
-          label={t('structure.notesEn')}
-          value={notesEn}
-          onChange={(e) => setNotesEn(e.currentTarget.value)}
-          minRows={2}
-        />
+            <Textarea
+            label={t('structure.notesPt')}
+            value={notesPt}
+            onChange={(e) => setNotesPt(e.currentTarget.value)}
+            minRows={2}
+            />
+            <Textarea
+            label={t('structure.notesEn')}
+            value={notesEn}
+            onChange={(e) => setNotesEn(e.currentTarget.value)}
+            minRows={2}
+            />
 
-        <Group justify="flex-end" mt="md">
-          <Button
-            variant="subtle"
-            onClick={onClose}
-            disabled={saving}
-          >
-            {t('structure.cancel')}
-          </Button>
-          <Button type="submit" loading={saving}>
-            {t('structure.save')}
-          </Button>
-        </Group>
+            <Group justify="flex-end" mt="md">
+            <Button
+                variant="subtle"
+                onClick={onClose}
+                disabled={saving}
+            >
+                {t('structure.cancel')}
+            </Button>
+            <Button type="submit" loading={saving}>
+                {t('structure.save')}
+            </Button>
+            </Group>
+        </Stack>
       </form>
     </Modal>
   );
@@ -540,66 +612,66 @@ function EditElementModal({
     <Modal
       opened
       onClose={onClose}
-      title={t('structure.editElement')}
+      title={<Text fw={700}>{t('structure.editElement')}</Text>}
       centered
       size="lg"
+      overlayProps={{ blur: 3 }}
     >
       <form onSubmit={handleSubmit}>
-        <Group grow gap="sm" mb="sm">
-          <TextInput
-            label={t('structure.code')}
-            value={code}
-            onChange={(e) => setCode(e.currentTarget.value)}
-          />
-          <NumberInput
-            label={t('structure.foundationScore')}
-            value={foundationScore}
-            onChange={(val) => setFoundationScore(Number(val) || 0)}
-            min={0}
-            max={100}
-          />
-        </Group>
+        <Stack gap="sm">
+            <Group grow>
+            <TextInput
+                label={t('structure.code')}
+                value={code}
+                onChange={(e) => setCode(e.currentTarget.value)}
+            />
+            <NumberInput
+                label={t('structure.foundationScore')}
+                value={foundationScore}
+                onChange={(val) => setFoundationScore(Number(val) || 0)}
+                min={0}
+                max={100}
+            />
+            </Group>
 
-        <TextInput
-          label={t('structure.namePt')}
-          required
-          value={namePt}
-          onChange={(e) => setNamePt(e.currentTarget.value)}
-          mb="sm"
-        />
-        <TextInput
-          label={t('structure.nameEn')}
-          value={nameEn}
-          onChange={(e) => setNameEn(e.currentTarget.value)}
-          mb="sm"
-        />
+            <TextInput
+            label={t('structure.namePt')}
+            required
+            value={namePt}
+            onChange={(e) => setNamePt(e.currentTarget.value)}
+            />
+            <TextInput
+            label={t('structure.nameEn')}
+            value={nameEn}
+            onChange={(e) => setNameEn(e.currentTarget.value)}
+            />
 
-        <Textarea
-          label={t('structure.notesPt')}
-          value={notesPt}
-          onChange={(e) => setNotesPt(e.currentTarget.value)}
-          minRows={2}
-          mb="sm"
-        />
-        <Textarea
-          label={t('structure.notesEn')}
-          value={notesEn}
-          onChange={(e) => setNotesEn(e.currentTarget.value)}
-          minRows={2}
-        />
+            <Textarea
+            label={t('structure.notesPt')}
+            value={notesPt}
+            onChange={(e) => setNotesPt(e.currentTarget.value)}
+            minRows={2}
+            />
+            <Textarea
+            label={t('structure.notesEn')}
+            value={notesEn}
+            onChange={(e) => setNotesEn(e.currentTarget.value)}
+            minRows={2}
+            />
 
-        <Group justify="flex-end" mt="md">
-          <Button
-            variant="subtle"
-            onClick={onClose}
-            disabled={saving}
-          >
-            {t('structure.cancel')}
-          </Button>
-          <Button type="submit" loading={saving}>
-            {t('structure.save')}
-          </Button>
-        </Group>
+            <Group justify="flex-end" mt="md">
+            <Button
+                variant="subtle"
+                onClick={onClose}
+                disabled={saving}
+            >
+                {t('structure.cancel')}
+            </Button>
+            <Button type="submit" loading={saving}>
+                {t('structure.save')}
+            </Button>
+            </Group>
+        </Stack>
       </form>
     </Modal>
   );

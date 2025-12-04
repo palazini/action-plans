@@ -1,24 +1,90 @@
 {
   "app": {
-    "title": "OPEX Action Plans"
+    "title": "Action Plans",
+    "subtitle": "Continuous Improvement Portal"
   },
   "nav": {
-    "dashboard": "Dashboard",
-    "backlog": "Action Plan Backlog",
-    "actionPlans": "Action plans",
-    "structure": "Pillars & Elements"
+    "dashboard": "Overview",
+    "actionPlans": "Action Plans",
+    "backlog": "Backlog",
+    "structure": "Structure",
+    "mainMenu": "Main Menu",
+    "account": "Account",
+    "settings": "Settings",
+    "logout": "Logout",
+    "version": "Version"
   },
-  "filters": {
-    "status": "Status",
-    "pillar": "Pillar",
-    "owner": "Owner",
-    "status_all": "All"
+  "landing": {
+    "selectRegion": "Select Region",
+    "chooseCountry": "Access your local branch environment to manage action plans and backlogs."
   },
-  "status": {
-    "PLANNED": "Planned",
-    "IN_PROGRESS": "In progress",
-    "DONE": "Done",
-    "CANCELLED": "Cancelled"
+  "auth": {
+    "welcomeBack": "Welcome Back!",
+    "accessingEnvironment": "Accessing environment:",
+    "loggingInTo": "Logging in to {{country}}",
+    "username": "Username",
+    "password": "Password",
+    "signIn": "Sign In",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "changeCountry": "Switch Region",
+    "createAccount": "Create Account",
+    "firstUser": "First user for {{country}}!",
+    "fullName": "Full Name",
+    "confirmPassword": "Confirm Password",
+    "register": "Register",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "successRegistration": "Registration successful! Please check your email.",
+    "error": "Authentication Error",
+    "generatedUsername": "Generated Username",
+    "loginWithThis": "You will use this to log in",
+    "nameTooShort": "Name must be at least 2 characters",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "usernameTooShort": "Username must be at least 3 characters"
+  },
+  "dashboard": {
+    "subtitle": "Monitoring actions for {{country}}",
+    "loadError": "Could not load dashboard stats.",
+    "totalElements": "Total Elements",
+    "gapElements": "Elements with GAP",
+    "elementsWithoutPlan": "Without Action Plan",
+    "perPillarTitle": "Summary by Pillar",
+    "noPillarStats": "Not enough data for pillar summary.",
+    "gapElementsColumn": "Gaps",
+    "withPlanColumn": "Has Plan",
+    "withoutPlanColumn": "No Plan",
+    "monitoredItems": "Items monitored in backlog",
+    "immediateAttention": "Require immediate attention",
+    "percentWithoutPlan": "{{percent}}% of total without plan"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Dashboard"
+    },
+    "backlog": {
+      "title": "Plan Backlog",
+      "description": "Manage elements with foundation scores below target.",
+      "filterByPillar": "Filter by Pillar",
+      "noElements": "No elements in backlog.",
+      "noElementsForFilter": "No elements found for this filter.",
+      "modalTitle": "Manage Plan",
+      "existingActionsTitle": "Existing Actions",
+      "allClear": "All clear!"
+    },
+    "actionPlans": {
+      "title": "Action Plans",
+      "description": "Manage all registered plans and their status."
+    },
+    "structure": {
+      "title": "Org Structure",
+      "description": "Master management of evaluation pillars and elements.",
+      "pillarsCardTitle": "Pillars",
+      "pillarsCardSubtitle": "Evaluation areas",
+      "elementsCardTitle": "Elements",
+      "elementsCardSubtitle": "Items evaluated within pillar",
+      "noPillarSelected": "Select a pillar to view details",
+      "noElementsInPillar": "This pillar has no elements"
+    }
   },
   "table": {
     "pillar": "Pillar",
@@ -27,93 +93,68 @@
     "problem": "Problem",
     "action": "Action",
     "owner": "Owner",
-    "dueDate": "Due date",
+    "dueDate": "Due Date",
     "actions": "Actions",
-    "noPlans": "No action plans registered yet.",
-    "noPlansForFilter": "No plans found for the selected filters.",
-    "foundation": "FOUNDATION",
+    "noPlans": "No records found.",
+    "noPlansForFilter": "Your search returned no results.",
+    "foundation": "Score",
     "plans": "Plans"
   },
-  "pages": {
-    "dashboard": {
-      "title": "Overview"
-    },
-    "backlog": {
-      "title": "Action Plan Backlog",
-      "description": "List of elements with FOUNDATION < 100. Use the \"Create plan\" button to register problem, action and owner. The number of existing plans appears in the \"Plans\" column.",
-      "filterByPillar": "Filter by pillar",
-      "noElements": "There are no elements registered with FOUNDATION below 100.",
-      "noElementsForFilter": "No elements found for the selected filter.",
-      "modalTitle": "Action plan",
-      "existingActionsTitle": "Actions already registered for this element"
-    },
-    "actionPlans": {
-      "title": "Action Plans"
-    },
-    "structure": {
-      "title": "Pillars & elements",
-      "description": "Manage assessment pillars and elements, including codes, names and FOUNDATION score.",
-      "pillarsCardTitle": "Pillars",
-      "pillarsCardSubtitle": "Create and maintain foundation pillars.",
-      "elementsCardTitle": "Elements",
-      "elementsCardSubtitle": "Create elements and adjust FOUNDATION score.",
-      "noPillarSelected": "Select a pillar to view and edit its elements.",
-      "noElementsInPillar": "There are no elements registered for this pillar."
-    }
+  "filters": {
+    "status": "Status",
+    "status_all": "All",
+    "pillar": "Pillar",
+    "owner": "Owner"
+  },
+  "status": {
+    "PLANNED": "Planned",
+    "IN_PROGRESS": "In Progress",
+    "DONE": "Done",
+    "CANCELLED": "Cancelled"
   },
   "backlog": {
-    "loadError": "Could not load backlog.",
-    "noPlanBadge": "No plan",
+    "loadError": "Error loading backlog.",
+    "noPlanBadge": "Pending",
     "planCountSuffix": "plan(s)",
-    "createPlan": "Create plan",
-    "addAnotherPlan": "Add another plan"
+    "createPlan": "Create Plan",
+    "addAnotherPlan": "+ Plan"
+  },
+  "structure": {
+    "newPillar": "New Pillar",
+    "editPillar": "Edit",
+    "newElement": "New Element",
+    "editElement": "Edit",
+    "code": "Code",
+    "namePt": "Name (Local)",
+    "nameEn": "Name (English)",
+    "descriptionPt": "Description (Local)",
+    "descriptionEn": "Description (English)",
+    "notesPt": "Notes (Local)",
+    "notesEn": "Notes (English)",
+    "foundationScore": "Score",
+    "elementsCount": "Items",
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "actions": {
-    "edit": "Edit plan",
+    "edit": "Edit",
     "cancel": "Cancel",
     "save": "Save",
-    "saveChanges": "Save changes",
-    "createPlan": "Save plan"
+    "saveChanges": "Save Changes",
+    "createPlan": "Register Plan",
+    "error": "An error occurred"
   },
   "form": {
     "pillar": "Pillar",
     "element": "Element",
-    "foundation": "FOUNDATION",
-    "problem": "Problem",
-    "problem_placeholder": "Describe the current problem...",
-    "action": "Action",
-    "action_placeholder": "What will be done to solve the problem?",
+    "foundation": "Current Score",
+    "problem": "Identified Problem",
+    "problem_placeholder": "Describe the gap found...",
+    "action": "Proposed Action",
+    "action_placeholder": "What will be done to fix it?",
     "owner": "Owner",
-    "owner_placeholder": "Person responsible for the action",
-    "dueDate": "Due date (optional)",
-    "dueDate_placeholder": "Select a date"
-  },
-  "dashboard": {
-    "loadError": "Could not load indicators.",
-    "totalElements": "Total elements",
-    "gapElements": "Elements with FOUNDATION < 100",
-    "elementsWithoutPlan": "Elements without action plan",
-    "perPillarTitle": "Summary by pillar",
-    "noPillarStats": "There are no elements with FOUNDATION below 100 to build the per-pillar summary.",
-    "gapElementsColumn": "Elements with gap",
-    "withPlanColumn": "With plan",
-    "withoutPlanColumn": "Without plan"
-  },
-  "structure": {
-    "newPillar": "New pillar",
-    "editPillar": "Edit pillar",
-    "newElement": "New element",
-    "editElement": "Edit element",
-    "code": "Code",
-    "namePt": "Name (PT)",
-    "nameEn": "Name (EN)",
-    "descriptionPt": "Description (PT)",
-    "descriptionEn": "Description (EN)",
-    "notesPt": "Notes (PT)",
-    "notesEn": "Notes (EN)",
-    "foundationScore": "FOUNDATION",
-    "elementsCount": "Elements",
-    "save": "Save",
-    "cancel": "Cancel"
+    "owner_placeholder": "Who will execute?",
+    "dueDate": "Deadline",
+    "dueDate_placeholder": "Select date"
   }
 }

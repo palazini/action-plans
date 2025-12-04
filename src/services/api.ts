@@ -19,16 +19,16 @@ type RawElementRow = {
   notes: string | null;
   pillar: Pillar[] | Pillar | null;
   action_plans:
-    | {
-        id: string;
-        status: ActionPlanStatus;
-        problem: string;
-        solution: string;
-        owner_name: string;
-        due_date: string | null;
-        created_at: string;
-      }[]
-    | null;
+  | {
+    id: string;
+    status: ActionPlanStatus;
+    problem: string;
+    solution: string;
+    owner_name: string;
+    due_date: string | null;
+    created_at: string;
+  }[]
+  | null;
 };
 
 // Forma "crua" dos planos de ação vindos do Supabase (lista de planos)
@@ -52,7 +52,7 @@ type RawActionPlanRow = {
 /**
  * Elementos com FOUNDATION < 100 + pilar + planos (detalhados)
  */
-export async function fetchBacklogElements(): Promise<ElementWithRelations[]> {
+export async function fetchBacklogElements(country: string): Promise<ElementWithRelations[]> {
   const { data, error } = await supabase
     .from('elements')
     .select(
@@ -79,6 +79,7 @@ export async function fetchBacklogElements(): Promise<ElementWithRelations[]> {
       )
     `,
     )
+    .eq('country', country)
     .lt('foundation_score', 100)
     .order('foundation_score', { ascending: true });
 
@@ -107,10 +108,10 @@ export async function fetchBacklogElements(): Promise<ElementWithRelations[]> {
 /**
  * Estatísticas gerais do dashboard
  */
-export async function fetchDashboardStats(): Promise<DashboardStats> {
+export async function fetchDashboardStats(country: string): Promise<DashboardStats> {
   const [totalRes, backlog] = await Promise.all([
-    supabase.from('elements').select('*', { count: 'exact', head: true }),
-    fetchBacklogElements(),
+    supabase.from('elements').select('*', { count: 'exact', head: true }).eq('country', country),
+    fetchBacklogElements(country),
   ]);
 
   if (totalRes.error) {
@@ -133,8 +134,8 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
 /**
  * Estatísticas por pilar (apenas elementos com FOUNDATION < 100)
  */
-export async function fetchPillarStats(): Promise<PillarStats[]> {
-  const backlog = await fetchBacklogElements();
+export async function fetchPillarStats(country: string): Promise<PillarStats[]> {
+  const backlog = await fetchBacklogElements(country);
 
   const map = new Map<string, PillarStats>();
 
@@ -171,7 +172,7 @@ export async function fetchPillarStats(): Promise<PillarStats[]> {
 /**
  * Lista todos os planos de ação com elemento + pilar
  */
-export async function fetchActionPlans(): Promise<ActionPlanWithElement[]> {
+export async function fetchActionPlans(country: string): Promise<ActionPlanWithElement[]> {
   const { data, error } = await supabase
     .from('action_plans')
     .select(`
@@ -201,6 +202,7 @@ export async function fetchActionPlans(): Promise<ActionPlanWithElement[]> {
         )
       )
     `)
+    .eq('country', country)
     .order('created_at', { ascending: true });
 
   if (error) {
@@ -269,9 +271,10 @@ export async function createActionPlan(
   input: ActionPlanInsert & {
     problemEn?: string;
     actionEn?: string;
+    country: string;
   },
 ): Promise<void> {
-  const { elementId, problem, solution, ownerName, dueDate, problemEn, actionEn } =
+  const { elementId, problem, solution, ownerName, dueDate, problemEn, actionEn, country } =
     input;
 
   const payload: any = {
@@ -283,6 +286,7 @@ export async function createActionPlan(
     problem_pt: problem,
     action_pt: solution,
     owner_name: ownerName,
+    country,
   };
 
   if (dueDate) {
@@ -404,7 +408,7 @@ export type AdminPillar = {
 /**
  * Lista todos os pilares com seus elementos (para administração)
  */
-export async function fetchPillarsWithElements(): Promise<AdminPillar[]> {
+export async function fetchPillarsWithElements(country: string): Promise<AdminPillar[]> {
   const { data, error } = await supabase
     .from('pillars')
     .select(`
@@ -429,6 +433,7 @@ export async function fetchPillarsWithElements(): Promise<AdminPillar[]> {
         pillar_id
       )
     `)
+    .eq('country', country)
     .order('code', { ascending: true });
 
   if (error) {
@@ -470,6 +475,7 @@ export async function createPillar(input: {
   nameEn?: string;
   descriptionPt?: string;
   descriptionEn?: string;
+  country: string;
 }): Promise<void> {
   const payload: any = {
     code: input.code ?? null,
@@ -479,6 +485,7 @@ export async function createPillar(input: {
     description: input.descriptionPt ?? null,
     description_pt: input.descriptionPt ?? null,
     description_en: input.descriptionEn ?? null,
+    country: input.country,
   };
 
   const { error } = await supabase.from('pillars').insert(payload);
@@ -496,6 +503,7 @@ export async function createElement(input: {
   foundationScore: number;
   notesPt?: string;
   notesEn?: string;
+  country: string;
 }): Promise<void> {
   const payload: any = {
     pillar_id: input.pillarId,
@@ -507,6 +515,7 @@ export async function createElement(input: {
     notes: input.notesPt ?? null,
     notes_pt: input.notesPt ?? null,
     notes_en: input.notesEn ?? null,
+    country: input.country,
   };
 
   const { error } = await supabase.from('elements').insert(payload);

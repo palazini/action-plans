@@ -1,4 +1,3 @@
-// src/pages/BacklogPage.tsx
 import { useEffect, useState } from 'react';
 import {
   Card,
@@ -13,15 +12,29 @@ import {
   Alert,
   Modal,
   SegmentedControl,
+  Paper,
+  Stack,
+  ThemeIcon,
+  rem,
+  Box,
+  Tooltip,
 } from '@mantine/core';
-import { IconAlertCircle, IconPlus } from '@tabler/icons-react';
+import { 
+  IconAlertCircle, 
+  IconPlus, 
+  IconDatabase, 
+  IconListDetails,
+  IconClipboardList 
+} from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
 import { fetchBacklogElements } from '../services/api';
 import type { ElementWithRelations } from '../types';
 import { ActionPlanForm } from '../components/action-plans/ActionPlanForm';
 
 export function BacklogPage() {
   const { t } = useTranslation();
+  const { selectedCountry } = useAuth();
 
   const [elements, setElements] = useState<ElementWithRelations[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +46,8 @@ export function BacklogPage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchBacklogElements();
+      if (!selectedCountry) return;
+      const data = await fetchBacklogElements(selectedCountry);
       setElements(data);
     } catch (err) {
       console.error(err);
@@ -44,9 +58,11 @@ export function BacklogPage() {
   }
 
   useEffect(() => {
-    load();
+    if (selectedCountry) {
+      load();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedCountry]);
 
   const pillarOptions = Array.from(
     new Map(
@@ -72,25 +88,37 @@ export function BacklogPage() {
 
     return (
       <Table.Tr key={el.id}>
-        <Table.Td>{el.pillar?.code ?? '-'}</Table.Td>
-        <Table.Td>{el.name}</Table.Td>
-        <Table.Td>{el.foundation_score}</Table.Td>
+        <Table.Td>
+            <Group gap="sm">
+                <Box w={4} h={24} bg="blue.4" style={{ borderRadius: 4 }} />
+                <Text fw={500} size="sm">{el.pillar?.code ?? '-'}</Text>
+            </Group>
+        </Table.Td>
+        <Table.Td>
+            <Text fw={500} size="sm">{el.name}</Text>
+        </Table.Td>
+        <Table.Td>
+            <Badge variant="light" color={el.foundation_score < 50 ? 'red' : 'orange'}>
+                {el.foundation_score}%
+            </Badge>
+        </Table.Td>
         <Table.Td>
           {hasPlan ? (
-            <Badge color="green" variant="light">
+            <Badge color="teal" variant="light" size="sm">
               {el.action_plans.length} {t('backlog.planCountSuffix')}
             </Badge>
           ) : (
-            <Badge color="red" variant="light">
+            <Badge color="gray" variant="light" size="sm">
               {t('backlog.noPlanBadge')}
             </Badge>
           )}
         </Table.Td>
-        <Table.Td>
+        <Table.Td align="right">
           <Button
             size="xs"
+            variant={hasPlan ? 'light' : 'filled'}
+            color={hasPlan ? 'blue' : 'blue'}
             leftSection={<IconPlus size={14} />}
-            variant={hasPlan ? 'outline' : 'filled'}
             onClick={() => setSelected(el)}
           >
             {hasPlan ? t('backlog.addAnotherPlan') : t('backlog.createPlan')}
@@ -101,38 +129,41 @@ export function BacklogPage() {
   });
 
   return (
-    <>
-      <Title order={2} mb="md">
-        {t('pages.backlog.title')}
-      </Title>
-
-      <Card withBorder radius="md" shadow="xs" mb="md">
-        <Text size="sm" c="dimmed">
-          {t('pages.backlog.description')}
-        </Text>
-      </Card>
+    <Stack gap="lg">
+      <Group justify="space-between" align="center">
+        <div>
+          <Title order={2} c="dark.8">{t('pages.backlog.title')}</Title>
+          <Text c="dimmed" size="sm">
+            {t('pages.backlog.description')}
+          </Text>
+        </div>
+      </Group>
 
       {error && (
         <Alert
-          mb="md"
           icon={<IconAlertCircle size={16} />}
           color="red"
           title={t('actions.error', { defaultValue: 'Erro' })}
+          variant="filled"
         >
           {error}
         </Alert>
       )}
 
       {loading ? (
-        <Center>
-          <Loader />
+        <Center h={200}>
+          <Loader size="lg" type="dots" />
         </Center>
       ) : (
-        <Card withBorder radius="md" shadow="xs">
-          <Group justify="space-between" mb="sm">
-            <Text size="sm" c="dimmed">
-              {t('pages.backlog.filterByPillar')}
-            </Text>
+        <Card withBorder radius="md" shadow="sm" p="lg">
+          <Group justify="space-between" mb="lg" align="center">
+            <Group gap="xs">
+                <ThemeIcon variant="light" color="grape" size="md">
+                    <IconDatabase style={{ width: rem(18), height: rem(18) }} />
+                </ThemeIcon>
+                <Text fw={600} size="sm">{t('pages.backlog.filterByPillar')}</Text>
+            </Group>
+            
             {pillarOptions.length > 0 && (
               <SegmentedControl
                 size="xs"
@@ -147,16 +178,26 @@ export function BacklogPage() {
           </Group>
 
           {elements.length === 0 ? (
-            <Text size="sm" c="dimmed">
-              {t('pages.backlog.noElements')}
-            </Text>
+            <Center p="xl">
+                <Stack align="center" gap="xs">
+                    <ThemeIcon size={60} radius="xl" variant="light" color="green">
+                        <IconListDetails size={30} />
+                    </ThemeIcon>
+                    <Text fw={600} size="lg" mt="sm">{t('pages.backlog.allClear')}</Text>
+                    <Text c="dimmed" size="sm" ta="center">
+                        {t('pages.backlog.noElements')}
+                    </Text>
+                </Stack>
+            </Center>
           ) : filteredElements.length === 0 ? (
-            <Text size="sm" c="dimmed">
-              {t('pages.backlog.noElementsForFilter')}
-            </Text>
+            <Center p="xl">
+                <Stack align="center">
+                    <Text c="dimmed">{t('pages.backlog.noElementsForFilter')}</Text>
+                </Stack>
+            </Center>
           ) : (
             <Table verticalSpacing="sm" highlightOnHover>
-              <Table.Thead>
+              <Table.Thead bg="gray.0">
                 <Table.Tr>
                   <Table.Th>{t('table.pillar')}</Table.Th>
                   <Table.Th>{t('table.element')}</Table.Th>
@@ -174,53 +215,53 @@ export function BacklogPage() {
       <Modal
         opened={selected !== null}
         onClose={() => setSelected(null)}
-        title={t('pages.backlog.modalTitle')}
+        title={<Text fw={700}>{t('pages.backlog.modalTitle')}</Text>}
         size="lg"
         centered
+        overlayProps={{ blur: 3 }}
       >
         {selected && (
-          <>
+          <Stack gap="md">
             {selected.action_plans.length > 0 && (
-              <Card withBorder radius="md" shadow="xs" mb="md">
-                <Text size="sm" fw={500} mb="xs">
-                  {t('pages.backlog.existingActionsTitle')}
-                </Text>
-                <Table verticalSpacing="xs" highlightOnHover>
+              <Paper withBorder radius="md" p="md" bg="gray.0">
+                <Group mb="xs" gap="xs">
+                    <IconClipboardList size={16} style={{ opacity: 0.7 }} />
+                    <Text size="xs" fw={700} tt="uppercase" c="dimmed">
+                    {t('pages.backlog.existingActionsTitle')}
+                    </Text>
+                </Group>
+                
+                <Table verticalSpacing="xs">
                   <Table.Thead>
                     <Table.Tr>
                       <Table.Th>{t('table.owner')}</Table.Th>
                       <Table.Th>{t('table.status')}</Table.Th>
-                      <Table.Th>{t('table.dueDate')}</Table.Th>
                       <Table.Th>{t('table.problem')}</Table.Th>
-                      <Table.Th>{t('table.action')}</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
                     {selected.action_plans.map((plan) => (
                       <Table.Tr key={plan.id}>
-                        <Table.Td>{plan.owner_name}</Table.Td>
                         <Table.Td>
-                          <Badge size="xs" variant="light">
-                            {/* status traduzido */}
+                            <Text size="xs" fw={500}>{plan.owner_name}</Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Badge size="xs" variant="outline">
                             {t(`status.${plan.status}`)}
                           </Badge>
                         </Table.Td>
-                        <Table.Td>{plan.due_date ?? '-'}</Table.Td>
                         <Table.Td>
-                          <Text size="xs" lineClamp={2}>
-                            {plan.problem}
-                          </Text>
-                        </Table.Td>
-                        <Table.Td>
-                          <Text size="xs" lineClamp={2}>
-                            {plan.solution}
-                          </Text>
+                          <Tooltip label={plan.problem} multiline w={200}>
+                            <Text size="xs" lineClamp={1} style={{ cursor: 'help' }}>
+                                {plan.problem}
+                            </Text>
+                          </Tooltip>
                         </Table.Td>
                       </Table.Tr>
                     ))}
                   </Table.Tbody>
                 </Table>
-              </Card>
+              </Paper>
             )}
 
             <ActionPlanForm
@@ -230,10 +271,11 @@ export function BacklogPage() {
                 setSelected(null);
                 await load();
               }}
+              country={selectedCountry!}
             />
-          </>
+          </Stack>
         )}
       </Modal>
-    </>
+    </Stack>
   );
 }

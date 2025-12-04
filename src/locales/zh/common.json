@@ -1,0 +1,160 @@
+{
+  "app": {
+    "title": "OPEX 行動計畫",
+    "subtitle": "企業入口網站"
+  },
+  "nav": {
+    "dashboard": "儀表板",
+    "actionPlans": "行動計畫",
+    "backlog": "待辦清單",
+    "structure": "組織結構",
+    "mainMenu": "主選單",
+    "account": "帳戶",
+    "settings": "設定",
+    "logout": "登出",
+    "version": "版本"
+  },
+  "landing": {
+    "selectRegion": "選擇您的地區",
+    "chooseCountry": "選擇您的國家/地區以進入您分公司的專屬平台。"
+  },
+  "auth": {
+    "welcomeBack": "歡迎回來！",
+    "accessingEnvironment": "正在存取環境：",
+    "loggingInTo": "正在登入 {{country}}",
+    "username": "使用者名稱",
+    "password": "密碼",
+    "signIn": "登入",
+    "rememberMe": "記住我",
+    "forgotPassword": "忘記密碼？",
+    "changeCountry": "切換國家/地區",
+    "createAccount": "建立帳戶",
+    "firstUser": "{{country}} 的首位使用者！",
+    "fullName": "全名",
+    "confirmPassword": "確認密碼",
+    "register": "註冊",
+    "passwordsDoNotMatch": "密碼不符",
+    "successRegistration": "註冊成功！請檢查您的電子郵件進行確認。",
+    "error": "驗證錯誤",
+    "generatedUsername": "產生的使用者名稱",
+    "loginWithThis": "您將使用此名稱登入",
+    "nameTooShort": "名字至少需要 2 個字元",
+    "passwordTooShort": "密碼至少需要 6 個字元",
+    "usernameTooShort": "使用者名稱至少需要 3 個字元"
+  },
+  "dashboard": {
+    "subtitle": "{{country}} 的行動監控",
+    "loadError": "無法載入指標。",
+    "totalElements": "要素總數",
+    "gapElements": "具有 GAP 的要素",
+    "elementsWithoutPlan": "無行動計畫",
+    "perPillarTitle": "依支柱摘要",
+    "noPillarStats": "資料不足，無法產生支柱摘要。",
+    "gapElementsColumn": "差距 (Gaps)",
+    "withPlanColumn": "有計畫",
+    "withoutPlanColumn": "無計畫",
+    "monitoredItems": "积压中监控的项目",
+    "immediateAttention": "需要立即注意",
+    "percentWithoutPlan": "总数的 {{percent}}% 无计划"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "總覽"
+    },
+    "backlog": {
+      "title": "計畫待辦清單",
+      "description": "管理基礎分數低於目標的要素。",
+      "filterByPillar": "依支柱篩選",
+      "noElements": "待辦清單中無紀錄。",
+      "noElementsForFilter": "查無符合此篩選的要素。",
+      "modalTitle": "管理計畫",
+      "existingActionsTitle": "現有行動",
+      "allClear": "一切正常！"
+    },
+    "actionPlans": {
+      "title": "行動計畫",
+      "description": "管理所有注册计划及其状态。"
+    },
+    "structure": {
+      "title": "組織結構",
+      "description": "評估支柱與要素的主檔管理。",
+      "pillarsCardTitle": "支柱",
+      "pillarsCardSubtitle": "評估領域",
+      "elementsCardTitle": "要素",
+      "elementsCardSubtitle": "支柱內的評估項目",
+      "noPillarSelected": "選擇支柱以檢視詳細資訊",
+      "noElementsInPillar": "此支柱尚無要素"
+    }
+  },
+  "table": {
+    "pillar": "支柱",
+    "element": "要素",
+    "status": "狀態",
+    "problem": "問題",
+    "action": "行動",
+    "owner": "負責人",
+    "dueDate": "截止日",
+    "actions": "選項",
+    "noPlans": "查無紀錄。",
+    "noPlansForFilter": "搜尋無結果。",
+    "foundation": "分數",
+    "plans": "計畫"
+  },
+  "filters": {
+    "status": "狀態",
+    "status_all": "全部",
+    "pillar": "支柱",
+    "owner": "負責人"
+  },
+  "status": {
+    "PLANNED": "已計畫",
+    "IN_PROGRESS": "進行中",
+    "DONE": "完成",
+    "CANCELLED": "已取消"
+  },
+  "backlog": {
+    "loadError": "無法載入待辦清單。",
+    "noPlanBadge": "待處理",
+    "planCountSuffix": "個計畫",
+    "createPlan": "建立計畫",
+    "addAnotherPlan": "+ 計畫"
+  },
+  "structure": {
+    "newPillar": "新增支柱",
+    "editPillar": "編輯",
+    "newElement": "新增要素",
+    "editElement": "編輯",
+    "code": "代碼",
+    "namePt": "名稱 (本地)",
+    "nameEn": "名稱 (英語)",
+    "descriptionPt": "描述 (本地)",
+    "descriptionEn": "描述 (英語)",
+    "notesPt": "備註 (本地)",
+    "notesEn": "備註 (英語)",
+    "foundationScore": "分數",
+    "elementsCount": "項目數",
+    "save": "儲存",
+    "cancel": "取消"
+  },
+  "actions": {
+    "edit": "編輯",
+    "cancel": "取消",
+    "save": "儲存",
+    "saveChanges": "儲存變更",
+    "createPlan": "註冊計畫",
+    "error": "發生錯誤"
+  },
+  "form": {
+    "pillar": "支柱",
+    "element": "要素",
+    "foundation": "目前分數",
+    "problem": "已識別問題",
+    "problem_placeholder": "描述發現的差距...",
+    "action": "建議行動",
+    "action_placeholder": "將採取什麼行動來修正？",
+    "owner": "負責人",
+    "owner_placeholder": "誰將執行？",
+    "dueDate": "截止日期",
+    "dueDate_placeholder": "選擇日期"
+  }
+}
