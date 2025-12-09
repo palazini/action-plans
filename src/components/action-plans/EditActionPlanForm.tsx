@@ -35,11 +35,11 @@ export function EditActionPlanForm({ plan, onCancel, onSuccess }: Props) {
   const [actionEn, setActionEn] = useState(plan.action_en ?? '');
 
   const [ownerName, setOwnerName] = useState(plan.owner_name);
-  
+
   const [dueDate, setDueDate] = useState<Date | null>(
     plan.due_date ? new Date(plan.due_date) : null
   );
-  
+
   const [saving, setSaving] = useState(false);
 
   // CORREÇÃO 1: Cast para 'any' para acessar 'country' que pode não estar na tipagem ainda
@@ -100,12 +100,12 @@ export function EditActionPlanForm({ plan, onCancel, onSuccess }: Props) {
 
         {/* Bloco IDIOMA LOCAL */}
         <Group mt="md" mb={0}>
-            <Badge variant="filled" color="blue" size="sm">
-                {countryDisplay}
-            </Badge>
-            <Text size="xs" c="dimmed" fw={600}>
-                (Nativo / Local)
-            </Text>
+          <Badge variant="filled" color="blue" size="sm">
+            {countryDisplay}
+          </Badge>
+          <Text size="xs" c="dimmed" fw={600}>
+            {t('form.nativeLocal')}
+          </Text>
         </Group>
 
         <Textarea
@@ -129,25 +129,25 @@ export function EditActionPlanForm({ plan, onCancel, onSuccess }: Props) {
 
         {/* Bloco INGLÊS */}
         <Group mt="md" mb={0}>
-            <Badge variant="outline" color="gray" size="sm">
-                English
-            </Badge>
-            <Text size="xs" c="dimmed" fw={600}>
-                (Global / Optional)
-            </Text>
+          <Badge variant="outline" color="gray" size="sm">
+            {t('form.english')}
+          </Badge>
+          <Text size="xs" c="dimmed" fw={600}>
+            {t('form.globalOptional')}
+          </Text>
         </Group>
 
         <Textarea
-          label="Problem (English)"
-          placeholder="Describe the current problem..."
+          label={t('form.problemEn')}
+          placeholder={t('form.problemEn_placeholder')}
           minRows={3}
           value={problemEn}
           onChange={(e) => setProblemEn(e.currentTarget.value)}
         />
 
         <Textarea
-          label="Action (English)"
-          placeholder="What will be done to solve the problem?"
+          label={t('form.actionEn')}
+          placeholder={t('form.actionEn_placeholder')}
           minRows={3}
           value={actionEn}
           onChange={(e) => setActionEn(e.currentTarget.value)}
@@ -168,12 +168,12 @@ export function EditActionPlanForm({ plan, onCancel, onSuccess }: Props) {
           placeholder={t('form.dueDate_placeholder')}
           value={dueDate}
           onChange={(val: any) => {
-             // Aceita string ou Date e converte para o state correto
-             if (typeof val === 'string') {
-                 setDueDate(val ? new Date(val) : null);
-             } else {
-                 setDueDate(val);
-             }
+            // Aceita string ou Date e converte para o state correto
+            if (typeof val === 'string') {
+              setDueDate(val ? new Date(val) : null);
+            } else {
+              setDueDate(val);
+            }
           }}
           clearable
         />

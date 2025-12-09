@@ -270,7 +270,7 @@ export function MainLayout() {
             {/* SELETOR DE PAÍS (Agora visível para todos) */}
             <Menu shadow="md" width={220} position="bottom-end">
               <Menu.Target>
-                <Tooltip label="Alterar visualização de unidade">
+                <Tooltip label={t('nav.switchUnit')}>
                   <Button
                     variant="light"
                     color={selectedCountry === 'Global' ? 'violet' : 'blue'}
@@ -278,7 +278,7 @@ export function MainLayout() {
                     leftSection={selectedCountry === 'Global' ? <IconWorld size={14} /> : <IconBuildingFactory size={14} />}
                     rightSection={<IconChevronRight size={12} style={{ opacity: 0.5 }} />}
                   >
-                    {selectedCountry ?? 'Selecionar'}
+                    {selectedCountry ?? t('nav.select')}
                   </Button>
                 </Tooltip>
               </Menu.Target>

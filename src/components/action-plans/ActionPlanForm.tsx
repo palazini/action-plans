@@ -26,7 +26,7 @@ export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props)
   // LOCAL (Principal)
   const [problemLocal, setProblemLocal] = useState('');
   const [actionLocal, setActionLocal] = useState('');
-  
+
   // ENGLISH (Opcional/Secundário)
   const [problemEn, setProblemEn] = useState('');
   const [actionEn, setActionEn] = useState('');
@@ -48,7 +48,7 @@ export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props)
         elementId: element.id,
         // Envia o texto local para as colunas principais (problem/solution)
         problem: problemLocal,
-        solution: actionLocal, 
+        solution: actionLocal,
         ownerName,
         dueDate: dueDate ?? undefined,
         problemEn: problemEn.trim() ? problemEn : undefined,
@@ -78,12 +78,12 @@ export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props)
 
         {/* Bloco IDIOMA LOCAL */}
         <Group mt="md" mb={0}>
-            <Badge variant="filled" color="blue" size="sm">
-                {country}
-            </Badge>
-            <Text size="xs" c="dimmed" fw={600}>
-                (Nativo / Local)
-            </Text>
+          <Badge variant="filled" color="blue" size="sm">
+            {country}
+          </Badge>
+          <Text size="xs" c="dimmed" fw={600}>
+            {t('form.nativeLocal')}
+          </Text>
         </Group>
 
         <Textarea
@@ -107,25 +107,25 @@ export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props)
 
         {/* Bloco INGLÊS */}
         <Group mt="md" mb={0}>
-            <Badge variant="outline" color="gray" size="sm">
-                English
-            </Badge>
-            <Text size="xs" c="dimmed" fw={600}>
-                (Global / Optional)
-            </Text>
+          <Badge variant="outline" color="gray" size="sm">
+            {t('form.english')}
+          </Badge>
+          <Text size="xs" c="dimmed" fw={600}>
+            {t('form.globalOptional')}
+          </Text>
         </Group>
 
         <Textarea
-          label="Problem (English)"
-          placeholder="Describe the current problem..."
+          label={t('form.problemEn')}
+          placeholder={t('form.problemEn_placeholder')}
           minRows={2}
           value={problemEn}
           onChange={(e) => setProblemEn(e.currentTarget.value)}
         />
 
         <Textarea
-          label="Action (English)"
-          placeholder="What will be done to solve the problem?"
+          label={t('form.actionEn')}
+          placeholder={t('form.actionEn_placeholder')}
           minRows={2}
           value={actionEn}
           onChange={(e) => setActionEn(e.currentTarget.value)}

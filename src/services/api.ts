@@ -17,18 +17,19 @@ type RawElementRow = {
   name: string;
   foundation_score: number;
   notes: string | null;
+  country: string;
   pillar: Pillar[] | Pillar | null;
   action_plans:
-  | {
-    id: string;
-    status: ActionPlanStatus;
-    problem: string;
-    solution: string;
-    owner_name: string;
-    due_date: string | null;
-    created_at: string;
-  }[]
-  | null;
+    | {
+        id: string;
+        status: ActionPlanStatus;
+        problem: string;
+        solution: string;
+        owner_name: string;
+        due_date: string | null;
+        created_at: string;
+      }[]
+    | null;
 };
 
 // Forma "crua" dos planos de ação vindos do Supabase (lista de planos)
@@ -45,6 +46,7 @@ type RawActionPlanRow = {
   status: ActionPlanStatus;
   created_at: string;
   updated_at: string;
+  country: string;
   // join com elements + pillars vem como "qualquer coisa" (às vezes array)
   element: any;
 };
@@ -53,7 +55,6 @@ type RawActionPlanRow = {
  * Elementos com FOUNDATION < 100 + pilar + planos (detalhados)
  */
 export async function fetchBacklogElements(country: string): Promise<ElementWithRelations[]> {
-  // monta o query base
   let query = supabase
     .from('elements')
     .select(
@@ -63,6 +64,7 @@ export async function fetchBacklogElements(country: string): Promise<ElementWith
       name,
       foundation_score,
       notes,
+      country,
       pillar:pillars (
         id,
         code,
@@ -82,7 +84,6 @@ export async function fetchBacklogElements(country: string): Promise<ElementWith
     )
     .lt('foundation_score', 100);
 
-  // se NÃO for Global, filtra por país normalmente
   if (country !== 'Global') {
     query = query.eq('country', country);
   }
@@ -101,6 +102,7 @@ export async function fetchBacklogElements(country: string): Promise<ElementWith
     name: row.name,
     foundation_score: row.foundation_score,
     notes: row.notes,
+    country: row.country, // 👈 novo
     pillar: Array.isArray(row.pillar)
       ? row.pillar[0] ?? null
       : row.pillar ?? null,
@@ -187,7 +189,7 @@ export async function fetchPillarStats(country: string): Promise<PillarStats[]> 
  * Lista todos os planos de ação com elemento + pilar
  */
 export async function fetchActionPlans(country: string): Promise<ActionPlanWithElement[]> {
-  const { data, error } = await supabase
+  let query = supabase
     .from('action_plans')
     .select(`
       id,
@@ -200,6 +202,7 @@ export async function fetchActionPlans(country: string): Promise<ActionPlanWithE
       owner_name,
       due_date,
       status,
+      country,
       created_at,
       updated_at,
       element:elements (
@@ -216,21 +219,24 @@ export async function fetchActionPlans(country: string): Promise<ActionPlanWithE
         )
       )
     `)
-    .eq('country', country)
     .order('created_at', { ascending: true });
+
+  if (country !== 'Global') {
+    query = query.eq('country', country);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw error;
   }
 
-  // De novo: convertemos via unknown pra nossa forma crua
   const rows = (data ?? []) as unknown as RawActionPlanRow[];
 
   const mapped = rows.map((row) => {
     let element: ElementWithRelations | null = null;
 
     if (row.element) {
-      // Supabase às vezes traz como array
       const rawElement = Array.isArray(row.element)
         ? row.element[0] ?? null
         : row.element;
@@ -248,8 +254,6 @@ export async function fetchActionPlans(country: string): Promise<ActionPlanWithE
           foundation_score: rawElement.foundation_score,
           notes: rawElement.notes,
           pillar: normalizedPillar,
-          // aqui a relação de planos não foi selecionada; como o tipo exige,
-          // garantimos que sempre exista um array
           action_plans: rawElement.action_plans ?? [],
         };
       }
@@ -269,10 +273,10 @@ export async function fetchActionPlans(country: string): Promise<ActionPlanWithE
       created_at: row.created_at,
       updated_at: row.updated_at,
       element,
+      country: row.country,
     };
   });
 
-  // Aqui "forçamos" o tipo final depois de normalizar tudo
   return mapped as ActionPlanWithElement[];
 }
 

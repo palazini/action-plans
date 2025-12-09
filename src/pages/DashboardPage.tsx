@@ -18,11 +18,11 @@ import {
   Button,
   Box, // Adicionado aqui
 } from '@mantine/core';
-import { 
-  IconAlertCircle, 
-  IconListCheck, 
-  IconAlertTriangle, 
-  IconClipboardList, 
+import {
+  IconAlertCircle,
+  IconListCheck,
+  IconAlertTriangle,
+  IconClipboardList,
   IconChartBar,
   IconWorld
 } from '@tabler/icons-react';
@@ -92,9 +92,9 @@ export function DashboardPage() {
       <Center h="50vh">
         <Stack align="center">
           <IconWorld size={48} color="gray" opacity={0.5} />
-          <Text c="dimmed">Nenhum país selecionado.</Text>
+          <Text c="dimmed">{t('dashboard.noCountrySelected')}</Text>
           <Button variant="light" onClick={() => navigate('/')}>
-            Selecionar Região
+            {t('dashboard.selectRegion')}
           </Button>
         </Stack>
       </Center>
@@ -123,9 +123,9 @@ export function DashboardPage() {
             {isGlobalView
               ? t('dashboard.subtitleGlobal', 'Monitoramento global de ações (todas as plantas)')
               : t('dashboard.subtitle', {
-                  country: selectedCountry,
-                  defaultValue: `Monitoramento de ações para ${selectedCountry}`,
-                })}
+                country: selectedCountry,
+                defaultValue: `Monitoramento de ações para ${selectedCountry}`,
+              })}
           </Text>
         </div>
         {/* Aqui poderia entrar um filtro de data ou botão de refresh */}
@@ -168,7 +168,7 @@ export function DashboardPage() {
                 <IconAlertTriangle style={{ width: rem(22), height: rem(22) }} />
               </ThemeIcon>
             </Group>
-             <Text c="dimmed" size="xs" mt="md">
+            <Text c="dimmed" size="xs" mt="md">
               {t('dashboard.immediateAttention')}
             </Text>
           </Paper>
@@ -184,13 +184,13 @@ export function DashboardPage() {
                   {stats.elementsWithoutPlan}
                 </Text>
               </div>
-               {/* Exemplo de mini gráfico de progresso visual */}
-               <RingProgress
-                  size={50}
-                  roundCaps
-                  thickness={4}
-                  sections={[{ value: getProgress(stats.elementsWithoutPlan, stats.totalElements), color: 'orange' }]}
-                />
+              {/* Exemplo de mini gráfico de progresso visual */}
+              <RingProgress
+                size={50}
+                roundCaps
+                thickness={4}
+                sections={[{ value: getProgress(stats.elementsWithoutPlan, stats.totalElements), color: 'orange' }]}
+              />
             </Group>
             <Text c="dimmed" size="xs" mt="md">
               {t('dashboard.percentWithoutPlan', { percent: getProgress(stats.elementsWithoutPlan, stats.totalElements) })}
@@ -233,11 +233,11 @@ export function DashboardPage() {
                 <Table.Tr key={p.pillarId}>
                   <Table.Td>
                     <Group gap="sm">
-                       {/* Um pequeno indicador de cor para o pilar */}
+                      {/* Um pequeno indicador de cor para o pilar */}
                       <Box w={4} h={24} bg="blue.4" style={{ borderRadius: 4 }} />
                       <div>
                         <Text fw={600} size="sm">
-                            {p.pillarName}
+                          {p.pillarName}
                         </Text>
                         <Text size="xs" c="dimmed">{p.pillarCode}</Text>
                       </div>
@@ -245,17 +245,17 @@ export function DashboardPage() {
                   </Table.Td>
                   <Table.Td style={{ textAlign: 'center' }}>
                     <Text fw={700} c={p.gapElements > 0 ? 'red.7' : 'dimmed'}>
-                        {p.gapElements}
+                      {p.gapElements}
                     </Text>
                   </Table.Td>
                   <Table.Td style={{ textAlign: 'center' }}>
                     <Text fw={500} c="teal.7">
-                        {p.elementsWithPlan}
+                      {p.elementsWithPlan}
                     </Text>
                   </Table.Td>
                   <Table.Td style={{ textAlign: 'center' }}>
                     <Text fw={500} c={p.elementsWithoutPlan > 0 ? 'orange.7' : 'dimmed'}>
-                        {p.elementsWithoutPlan}
+                      {p.elementsWithoutPlan}
                     </Text>
                   </Table.Td>
                 </Table.Tr>

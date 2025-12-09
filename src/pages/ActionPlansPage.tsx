@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+// src/pages/ActionPlansPage.tsx
+import { useEffect, useState, type ReactNode } from 'react';
 import {
   Alert,
   Badge,
@@ -65,6 +66,7 @@ const STATUS_VALUES: ActionPlanStatus[] = [
 export function ActionPlansPage() {
   const { t, i18n } = useTranslation();
   const { selectedCountry } = useAuth();
+
   const [plans, setPlans] = useState<ActionPlanWithElement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -77,6 +79,8 @@ export function ActionPlansPage() {
   const [editingPlan, setEditingPlan] = useState<ActionPlanWithElement | null>(
     null,
   );
+
+  const isGlobalView = selectedCountry === 'Global';
 
   const currentLang =
     i18n.language && i18n.language.startsWith('en') ? 'en' : 'pt';
@@ -155,132 +159,126 @@ export function ActionPlansPage() {
   }
 
   // --- LÓGICA DE EXPORTAÇÃO EXCEL (ESTILIZADO) ---
+  // Aqui exporta apenas o que está na tabela (país atual ou visão Global filtrada).
+  // O "export globalzão" consolidado você usa pelo botão no Header.
   const handleExportExcel = async () => {
-    // Cria um novo Workbook
     const workbook = new ExcelJS.Workbook();
-    
-    // Função auxiliar para configurar a planilha
+
     const setupWorksheet = (sheetName: string, data: any[], columns: any[]) => {
-        const sheet = workbook.addWorksheet(sheetName);
-        
-        // Define as colunas
-        sheet.columns = columns;
+      const sheet = workbook.addWorksheet(sheetName);
 
-        // Adiciona as linhas
-        sheet.addRows(data);
+      sheet.columns = columns;
+      sheet.addRows(data);
 
-        // --- ESTILIZAÇÃO ---
-        // Itera sobre TODAS as linhas para aplicar estilos CÉLULA A CÉLULA
-        // Isso evita pintar o Excel até o "infinito"
-        sheet.eachRow((row, rowNumber) => {
-            
-            // Estilos gerais de alinhamento para a linha
-            row.alignment = { 
-                vertical: 'top', 
-                wrapText: true, 
-                horizontal: 'left' 
+      sheet.eachRow((row, rowNumber) => {
+        row.alignment = {
+          vertical: 'top',
+          wrapText: true,
+          horizontal: 'left',
+        };
+
+        if (rowNumber === 1) {
+          row.height = 25;
+          row.eachCell((cell) => {
+            cell.font = {
+              bold: true,
+              color: { argb: 'FFFFFFFF' },
+              size: 12,
+            };
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FF228BE6' },
+            };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            cell.border = {
+              top: { style: 'thin' },
+              left: { style: 'thin' },
+              bottom: { style: 'thin' },
+              right: { style: 'thin' },
+            };
+          });
+        } else {
+          row.eachCell((cell) => {
+            cell.border = {
+              top: { style: 'thin' },
+              left: { style: 'thin' },
+              bottom: { style: 'thin' },
+              right: { style: 'thin' },
             };
 
-            // Se for Cabeçalho (Linha 1)
-            if (rowNumber === 1) {
-                row.height = 25; 
-                row.eachCell((cell) => {
-                    cell.font = { 
-                        bold: true, 
-                        color: { argb: 'FFFFFFFF' }, // Texto Branco
-                        size: 12
-                    };
-                    cell.fill = {
-                        type: 'pattern',
-                        pattern: 'solid',
-                        fgColor: { argb: 'FF228BE6' } // Azul Mantine
-                    };
-                    cell.alignment = { vertical: 'middle', horizontal: 'center' };
-                    cell.border = {
-                        top: { style: 'thin' },
-                        left: { style: 'thin' },
-                        bottom: { style: 'thin' },
-                        right: { style: 'thin' }
-                    };
-                });
-            } else {
-                // Se for Linha de Dados
-                row.eachCell((cell) => {
-                    // Bordas em todas as células
-                    cell.border = {
-                        top: { style: 'thin' },
-                        left: { style: 'thin' },
-                        bottom: { style: 'thin' },
-                        right: { style: 'thin' }
-                    };
-
-                    // Efeito Zebra (apenas nas linhas pares) aplicados NA CÉLULA
-                    if (rowNumber % 2 === 0) {
-                        cell.fill = {
-                            type: 'pattern',
-                            pattern: 'solid',
-                            fgColor: { argb: 'FFF8F9FA' } // Cinza bem claro
-                        };
-                    }
-                });
+            if (rowNumber % 2 === 0) {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FFF8F9FA' },
+              };
             }
-        });
+          });
+        }
+      });
     };
 
-    // --- DADOS ENGLISH (EN) ---
+    // --- EN ---
     const columnsEn = [
-        { header: 'Pillar', key: 'pillar', width: 10 },
-        { header: 'Element', key: 'element', width: 30 },
-        { header: 'Status', key: 'status', width: 15 },
-        { header: 'Problem', key: 'problem', width: 50 },
-        { header: 'Action', key: 'action', width: 50 },
-        { header: 'Owner', key: 'owner', width: 25 },
-        { header: 'Due Date', key: 'dueDate', width: 15 },
+      { header: 'Pillar', key: 'pillar', width: 10 },
+      { header: 'Element', key: 'element', width: 30 },
+      { header: 'Status', key: 'status', width: 15 },
+      { header: 'Problem', key: 'problem', width: 50 },
+      { header: 'Action', key: 'action', width: 50 },
+      { header: 'Owner', key: 'owner', width: 25 },
+      { header: 'Due Date', key: 'dueDate', width: 15 },
     ];
 
-    const dataEn = filteredPlans.map(p => ({
-        pillar: p.element?.pillar?.code ?? p.element?.pillar?.name,
-        element: p.element?.name,
-        status: p.status,
-        problem: p.problem_en ?? p.problem_pt ?? '',
-        action: p.action_en ?? p.solution ?? '',
-        owner: p.owner_name,
-        dueDate: p.due_date ?? '-'
+    const dataEn = filteredPlans.map((p) => ({
+      pillar: p.element?.pillar?.code ?? p.element?.pillar?.name,
+      element: p.element?.name,
+      status: p.status,
+      problem: p.problem_en ?? p.problem_pt ?? '',
+      action: p.action_en ?? p.solution ?? '',
+      owner: p.owner_name,
+      dueDate: p.due_date ?? '-',
     }));
 
     setupWorksheet('English (EN)', dataEn, columnsEn);
 
-    // --- DADOS LOCAL (PT) ---
+    // --- Local (PT) ---
     const columnsLocal = [
-        { header: 'Pilar', key: 'pillar', width: 10 },
-        { header: 'Elemento', key: 'element', width: 30 },
-        { header: 'Status', key: 'status', width: 15 },
-        { header: 'Problema', key: 'problem', width: 50 },
-        { header: 'Ação', key: 'action', width: 50 },
-        { header: 'Responsável', key: 'owner', width: 25 },
-        { header: 'Prazo', key: 'dueDate', width: 15 },
+      { header: 'Pilar', key: 'pillar', width: 10 },
+      { header: 'Elemento', key: 'element', width: 30 },
+      { header: 'Status', key: 'status', width: 15 },
+      { header: 'Problema', key: 'problem', width: 50 },
+      { header: 'Ação', key: 'action', width: 50 },
+      { header: 'Responsável', key: 'owner', width: 25 },
+      { header: 'Prazo', key: 'dueDate', width: 15 },
     ];
 
-    const dataLocal = filteredPlans.map(p => ({
-        pillar: p.element?.pillar?.code ?? p.element?.pillar?.name,
-        element: p.element?.name,
-        status: t(`status.${p.status}`),
-        problem: p.problem_pt ?? p.problem ?? '',
-        action: p.action_pt ?? p.solution ?? '',
-        owner: p.owner_name,
-        dueDate: p.due_date ?? '-'
+    const dataLocal = filteredPlans.map((p) => ({
+      pillar: p.element?.pillar?.code ?? p.element?.pillar?.name,
+      element: p.element?.name,
+      status: t(`status.${p.status}`),
+      problem: p.problem_pt ?? p.problem ?? '',
+      action: p.action_pt ?? p.solution ?? '',
+      owner: p.owner_name,
+      dueDate: p.due_date ?? '-',
     }));
 
     setupWorksheet('Local (PT)', dataLocal, columnsLocal);
 
-    // --- GERAR E SALVAR ---
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, `Action_Plans_${selectedCountry}_${new Date().toISOString().split('T')[0]}.xlsx`);
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(
+      blob,
+      `Action_Plans_${selectedCountry}_${new Date()
+        .toISOString()
+        .split('T')[0]}.xlsx`,
+    );
   };
   // ----------------------------------
 
-  // Opções de pilar para filtro
+  // Opções de pilar
   const pillarOptions = Array.from(
     new Map(
       plans
@@ -296,16 +294,11 @@ export function ActionPlansPage() {
     ).values(),
   );
 
-  // Aplica filtros
+  // Filtros
   const filteredPlans = plans.filter((plan) => {
-    if (statusFilter !== 'ALL' && plan.status !== statusFilter) {
-      return false;
-    }
+    if (statusFilter !== 'ALL' && plan.status !== statusFilter) return false;
 
-    if (
-      pillarFilter !== 'ALL' &&
-      plan.element?.pillar?.id !== pillarFilter
-    ) {
+    if (pillarFilter !== 'ALL' && plan.element?.pillar?.id !== pillarFilter) {
       return false;
     }
 
@@ -322,113 +315,271 @@ export function ActionPlansPage() {
     return true;
   });
 
-  const rows = filteredPlans.map((plan) => (
-    <Table.Tr key={plan.id}>
-      {/* Pilar */}
-      <Table.Td style={{ verticalAlign: 'top' }}>
-        <Group gap="sm" wrap="nowrap">
-            <Box w={4} h={24} bg="blue.4" style={{ borderRadius: 4 }} />
-            <Text size="sm" fw={500}>{plan.element?.pillar?.code ?? '-'}</Text>
-        </Group>
-      </Table.Td>
+  // Linhas da tabela (com agrupamento por país na visão Global)
+  const rows = (() => {
+    // visão "normal" (apenas país atual)
+    if (!isGlobalView) {
+      return filteredPlans.map((plan) => (
+        <Table.Tr key={plan.id}>
+          {/* Pilar */}
+          <Table.Td style={{ verticalAlign: 'top' }}>
+            <Group gap="sm" wrap="nowrap">
+              <Box w={4} h={24} bg="blue.4" style={{ borderRadius: 4 }} />
+              <Text size="sm" fw={500}>
+                {plan.element?.pillar?.code ?? '-'}
+              </Text>
+            </Group>
+          </Table.Td>
 
-      {/* Elemento */}
-      <Table.Td style={{ verticalAlign: 'top' }}>
-        <Text size="sm" fw={500} style={{ whiteSpace: 'normal' }}>
-            {plan.element?.name ?? '-'}
-        </Text>
-      </Table.Td>
+          {/* Elemento */}
+          <Table.Td style={{ verticalAlign: 'top' }}>
+            <Text size="sm" fw={500} style={{ whiteSpace: 'normal' }}>
+              {plan.element?.name ?? '-'}
+            </Text>
+          </Table.Td>
 
-      {/* Status */}
-      <Table.Td style={{ width: 140, verticalAlign: 'top' }}>
-        <Menu withinPortal shadow="sm" width={160}>
-          <Menu.Target>
-            <Badge
-              color={statusColor(plan.status)}
-              variant="light"
-              size="sm"
-              rightSection={<IconChevronDown size={12} />}
-              style={{ cursor: 'pointer', textTransform: 'uppercase' }}
+          {/* Status */}
+          <Table.Td style={{ width: 140, verticalAlign: 'top' }}>
+            <Menu withinPortal shadow="sm" width={160}>
+              <Menu.Target>
+                <Badge
+                  color={statusColor(plan.status)}
+                  variant="light"
+                  size="sm"
+                  rightSection={<IconChevronDown size={12} />}
+                  style={{ cursor: 'pointer', textTransform: 'uppercase' }}
+                >
+                  {t(`status.${plan.status}`)}
+                </Badge>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {STATUS_VALUES.map((value) => (
+                  <Menu.Item
+                    key={value}
+                    onClick={() => handleChangeStatus(plan.id, value)}
+                    disabled={updatingId === plan.id || value === plan.status}
+                    color={value === plan.status ? 'blue' : undefined}
+                    style={{ fontWeight: value === plan.status ? 600 : 400 }}
+                  >
+                    {t(`status.${value}`)}
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          </Table.Td>
+
+          {/* Problema */}
+          <Table.Td style={{ whiteSpace: 'normal', verticalAlign: 'top' }}>
+            <Text size="sm" lh={1.4} c="dark.9">
+              {resolveProblem(plan)}
+            </Text>
+          </Table.Td>
+
+          {/* Ação */}
+          <Table.Td style={{ whiteSpace: 'normal', verticalAlign: 'top' }}>
+            <Text size="sm" lh={1.4} c="dark.9">
+              {resolveAction(plan)}
+            </Text>
+          </Table.Td>
+
+          {/* Responsável */}
+          <Table.Td style={{ whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+            <Text size="sm" fw={500}>
+              {plan.owner_name}
+            </Text>
+          </Table.Td>
+
+          {/* Prazo */}
+          <Table.Td style={{ whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+            <Text size="sm" c="dimmed">
+              {plan.due_date ?? '-'}
+            </Text>
+          </Table.Td>
+
+          {/* Ações */}
+          <Table.Td align="right" style={{ verticalAlign: 'top' }}>
+            <ActionIcon
+              variant="subtle"
+              color="blue"
+              aria-label={t('actions.edit')}
+              onClick={() => setEditingPlan(plan)}
             >
-              {t(`status.${plan.status}`)}
-            </Badge>
-          </Menu.Target>
-          <Menu.Dropdown>
-            {STATUS_VALUES.map((value) => (
-              <Menu.Item
-                key={value}
-                onClick={() => handleChangeStatus(plan.id, value)}
-                disabled={updatingId === plan.id || value === plan.status}
-                color={value === plan.status ? 'blue' : undefined}
-                style={{ fontWeight: value === plan.status ? 600 : 400 }}
-              >
-                {t(`status.${value}`)}
-              </Menu.Item>
-            ))}
-          </Menu.Dropdown>
-        </Menu>
-      </Table.Td>
+              <IconPencil size={16} />
+            </ActionIcon>
+          </Table.Td>
+        </Table.Tr>
+      ));
+    }
 
-      {/* Problema - Texto completo e visível */}
-      <Table.Td style={{ whiteSpace: 'normal', verticalAlign: 'top' }}>
-        <Text size="sm" lh={1.4} c="dark.9">
-            {resolveProblem(plan)}
-        </Text>
-      </Table.Td>
+    // visão Global: agrupa por país
+    const sorted = [...filteredPlans].sort((a, b) => {
+      const countryA = (a.country ?? '').localeCompare(b.country ?? '');
+      if (countryA !== 0) return countryA;
 
-      {/* Ação - Texto completo e visível */}
-      <Table.Td style={{ whiteSpace: 'normal', verticalAlign: 'top' }}>
-        <Text size="sm" lh={1.4} c="dark.9">
-            {resolveAction(plan)}
-        </Text>
-      </Table.Td>
+      const pillarA =
+        a.element?.pillar?.code ||
+        a.element?.pillar?.name ||
+        '';
+      const pillarB =
+        b.element?.pillar?.code ||
+        b.element?.pillar?.name ||
+        '';
+      return pillarA.localeCompare(pillarB);
+    });
 
-      {/* Responsável */}
-      <Table.Td style={{ whiteSpace: 'nowrap', verticalAlign: 'top' }}>
-        <Text size="sm" fw={500}>{plan.owner_name}</Text>
-      </Table.Td>
+    const result: ReactNode[] = [];
+    let lastCountry: string | null = null;
 
-      {/* Prazo */}
-      <Table.Td style={{ whiteSpace: 'nowrap', verticalAlign: 'top' }}>
-        <Text size="sm" c="dimmed">{plan.due_date ?? '-'}</Text>
-      </Table.Td>
+    sorted.forEach((plan) => {
+      const countryLabel = plan.country ?? 'N/A';
 
-      {/* Ações – lápis */}
-      <Table.Td align="right" style={{ verticalAlign: 'top' }}>
-        <ActionIcon
-          variant="subtle"
-          color="blue"
-          aria-label={t('actions.edit')}
-          onClick={() => setEditingPlan(plan)}
-        >
-          <IconPencil size={16} />
-        </ActionIcon>
-      </Table.Td>
-    </Table.Tr>
-  ));
+      if (countryLabel !== lastCountry) {
+        lastCountry = countryLabel;
+        result.push(
+          <Table.Tr key={`country-${countryLabel}`}>
+            <Table.Td colSpan={8} style={{ backgroundColor: '#f1f3f5' }}>
+              <Group gap="xs">
+                <Badge size="xs" variant="filled" color="blue">
+                  {t('table.country', { defaultValue: 'Country' })}
+                </Badge>
+                <Text fw={700}>{countryLabel}</Text>
+              </Group>
+            </Table.Td>
+          </Table.Tr>,
+        );
+      }
+
+      result.push(
+        <Table.Tr key={plan.id}>
+          {/* Pilar */}
+          <Table.Td style={{ verticalAlign: 'top' }}>
+            <Group gap="sm" wrap="nowrap">
+              <Box w={4} h={24} bg="blue.4" style={{ borderRadius: 4 }} />
+              <Text size="sm" fw={500}>
+                {plan.element?.pillar?.code ?? '-'}
+              </Text>
+            </Group>
+          </Table.Td>
+
+          {/* Elemento */}
+          <Table.Td style={{ verticalAlign: 'top' }}>
+            <Text size="sm" fw={500} style={{ whiteSpace: 'normal' }}>
+              {plan.element?.name ?? '-'}
+            </Text>
+          </Table.Td>
+
+          {/* Status */}
+          <Table.Td style={{ width: 140, verticalAlign: 'top' }}>
+            <Menu withinPortal shadow="sm" width={160}>
+              <Menu.Target>
+                <Badge
+                  color={statusColor(plan.status)}
+                  variant="light"
+                  size="sm"
+                  rightSection={<IconChevronDown size={12} />}
+                  style={{ cursor: 'pointer', textTransform: 'uppercase' }}
+                >
+                  {t(`status.${plan.status}`)}
+                </Badge>
+              </Menu.Target>
+              <Menu.Dropdown>
+                {STATUS_VALUES.map((value) => (
+                  <Menu.Item
+                    key={value}
+                    onClick={() => handleChangeStatus(plan.id, value)}
+                    disabled={updatingId === plan.id || value === plan.status}
+                    color={value === plan.status ? 'blue' : undefined}
+                    style={{ fontWeight: value === plan.status ? 600 : 400 }}
+                  >
+                    {t(`status.${value}`)}
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          </Table.Td>
+
+          {/* Problema */}
+          <Table.Td style={{ whiteSpace: 'normal', verticalAlign: 'top' }}>
+            <Text size="sm" lh={1.4} c="dark.9">
+              {resolveProblem(plan)}
+            </Text>
+          </Table.Td>
+
+          {/* Ação */}
+          <Table.Td style={{ whiteSpace: 'normal', verticalAlign: 'top' }}>
+            <Text size="sm" lh={1.4} c="dark.9">
+              {resolveAction(plan)}
+            </Text>
+          </Table.Td>
+
+          {/* Responsável */}
+          <Table.Td style={{ whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+            <Text size="sm" fw={500}>
+              {plan.owner_name}
+            </Text>
+          </Table.Td>
+
+          {/* Prazo */}
+          <Table.Td style={{ whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+            <Text size="sm" c="dimmed">
+              {plan.due_date ?? '-'}
+            </Text>
+          </Table.Td>
+
+          {/* Ações */}
+          <Table.Td align="right" style={{ verticalAlign: 'top' }}>
+            <ActionIcon
+              variant="subtle"
+              color="blue"
+              aria-label={t('actions.edit')}
+              onClick={() => setEditingPlan(plan)}
+            >
+              <IconPencil size={16} />
+            </ActionIcon>
+          </Table.Td>
+        </Table.Tr>,
+      );
+    });
+
+    return result;
+  })();
 
   return (
     <Stack gap="lg">
       <Group justify="space-between" mb="xs">
         <div>
-            <Title order={2} c="dark.8">{t('pages.actionPlans.title')}</Title>
-            <Text c="dimmed" size="sm">
-                {t('pages.actionPlans.description')}
-            </Text>
+          <Title order={2} c="dark.8">
+            {t('pages.actionPlans.title')}
+          </Title>
+          <Text c="dimmed" size="sm">
+            {isGlobalView
+              ? t(
+                'pages.actionPlans.descriptionGlobal',
+                'Lista global de planos de ação (todas as unidades que você pode ver).',
+              )
+              : t('pages.actionPlans.description')}
+          </Text>
         </div>
 
         {/* BOTÃO EXPORTAR EXCEL */}
-        <Tooltip label="Export to Excel" withArrow>
-            <Button 
-                variant="default" 
-                onClick={handleExportExcel}
-                disabled={filteredPlans.length === 0}
-            >
-                <Group gap={6}>
-                    <IconDownload size={18} />
-                    <IconFileSpreadsheet size={18} color="green" />
-                </Group>
-            </Button>
+        <Tooltip
+          withArrow
+          label={
+            isGlobalView
+              ? t('pages.actionPlans.useHeaderExport')
+              : t('pages.actionPlans.exportToExcel')
+          }
+        >
+          <Button
+            variant="default"
+            onClick={!isGlobalView ? handleExportExcel : undefined}
+            disabled={isGlobalView || filteredPlans.length === 0}
+          >
+            <Group gap={6}>
+              <IconDownload size={18} />
+              <IconFileSpreadsheet size={18} color="green" />
+            </Group>
+          </Button>
         </Tooltip>
       </Group>
 
@@ -452,7 +603,7 @@ export function ActionPlansPage() {
               <Group gap="xs" mb={6}>
                 <IconFilter size={14} style={{ opacity: 0.6 }} />
                 <Text size="xs" fw={700} c="dimmed" tt="uppercase">
-                    {t('filters.status')}
+                  {t('filters.status')}
                 </Text>
               </Group>
               <SegmentedControl
@@ -472,10 +623,10 @@ export function ActionPlansPage() {
             {pillarOptions.length > 0 && (
               <div>
                 <Group gap="xs" mb={6}>
-                    <IconDatabase size={14} style={{ opacity: 0.6 }} />
-                    <Text size="xs" fw={700} c="dimmed" tt="uppercase">
-                        {t('filters.pillar')}
-                    </Text>
+                  <IconDatabase size={14} style={{ opacity: 0.6 }} />
+                  <Text size="xs" fw={700} c="dimmed" tt="uppercase">
+                    {t('filters.pillar')}
+                  </Text>
                 </Group>
                 <SegmentedControl
                   size="xs"
@@ -507,24 +658,36 @@ export function ActionPlansPage() {
           <Loader size="lg" type="dots" />
         </Center>
       ) : plans.length === 0 ? (
-        <Center p="xl" bg="white" style={{ borderRadius: 8, border: `1px solid ${rem('#dee2e6')}` }}>
-            <Stack align="center" gap="xs">
-                <ThemeIcon size={60} radius="xl" variant="light" color="gray">
-                    <IconClipboardList size={30} />
-                </ThemeIcon>
-                <Text fw={600} size="lg" mt="sm" c="dimmed">
-                    {t('table.noPlans')}
-                </Text>
-            </Stack>
+        <Center
+          p="xl"
+          bg="white"
+          style={{
+            borderRadius: 8,
+            border: `1px solid ${rem('#dee2e6')}`,
+          }}
+        >
+          <Stack align="center" gap="xs">
+            <ThemeIcon size={60} radius="xl" variant="light" color="gray">
+              <IconClipboardList size={30} />
+            </ThemeIcon>
+            <Text fw={600} size="lg" mt="sm" c="dimmed">
+              {t('table.noPlans')}
+            </Text>
+          </Stack>
         </Center>
       ) : filteredPlans.length === 0 ? (
-        <Center p="xl" bg="white" style={{ borderRadius: 8, border: `1px solid ${rem('#dee2e6')}` }}>
-            <Stack align="center" gap="xs">
-                <IconSearch size={40} color="gray" style={{ opacity: 0.3 }} />
-                <Text c="dimmed">
-                    {t('table.noPlansForFilter')}
-                </Text>
-            </Stack>
+        <Center
+          p="xl"
+          bg="white"
+          style={{
+            borderRadius: 8,
+            border: `1px solid ${rem('#dee2e6')}`,
+          }}
+        >
+          <Stack align="center" gap="xs">
+            <IconSearch size={40} color="gray" style={{ opacity: 0.3 }} />
+            <Text c="dimmed">{t('table.noPlansForFilter')}</Text>
+          </Stack>
         </Center>
       ) : (
         <Card withBorder radius="md" shadow="sm" p={0}>
@@ -534,8 +697,12 @@ export function ActionPlansPage() {
                 <Table.Th>{t('table.pillar')}</Table.Th>
                 <Table.Th>{t('table.element')}</Table.Th>
                 <Table.Th>{t('table.status')}</Table.Th>
-                <Table.Th style={{ width: '25%' }}>{t('table.problem')}</Table.Th>
-                <Table.Th style={{ width: '25%' }}>{t('table.action')}</Table.Th>
+                <Table.Th style={{ width: '25%' }}>
+                  {t('table.problem')}
+                </Table.Th>
+                <Table.Th style={{ width: '25%' }}>
+                  {t('table.action')}
+                </Table.Th>
                 <Table.Th>{t('table.owner')}</Table.Th>
                 <Table.Th>{t('table.dueDate')}</Table.Th>
                 <Table.Th align="right" />

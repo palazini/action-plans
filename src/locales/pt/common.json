@@ -13,7 +13,11 @@
     "settings": "Configurações",
     "logout": "Sair",
     "version": "Versão",
-    "viewDataFrom": "Visualizar dados de:"
+    "viewDataFrom": "Visualizar dados de:",
+    "exportGlobal": "Exportar todos os planos (EN)",
+    "exportGlobalShort": "Exportar Global",
+    "switchUnit": "Alterar visualização de unidade",
+    "select": "Selecionar"
   },
   "landing": {
     "selectRegion": "Selecione sua Região",
@@ -47,7 +51,10 @@
   },
   "dashboard": {
     "subtitle": "Monitoramento de ações para {{country}}",
+    "subtitleGlobal": "Monitoramento global de ações (todas as plantas)",
     "loadError": "Não foi possível carregar os indicadores.",
+    "noCountrySelected": "Nenhum país selecionado.",
+    "selectRegion": "Selecionar Região",
     "totalElements": "Total de elementos",
     "gapElements": "Elementos com GAP",
     "elementsWithoutPlan": "Sem plano de ação",
@@ -67,7 +74,9 @@
     "backlog": {
       "title": "Backlog de Planos",
       "description": "Gerenciamento de elementos com nota de fundação abaixo do esperado.",
+      "descriptionGlobal": "Backlog global de elementos com fundação < 100% em todas as unidades.",
       "filterByPillar": "Filtrar por pilar",
+      "filterByPillarGlobal": "Filtrar por pilar (todas as unidades)",
       "noElements": "Não há elementos cadastrados no backlog.",
       "noElementsForFilter": "Nenhum elemento encontrado para este filtro.",
       "modalTitle": "Gerenciar Plano",
@@ -76,7 +85,10 @@
     },
     "actionPlans": {
       "title": "Planos de Ação",
-      "description": "Gerencie todos os planos registrados e seus status."
+      "description": "Gerencie todos os planos registrados e seus status.",
+      "descriptionGlobal": "Lista global de planos de ação (todas as unidades que você pode ver).",
+      "exportToExcel": "Exportar para Excel",
+      "useHeaderExport": "Use o botão \"Exportar Global\" no topo da página."
     },
     "structure": {
       "title": "Estrutura Organizacional",
@@ -101,7 +113,8 @@
     "noPlans": "Nenhum registro encontrado.",
     "noPlansForFilter": "Sua busca não retornou resultados.",
     "foundation": "Nota",
-    "plans": "Planos"
+    "plans": "Planos",
+    "country": "País"
   },
   "filters": {
     "status": "Status",
@@ -137,7 +150,8 @@
     "foundationScore": "Score",
     "elementsCount": "Qtd. Itens",
     "save": "Salvar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "context": "Contexto"
   },
   "actions": {
     "edit": "Editar",
@@ -158,6 +172,13 @@
     "owner": "Responsável",
     "owner_placeholder": "Quem executará?",
     "dueDate": "Prazo Limite",
-    "dueDate_placeholder": "Selecione a data"
+    "dueDate_placeholder": "Selecione a data",
+    "nativeLocal": "(Nativo / Local)",
+    "globalOptional": "(Global / Opcional)",
+    "english": "Inglês",
+    "problemEn": "Problema (Inglês)",
+    "problemEn_placeholder": "Descreva o problema atual...",
+    "actionEn": "Ação (Inglês)",
+    "actionEn_placeholder": "O que será feito para resolver o problema?"
   }
 }

@@ -21,14 +21,14 @@ import {
   Badge,
   rem
 } from '@mantine/core';
-import { 
-  IconAlertCircle, 
-  IconPencil, 
-  IconPlus, 
-  IconLayoutKanban, 
-  IconComponents, 
+import {
+  IconAlertCircle,
+  IconPencil,
+  IconPlus,
+  IconLayoutKanban,
+  IconComponents,
   IconArrowRight,
-  IconDatabaseOff 
+  IconDatabaseOff
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
@@ -123,11 +123,11 @@ export function StructurePage() {
             <Group justify="space-between" mb="lg">
               <Group gap="xs">
                 <ThemeIcon variant="light" color="violet" size="md">
-                    <IconLayoutKanban style={{ width: rem(18), height: rem(18) }} />
+                  <IconLayoutKanban style={{ width: rem(18), height: rem(18) }} />
                 </ThemeIcon>
                 <div>
-                    <Text fw={600} size="sm">{t('pages.structure.pillarsCardTitle')}</Text>
-                    <Text size="xs" c="dimmed">{t('pages.structure.pillarsCardSubtitle')}</Text>
+                  <Text fw={600} size="sm">{t('pages.structure.pillarsCardTitle')}</Text>
+                  <Text size="xs" c="dimmed">{t('pages.structure.pillarsCardSubtitle')}</Text>
                 </div>
               </Group>
               <Button
@@ -143,10 +143,10 @@ export function StructurePage() {
             {pillars.length === 0 ? (
               <Center p="xl" bg="gray.0" style={{ borderRadius: 8 }}>
                 <Stack align="center" gap="xs">
-                    <IconDatabaseOff size={30} color="gray" style={{ opacity: 0.5 }} />
-                    <Text size="sm" c="dimmed">
-                        {t('pages.structure.noPillarSelected')}
-                    </Text>
+                  <IconDatabaseOff size={30} color="gray" style={{ opacity: 0.5 }} />
+                  <Text size="sm" c="dimmed">
+                    {t('pages.structure.noPillarSelected')}
+                  </Text>
                 </Stack>
               </Center>
             ) : (
@@ -155,7 +155,7 @@ export function StructurePage() {
                   <Table.Tr>
                     <Table.Th>{t('structure.code')}</Table.Th>
                     <Table.Th>{t('structure.namePt')}</Table.Th>
-                    <Table.Th style={{textAlign: 'center'}}>{t('structure.elementsCount')}</Table.Th>
+                    <Table.Th style={{ textAlign: 'center' }}>{t('structure.elementsCount')}</Table.Th>
                     <Table.Th />
                   </Table.Tr>
                 </Table.Thead>
@@ -175,9 +175,9 @@ export function StructurePage() {
                         onClick={() => setSelectedPillarId(pillar.id)}
                       >
                         <Table.Td>
-                            <Badge variant="outline" color="gray" size="sm">
-                                {pillar.code ?? '-'}
-                            </Badge>
+                          <Badge variant="outline" color="gray" size="sm">
+                            {pillar.code ?? '-'}
+                          </Badge>
                         </Table.Td>
                         <Table.Td>
                           <Text size="sm" fw={500}>{pillar.name_pt || pillar.name}</Text>
@@ -188,7 +188,7 @@ export function StructurePage() {
                           </Badge>
                         </Table.Td>
                         <Table.Td>
-                            {isSelected && <IconArrowRight size={14} color="var(--mantine-color-blue-6)" />}
+                          {isSelected && <IconArrowRight size={14} color="var(--mantine-color-blue-6)" />}
                         </Table.Td>
                       </Table.Tr>
                     );
@@ -203,11 +203,11 @@ export function StructurePage() {
             <Group justify="space-between" mb="lg">
               <Group gap="xs">
                 <ThemeIcon variant="light" color="cyan" size="md">
-                    <IconComponents style={{ width: rem(18), height: rem(18) }} />
+                  <IconComponents style={{ width: rem(18), height: rem(18) }} />
                 </ThemeIcon>
                 <div>
-                    <Text fw={600} size="sm">{t('pages.structure.elementsCardTitle')}</Text>
-                    <Text size="xs" c="dimmed">{t('pages.structure.elementsCardSubtitle')}</Text>
+                  <Text fw={600} size="sm">{t('pages.structure.elementsCardTitle')}</Text>
+                  <Text size="xs" c="dimmed">{t('pages.structure.elementsCardSubtitle')}</Text>
                 </div>
               </Group>
 
@@ -230,11 +230,11 @@ export function StructurePage() {
               </Center>
             ) : selectedPillar.elements.length === 0 ? (
               <Center h={200} bg="gray.0" style={{ borderRadius: 8 }}>
-                 <Stack align="center" gap="xs">
-                    <IconDatabaseOff size={30} color="gray" style={{ opacity: 0.5 }} />
-                    <Text size="sm" c="dimmed">
-                        {t('pages.structure.noElementsInPillar')}
-                    </Text>
+                <Stack align="center" gap="xs">
+                  <IconDatabaseOff size={30} color="gray" style={{ opacity: 0.5 }} />
+                  <Text size="sm" c="dimmed">
+                    {t('pages.structure.noElementsInPillar')}
+                  </Text>
                 </Stack>
               </Center>
             ) : (
@@ -258,7 +258,7 @@ export function StructurePage() {
                       </Table.Td>
                       <Table.Td>
                         <Badge variant="dot" color={getScoreColor(el.foundation_score)}>
-                            {el.foundation_score}%
+                          {el.foundation_score}%
                         </Badge>
                       </Table.Td>
                       <Table.Td align="right">
@@ -378,54 +378,54 @@ function CreatePillarModal({
     >
       <form onSubmit={handleSubmit}>
         <Stack gap="sm">
-            <Group grow>
+          <Group grow>
             <TextInput
-                label={t('structure.code')}
-                placeholder="EX: SAF"
-                value={code}
-                onChange={(e) => setCode(e.currentTarget.value)}
+              label={t('structure.code')}
+              placeholder="EX: SAF"
+              value={code}
+              onChange={(e) => setCode(e.currentTarget.value)}
             />
             <TextInput
-                label={t('structure.namePt')}
-                placeholder="Ex: Segurança"
-                required
-                value={namePt}
-                onChange={(e) => setNamePt(e.currentTarget.value)}
+              label={t('structure.namePt')}
+              placeholder="Ex: Segurança"
+              required
+              value={namePt}
+              onChange={(e) => setNamePt(e.currentTarget.value)}
             />
-            </Group>
+          </Group>
 
-            <TextInput
+          <TextInput
             label={t('structure.nameEn')}
             placeholder="Ex: Safety"
             value={nameEn}
             onChange={(e) => setNameEn(e.currentTarget.value)}
-            />
+          />
 
-            <Textarea
+          <Textarea
             label={t('structure.descriptionPt')}
             value={descriptionPt}
             onChange={(e) => setDescriptionPt(e.currentTarget.value)}
             minRows={2}
-            />
-            <Textarea
+          />
+          <Textarea
             label={t('structure.descriptionEn')}
             value={descriptionEn}
             onChange={(e) => setDescriptionEn(e.currentTarget.value)}
             minRows={2}
-            />
+          />
 
-            <Group justify="flex-end" mt="md">
+          <Group justify="flex-end" mt="md">
             <Button
-                variant="subtle"
-                onClick={onClose}
-                disabled={saving}
+              variant="subtle"
+              onClick={onClose}
+              disabled={saving}
             >
-                {t('structure.cancel')}
+              {t('structure.cancel')}
             </Button>
             <Button type="submit" loading={saving}>
-                {t('structure.save')}
+              {t('structure.save')}
             </Button>
-            </Group>
+          </Group>
         </Stack>
       </form>
     </Modal>
@@ -499,62 +499,62 @@ function CreateElementModal({
     >
       <form onSubmit={handleSubmit}>
         <Stack gap="sm">
-            <Alert variant="light" color="blue" title="Contexto" icon={<IconLayoutKanban size={16} />}>
-                {t('table.pillar')}: <Text span fw={700}>{pillar.code ?? '-'}</Text> — {pillar.name_pt || pillar.name}
-            </Alert>
+          <Alert variant="light" color="blue" title={t('structure.context')} icon={<IconLayoutKanban size={16} />}>
+            {t('table.pillar')}: <Text span fw={700}>{pillar.code ?? '-'}</Text> — {pillar.name_pt || pillar.name}
+          </Alert>
 
-            <Group grow>
+          <Group grow>
             <TextInput
-                label={t('structure.code')}
-                value={code}
-                onChange={(e) => setCode(e.currentTarget.value)}
+              label={t('structure.code')}
+              value={code}
+              onChange={(e) => setCode(e.currentTarget.value)}
             />
             <NumberInput
-                label={t('structure.foundationScore')}
-                value={foundationScore}
-                onChange={(val) => setFoundationScore(Number(val) || 0)}
-                min={0}
-                max={100}
+              label={t('structure.foundationScore')}
+              value={foundationScore}
+              onChange={(val) => setFoundationScore(Number(val) || 0)}
+              min={0}
+              max={100}
             />
-            </Group>
+          </Group>
 
-            <TextInput
+          <TextInput
             label={t('structure.namePt')}
             required
             value={namePt}
             onChange={(e) => setNamePt(e.currentTarget.value)}
-            />
-            <TextInput
+          />
+          <TextInput
             label={t('structure.nameEn')}
             value={nameEn}
             onChange={(e) => setNameEn(e.currentTarget.value)}
-            />
+          />
 
-            <Textarea
+          <Textarea
             label={t('structure.notesPt')}
             value={notesPt}
             onChange={(e) => setNotesPt(e.currentTarget.value)}
             minRows={2}
-            />
-            <Textarea
+          />
+          <Textarea
             label={t('structure.notesEn')}
             value={notesEn}
             onChange={(e) => setNotesEn(e.currentTarget.value)}
             minRows={2}
-            />
+          />
 
-            <Group justify="flex-end" mt="md">
+          <Group justify="flex-end" mt="md">
             <Button
-                variant="subtle"
-                onClick={onClose}
-                disabled={saving}
+              variant="subtle"
+              onClick={onClose}
+              disabled={saving}
             >
-                {t('structure.cancel')}
+              {t('structure.cancel')}
             </Button>
             <Button type="submit" loading={saving}>
-                {t('structure.save')}
+              {t('structure.save')}
             </Button>
-            </Group>
+          </Group>
         </Stack>
       </form>
     </Modal>
@@ -619,58 +619,58 @@ function EditElementModal({
     >
       <form onSubmit={handleSubmit}>
         <Stack gap="sm">
-            <Group grow>
+          <Group grow>
             <TextInput
-                label={t('structure.code')}
-                value={code}
-                onChange={(e) => setCode(e.currentTarget.value)}
+              label={t('structure.code')}
+              value={code}
+              onChange={(e) => setCode(e.currentTarget.value)}
             />
             <NumberInput
-                label={t('structure.foundationScore')}
-                value={foundationScore}
-                onChange={(val) => setFoundationScore(Number(val) || 0)}
-                min={0}
-                max={100}
+              label={t('structure.foundationScore')}
+              value={foundationScore}
+              onChange={(val) => setFoundationScore(Number(val) || 0)}
+              min={0}
+              max={100}
             />
-            </Group>
+          </Group>
 
-            <TextInput
+          <TextInput
             label={t('structure.namePt')}
             required
             value={namePt}
             onChange={(e) => setNamePt(e.currentTarget.value)}
-            />
-            <TextInput
+          />
+          <TextInput
             label={t('structure.nameEn')}
             value={nameEn}
             onChange={(e) => setNameEn(e.currentTarget.value)}
-            />
+          />
 
-            <Textarea
+          <Textarea
             label={t('structure.notesPt')}
             value={notesPt}
             onChange={(e) => setNotesPt(e.currentTarget.value)}
             minRows={2}
-            />
-            <Textarea
+          />
+          <Textarea
             label={t('structure.notesEn')}
             value={notesEn}
             onChange={(e) => setNotesEn(e.currentTarget.value)}
             minRows={2}
-            />
+          />
 
-            <Group justify="flex-end" mt="md">
+          <Group justify="flex-end" mt="md">
             <Button
-                variant="subtle"
-                onClick={onClose}
-                disabled={saving}
+              variant="subtle"
+              onClick={onClose}
+              disabled={saving}
             >
-                {t('structure.cancel')}
+              {t('structure.cancel')}
             </Button>
             <Button type="submit" loading={saving}>
-                {t('structure.save')}
+              {t('structure.save')}
             </Button>
-            </Group>
+          </Group>
         </Stack>
       </form>
     </Modal>

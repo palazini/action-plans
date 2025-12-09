@@ -41,6 +41,7 @@ export type ElementWithRelations = {
     due_date: string | null;
     created_at: string;
   }[];
+  country?: string;
 };
 
 export type DashboardStats = {
@@ -73,6 +74,7 @@ export type ActionPlanWithElement = {
   // campos originais (podem continuar existindo)
   problem: string | null;
   solution: string | null;
+  country?: string | null;
 
   // campos por idioma
   problem_pt: string | null;
