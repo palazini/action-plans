@@ -1,3 +1,4 @@
+//src/pages/StructurePage.tsx
 import { useEffect, useState } from 'react';
 import {
   Alert,

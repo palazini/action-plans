@@ -8,18 +8,13 @@ import {
     Stack,
     Box,
     Image,
-    Badge,
-    Group,
-    ThemeIcon
+    Badge
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { IconWorld } from '@tabler/icons-react';
 
-// Separei o Global para destaque
-const GLOBAL_OPTION = { code: 'GL', name: 'Global', flagCode: 'un', lang: 'en', region: 'World' };
 
 const COUNTRIES = [
     { code: 'BR', name: 'Brazil', flagCode: 'br', lang: 'pt', region: 'Americas' },
@@ -27,7 +22,7 @@ const COUNTRIES = [
     { code: 'USA', name: 'USA', flagCode: 'us', lang: 'en', region: 'Americas' },
     { code: 'AR', name: 'Argentina', flagCode: 'ar', lang: 'es', region: 'Americas' },
     // Europa
-    { code: 'DE-G', name: 'Germany (Gestra)', flagCode: 'de', lang: 'en', region: 'Europe', badge: 'Gestra' },
+    { code: 'DE', name: 'Germany (Gestra)', flagCode: 'de', lang: 'en', region: 'Europe', badge: 'Gestra' },
     { code: 'UK', name: 'UK', flagCode: 'gb', lang: 'en', region: 'Europe' },
     { code: 'FR', name: 'France', flagCode: 'fr', lang: 'fr', region: 'Europe' },
     { code: 'IT', name: 'Italy', flagCode: 'it', lang: 'it', region: 'Europe' },
@@ -67,49 +62,7 @@ export function LandingPage() {
                     </Text>
                 </Stack>
 
-                {/* --- DESTAQUE GLOBAL --- */}
-                <Stack align="center" mb={40}>
-                    <UnstyledButton
-                        onClick={() => handleCountrySelect(GLOBAL_OPTION.name, GLOBAL_OPTION.lang)}
-                        style={{ width: '100%', maxWidth: '400px' }}
-                    >
-                        <Card
-                            padding="lg"
-                            radius="md"
-                            withBorder
-                            style={{
-                                backgroundColor: 'white',
-                                transition: 'transform 0.2s, box-shadow 0.2s',
-                                cursor: 'pointer',
-                                borderTop: `4px solid var(--mantine-color-violet-6)`
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-4px)';
-                                e.currentTarget.style.boxShadow = 'var(--mantine-shadow-md)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'none';
-                                e.currentTarget.style.boxShadow = 'none';
-                            }}
-                        >
-                            <Group wrap="nowrap">
-                                <ThemeIcon size={60} radius="md" variant="light" color="violet">
-                                    <IconWorld size={34} />
-                                </ThemeIcon>
-                                <div>
-                                    <Text size="xl" fw={800} c="violet.9">GLOBAL VIEW</Text>
-                                    <Text size="sm" c="dimmed" lh={1.3}>
-                                        {t('landing.viewConsolidatedPlans')}
-                                    </Text>
-                                </div>
-                            </Group>
-                        </Card>
-                    </UnstyledButton>
-                </Stack>
 
-                <Text c="dimmed" fw={700} tt="uppercase" size="sm" ta="center" mb="md">
-                    {t('landing.selectSpecificUnit')}
-                </Text>
 
                 {/* --- GRID DE PAÍSES --- */}
                 <SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 5 }} spacing="lg">
