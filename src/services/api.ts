@@ -53,7 +53,8 @@ type RawActionPlanRow = {
  * Elementos com FOUNDATION < 100 + pilar + planos (detalhados)
  */
 export async function fetchBacklogElements(country: string): Promise<ElementWithRelations[]> {
-  const { data, error } = await supabase
+  // monta o query base
+  let query = supabase
     .from('elements')
     .select(
       `
@@ -79,15 +80,19 @@ export async function fetchBacklogElements(country: string): Promise<ElementWith
       )
     `,
     )
-    .eq('country', country)
-    .lt('foundation_score', 100)
-    .order('foundation_score', { ascending: true });
+    .lt('foundation_score', 100);
+
+  // se NÃO for Global, filtra por país normalmente
+  if (country !== 'Global') {
+    query = query.eq('country', country);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw error;
   }
 
-  // TS é chato com o tipo retornado, então usamos unknown -> RawElementRow[]
   const rows = (data ?? []) as unknown as RawElementRow[];
 
   const normalized: ElementWithRelations[] = rows.map((row) => ({
@@ -104,13 +109,22 @@ export async function fetchBacklogElements(country: string): Promise<ElementWith
 
   return normalized;
 }
-
 /**
  * Estatísticas gerais do dashboard
  */
 export async function fetchDashboardStats(country: string): Promise<DashboardStats> {
+  // query base de contagem
+  let totalQuery = supabase
+    .from('elements')
+    .select('*', { count: 'exact', head: true });
+
+  // se NÃO for Global, filtra por país
+  if (country !== 'Global') {
+    totalQuery = totalQuery.eq('country', country);
+  }
+
   const [totalRes, backlog] = await Promise.all([
-    supabase.from('elements').select('*', { count: 'exact', head: true }).eq('country', country),
+    totalQuery,
     fetchBacklogElements(country),
   ]);
 

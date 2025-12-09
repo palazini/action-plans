@@ -112,17 +112,17 @@ export function LoginPage() {
     >
       <Container size={420} w="100%">
         <Stack align="center" mb={30}>
-           <ThemeIcon size={80} radius="xl" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }}>
-                <IconLogin size={40} stroke={1.5} />
-            </ThemeIcon>
-            <Box ta="center">
-                <Title order={2} fw={900} c="dark.8" style={{ letterSpacing: -0.5 }}>
-                {t('auth.welcomeBack')}
-                </Title>
-                <Text c="dimmed" size="sm" mt={5} fw={500}>
-                {t('auth.accessingEnvironment')} <Text span c="blue.7" fw={700}>{selectedCountry}</Text>
-                </Text>
-            </Box>
+          <ThemeIcon size={80} radius="xl" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }}>
+            <IconLogin size={40} stroke={1.5} />
+          </ThemeIcon>
+          <Box ta="center">
+            <Title order={2} fw={900} c="dark.8" style={{ letterSpacing: -0.5 }}>
+              {t('auth.welcomeBack')}
+            </Title>
+            <Text c="dimmed" size="sm" mt={5} fw={500}>
+              {t('auth.accessingEnvironment')} <Text span c="blue.7" fw={700}>{selectedCountry}</Text>
+            </Text>
+          </Box>
         </Stack>
 
         <Paper withBorder shadow="md" p={30} radius="md" bg="white">
@@ -160,27 +160,23 @@ export function LoginPage() {
 
           <Box mt="xl" style={{ borderTop: `1px solid ${rem('#f1f3f5')}` }} pt="lg">
             <Group justify="center">
-                <Anchor
+              <Anchor
                 component="button"
                 size="sm"
                 c="dimmed"
                 fw={500}
                 onClick={() => {
-                    setSelectedCountry(null);
-                    navigate('/');
+                  setSelectedCountry(null);
+                  navigate('/');
                 }}
                 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-                >
+              >
                 <IconArrowLeft size={14} />
                 {t('auth.changeCountry')}
-                </Anchor>
+              </Anchor>
             </Group>
           </Box>
         </Paper>
-        
-        <Text ta="center" size="xs" c="dimmed" mt="xl">
-            Action Plans System &copy; 2024
-        </Text>
       </Container>
     </Box>
   );

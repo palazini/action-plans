@@ -36,6 +36,8 @@ export function DashboardPage() {
   const { selectedCountry } = useAuth();
   const navigate = useNavigate();
 
+  const isGlobalView = selectedCountry === 'Global';
+
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [pillarStats, setPillarStats] = useState<PillarStats[]>([]);
   const [loading, setLoading] = useState(true);
@@ -118,7 +120,12 @@ export function DashboardPage() {
         <div>
           <Title order={2} c="dark.8">{t('pages.dashboard.title', 'Visão Geral')}</Title>
           <Text c="dimmed" size="sm">
-            {t('dashboard.subtitle', { country: selectedCountry, defaultValue: `Monitoramento de ações para ${selectedCountry}` })}
+            {isGlobalView
+              ? t('dashboard.subtitleGlobal', 'Monitoramento global de ações (todas as plantas)')
+              : t('dashboard.subtitle', {
+                  country: selectedCountry,
+                  defaultValue: `Monitoramento de ações para ${selectedCountry}`,
+                })}
           </Text>
         </div>
         {/* Aqui poderia entrar um filtro de data ou botão de refresh */}
