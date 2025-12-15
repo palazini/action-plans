@@ -383,7 +383,7 @@ export function ActionPlansPage() {
           </Table.Td>
 
           {/* Responsável */}
-          <Table.Td style={{ whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+          <Table.Td style={{ whiteSpace: 'normal', verticalAlign: 'top', maxWidth: 150, wordBreak: 'break-word' }}>
             <Text size="sm" fw={500}>
               {plan.owner_name}
             </Text>
@@ -513,7 +513,7 @@ export function ActionPlansPage() {
           </Table.Td>
 
           {/* Responsável */}
-          <Table.Td style={{ whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+          <Table.Td style={{ whiteSpace: 'normal', verticalAlign: 'top', maxWidth: 150, wordBreak: 'break-word' }}>
             <Text size="sm" fw={500}>
               {plan.owner_name}
             </Text>
@@ -703,7 +703,7 @@ export function ActionPlansPage() {
                 <Table.Th style={{ width: '25%' }}>
                   {t('table.action')}
                 </Table.Th>
-                <Table.Th>{t('table.owner')}</Table.Th>
+                <Table.Th style={{ width: 150 }}>{t('table.owner')}</Table.Th>
                 <Table.Th>{t('table.dueDate')}</Table.Th>
                 <Table.Th align="right" />
               </Table.Tr>
