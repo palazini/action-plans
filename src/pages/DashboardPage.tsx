@@ -16,7 +16,7 @@ import {
   RingProgress,
   rem,
   Button,
-  Box, // Adicionado aqui
+  Box,
 } from '@mantine/core';
 import {
   IconAlertCircle,
@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { fetchDashboardStats, fetchPillarStats } from '../services/api';
 import type { DashboardStats, PillarStats } from '../types';
+import { GlobalDashboard } from '../components/GlobalDashboard';
 
 export function DashboardPage() {
   const { t } = useTranslation();
@@ -46,6 +47,12 @@ export function DashboardPage() {
   useEffect(() => {
     // Se não tiver país selecionado, paramos o loading imediatamente
     if (!selectedCountry) {
+      setLoading(false);
+      return;
+    }
+
+    // Se for Global, o componente GlobalDashboard gerencia seu próprio fetch
+    if (selectedCountry === 'Global') {
       setLoading(false);
       return;
     }
@@ -77,6 +84,11 @@ export function DashboardPage() {
     if (total === 0) return 0;
     return Math.round((value / total) * 100);
   };
+
+  // Renderização condicional para Global Dashboard
+  if (isGlobalView) {
+    return <GlobalDashboard />;
+  }
 
   if (loading) {
     return (
@@ -120,15 +132,12 @@ export function DashboardPage() {
         <div>
           <Title order={2} c="dark.8">{t('pages.dashboard.title', 'Visão Geral')}</Title>
           <Text c="dimmed" size="sm">
-            {isGlobalView
-              ? t('dashboard.subtitleGlobal', 'Monitoramento global de ações (todas as plantas)')
-              : t('dashboard.subtitle', {
-                country: selectedCountry,
-                defaultValue: `Monitoramento de ações para ${selectedCountry}`,
-              })}
+            {t('dashboard.subtitle', {
+              country: selectedCountry,
+              defaultValue: `Monitoramento de ações para ${selectedCountry}`,
+            })}
           </Text>
         </div>
-        {/* Aqui poderia entrar um filtro de data ou botão de refresh */}
       </Group>
 
       {stats && (

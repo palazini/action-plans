@@ -20,16 +20,16 @@ type RawElementRow = {
   country: string;
   pillar: Pillar[] | Pillar | null;
   action_plans:
-    | {
-        id: string;
-        status: ActionPlanStatus;
-        problem: string;
-        solution: string;
-        owner_name: string;
-        due_date: string | null;
-        created_at: string;
-      }[]
-    | null;
+  | {
+    id: string;
+    status: ActionPlanStatus;
+    problem: string;
+    solution: string;
+    owner_name: string;
+    due_date: string | null;
+    created_at: string;
+  }[]
+  | null;
 };
 
 // Forma "crua" dos planos de ação vindos do Supabase (lista de planos)
@@ -145,6 +145,80 @@ export async function fetchDashboardStats(country: string): Promise<DashboardSta
     gapElements,
     elementsWithoutPlan,
   };
+}
+
+export type GlobalCountryStats = {
+  country: string;
+  totalElements: number;
+  gapElements: number;
+  elementsWithPlan: number;
+  completedActionPlans: number;
+  elementsWithoutPlan: number;
+};
+
+/**
+ * Estatísticas detalhadas por país (para o dashboard Global)
+ */
+export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
+  // Busca todos os elementos de todos os países + planos
+  // Note: count='exact' não ajuda muito pois vamos agrupar em memória
+  const { data, error } = await supabase.from('elements').select(`
+    id,
+    country,
+    foundation_score,
+    action_plans (
+      id,
+      status
+    )
+  `);
+
+  if (error) {
+    throw error;
+  }
+
+  const rows = (data ?? []) as any[];
+
+  // Agrupamento em memória
+  const map = new Map<string, GlobalCountryStats>();
+
+  for (const row of rows) {
+    const country = row.country;
+    if (!country) continue; // Ignora se não tiver país
+
+    if (!map.has(country)) {
+      map.set(country, {
+        country,
+        totalElements: 0,
+        gapElements: 0,
+        elementsWithPlan: 0,
+        completedActionPlans: 0,
+        elementsWithoutPlan: 0,
+      });
+    }
+
+    const stats = map.get(country)!;
+
+    stats.totalElements += 1;
+
+    // GAP: foundation_score < 100
+    if ((row.foundation_score ?? 100) < 100) {
+      stats.gapElements += 1;
+
+      // Se é gap, checamos se tem planos
+      if (!row.action_plans || row.action_plans.length === 0) {
+        stats.elementsWithoutPlan += 1;
+      }
+    }
+
+    // Planos (Conta elementos que têm pelo menos 1 plano)
+    if (row.action_plans && Array.isArray(row.action_plans) && row.action_plans.length > 0) {
+      stats.elementsWithPlan += 1;
+      const completed = row.action_plans.filter((p: any) => p.status === 'DONE').length;
+      stats.completedActionPlans += completed;
+    }
+  }
+
+  return Array.from(map.values()).sort((a, b) => a.country.localeCompare(b.country));
 }
 
 /**

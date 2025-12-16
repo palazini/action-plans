@@ -65,7 +65,20 @@
     "withoutPlanColumn": "Sem plano",
     "monitoredItems": "Itens monitorados no backlog",
     "immediateAttention": "Requerem atenção imediata",
-    "percentWithoutPlan": "{{percent}}% do total sem plano"
+    "percentWithoutPlan": "{{percent}}% do total sem plano",
+    "coverage": "Coverage (Planos/Gaps)",
+    "global": {
+      "title": "Visão Global por País (Status Geral)",
+      "country": "País",
+      "totalElements": "Total Elementos",
+      "gaps": "Gaps (Score < 100)",
+      "definedPlans": "Elementos c/ Plano",
+      "withoutPlan": "Gaps sem Plano",
+      "pendingShort": "Pend.",
+      "plansShort": "Planos",
+      "gapsShort": "Gaps",
+      "view": "Visualizar"
+    }
   },
   "pages": {
     "dashboard": {
