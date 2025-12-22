@@ -33,8 +33,7 @@ import {
   IconDownload,
   IconFileSpreadsheet,
 } from '@tabler/icons-react';
-import ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
+
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useActionPlans, useUpdateActionPlanStatus } from '../hooks/useQueries';
@@ -145,121 +144,11 @@ export function ActionPlansPage() {
 
   // --- LÓGICA DE EXPORTAÇÃO EXCEL (ESTILIZADO) ---
   // Aqui exporta apenas o que está na tabela (país atual ou visão Global filtrada).
-  // O "export globalzão" consolidado você usa pelo botão no Header.
   const handleExportExcel = async () => {
-    const workbook = new ExcelJS.Workbook();
-
-    const setupWorksheet = (sheetName: string, data: any[], columns: any[]) => {
-      const sheet = workbook.addWorksheet(sheetName);
-
-      sheet.columns = columns;
-      sheet.addRows(data);
-
-      sheet.eachRow((row, rowNumber) => {
-        row.alignment = {
-          vertical: 'top',
-          wrapText: true,
-          horizontal: 'left',
-        };
-
-        if (rowNumber === 1) {
-          row.height = 25;
-          row.eachCell((cell) => {
-            cell.font = {
-              bold: true,
-              color: { argb: 'FFFFFFFF' },
-              size: 12,
-            };
-            cell.fill = {
-              type: 'pattern',
-              pattern: 'solid',
-              fgColor: { argb: 'FF228BE6' },
-            };
-            cell.alignment = { vertical: 'middle', horizontal: 'center' };
-            cell.border = {
-              top: { style: 'thin' },
-              left: { style: 'thin' },
-              bottom: { style: 'thin' },
-              right: { style: 'thin' },
-            };
-          });
-        } else {
-          row.eachCell((cell) => {
-            cell.border = {
-              top: { style: 'thin' },
-              left: { style: 'thin' },
-              bottom: { style: 'thin' },
-              right: { style: 'thin' },
-            };
-
-            if (rowNumber % 2 === 0) {
-              cell.fill = {
-                type: 'pattern',
-                pattern: 'solid',
-                fgColor: { argb: 'FFF8F9FA' },
-              };
-            }
-          });
-        }
-      });
-    };
-
-    // --- EN ---
-    const columnsEn = [
-      { header: 'Pillar', key: 'pillar', width: 10 },
-      { header: 'Element', key: 'element', width: 30 },
-      { header: 'Status', key: 'status', width: 15 },
-      { header: 'Problem', key: 'problem', width: 50 },
-      { header: 'Action', key: 'action', width: 50 },
-      { header: 'Owner', key: 'owner', width: 25 },
-      { header: 'Due Date', key: 'dueDate', width: 15 },
-    ];
-
-    const dataEn = filteredPlans.map((p) => ({
-      pillar: p.element?.pillar?.code ?? p.element?.pillar?.name,
-      element: p.element?.name,
-      status: p.status,
-      problem: p.problem_en ?? p.problem_pt ?? '',
-      action: p.action_en ?? p.solution ?? '',
-      owner: p.owner_name,
-      dueDate: p.due_date ?? '-',
-    }));
-
-    setupWorksheet('English (EN)', dataEn, columnsEn);
-
-    // --- Local (PT) ---
-    const columnsLocal = [
-      { header: 'Pilar', key: 'pillar', width: 10 },
-      { header: 'Elemento', key: 'element', width: 30 },
-      { header: 'Status', key: 'status', width: 15 },
-      { header: 'Problema', key: 'problem', width: 50 },
-      { header: 'Ação', key: 'action', width: 50 },
-      { header: 'Responsável', key: 'owner', width: 25 },
-      { header: 'Prazo', key: 'dueDate', width: 15 },
-    ];
-
-    const dataLocal = filteredPlans.map((p) => ({
-      pillar: p.element?.pillar?.code ?? p.element?.pillar?.name,
-      element: p.element?.name,
-      status: t(`status.${p.status}`),
-      problem: p.problem_pt ?? p.problem ?? '',
-      action: p.action_pt ?? p.solution ?? '',
-      owner: p.owner_name,
-      dueDate: p.due_date ?? '-',
-    }));
-
-    setupWorksheet('Local (PT)', dataLocal, columnsLocal);
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    saveAs(
-      blob,
-      `Action_Plans_${selectedCountry}_${new Date()
-        .toISOString()
-        .split('T')[0]}.xlsx`,
-    );
+    // Import dinâmico - ExcelJS só é carregado quando o usuário clica em exportar
+    const { exportActionPlansToExcel } = await import('../utils/excelExport');
+    const filename = `Action_Plans_${selectedCountry}_${new Date().toISOString().split('T')[0]}`;
+    await exportActionPlansToExcel(filteredPlans, filename);
   };
   // ----------------------------------
 

@@ -36,9 +36,7 @@ import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { useAuth } from '../contexts/AuthContext';
 import logoGroup from '../assets/group-logo-16x9.png';
 
-// 👇 novos imports para export global
-import ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
+// Import da API para exportação global
 import { fetchActionPlans } from '../services/api';
 
 // Lista completa disponível para troca de contexto
@@ -104,109 +102,22 @@ export function MainLayout() {
     setExportingGlobal(true);
 
     try {
-      const workbook = new ExcelJS.Workbook();
-
-      const columns = [
-        { header: 'Country', key: 'country', width: 18 },
-        { header: 'Pillar', key: 'pillar', width: 12 },
-        { header: 'Element', key: 'element', width: 30 },
-        { header: 'Status', key: 'status', width: 15 },
-        { header: 'Problem (EN)', key: 'problem', width: 50 },
-        { header: 'Action (EN)', key: 'action', width: 50 },
-        { header: 'Owner', key: 'owner', width: 25 },
-        { header: 'Due Date', key: 'dueDate', width: 15 },
-      ];
-
-      const setupWorksheet = (sheetName: string, data: any[]) => {
-        const sheet = workbook.addWorksheet(sheetName);
-        sheet.columns = columns;
-        sheet.addRows(data);
-
-        sheet.eachRow((row, rowNumber) => {
-          row.alignment = {
-            vertical: 'top',
-            wrapText: true,
-            horizontal: 'left',
-          };
-
-          if (rowNumber === 1) {
-            row.height = 25;
-            row.eachCell((cell) => {
-              cell.font = {
-                bold: true,
-                color: { argb: 'FFFFFFFF' },
-                size: 12,
-              };
-              cell.fill = {
-                type: 'pattern',
-                pattern: 'solid',
-                fgColor: { argb: 'FF228BE6' }, // azul
-              };
-              cell.alignment = { vertical: 'middle', horizontal: 'center' };
-              cell.border = {
-                top: { style: 'thin' },
-                left: { style: 'thin' },
-                bottom: { style: 'thin' },
-                right: { style: 'thin' },
-              };
-            });
-          } else {
-            row.eachCell((cell) => {
-              cell.border = {
-                top: { style: 'thin' },
-                left: { style: 'thin' },
-                bottom: { style: 'thin' },
-                right: { style: 'thin' },
-              };
-              if (rowNumber % 2 === 0) {
-                cell.fill = {
-                  type: 'pattern',
-                  pattern: 'solid',
-                  fgColor: { argb: 'FFF8F9FA' }, // cinza claro
-                };
-              }
-            });
-          }
-        });
-      };
-
       // Países que realmente existem na base (ignoramos "Global")
       const exportCountries = AVAILABLE_COUNTRIES.filter(
         (c) => c.name !== 'Global',
       );
 
+      // Prepara dados para exportação
+      const countriesWithPlans = [];
       for (const country of exportCountries) {
-        const countryName = country.name;
-        const plans = await fetchActionPlans(countryName);
-
-        const sheetData = plans.map((p) => ({
-          country: countryName,
-          pillar: p.element?.pillar?.code ?? p.element?.pillar?.name ?? '',
-          element: p.element?.name ?? '',
-          status: p.status,
-          problem:
-            p.problem_en ??
-            p.problem_pt ??
-            p.problem ??
-            '',
-          action:
-            p.action_en ??
-            p.action_pt ??
-            p.solution ??
-            '',
-          owner: p.owner_name,
-          dueDate: p.due_date ?? '',
-        }));
-
-        setupWorksheet(countryName, sheetData);
+        const plans = await fetchActionPlans(country.name);
+        countriesWithPlans.push({ countryName: country.name, plans });
       }
 
-      const buffer = await workbook.xlsx.writeBuffer();
-      const blob = new Blob([buffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
+      // Import dinâmico - ExcelJS só é carregado quando necessário
+      const { exportGlobalPlansToExcel } = await import('../utils/excelExport');
       const today = new Date().toISOString().split('T')[0];
-      saveAs(blob, `Action_Plans_GLOBAL_EN_${today}.xlsx`);
+      await exportGlobalPlansToExcel(countriesWithPlans, `Action_Plans_GLOBAL_EN_${today}`);
     } catch (err) {
       console.error('Error exporting global plans:', err);
     } finally {
