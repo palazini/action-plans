@@ -43,7 +43,10 @@
         "loginWithThis": "Diesen werden Sie zur Anmeldung verwenden",
         "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein",
         "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein",
-        "usernameTooShort": "Der Benutzername muss mindestens 3 Zeichen lang sein"
+        "usernameTooShort": "Der Benutzername muss mindestens 3 Zeichen lang sein",
+        "invalidCredentials": "Falscher Benutzername oder Passwort. Bitte überprüfen Sie Ihre Anmeldedaten.",
+        "usernamePlaceholder": "benutzername.nachname",
+        "passwordPlaceholder": "Ihr sicheres Passwort"
     },
     "dashboard": {
         "subtitle": "Überwachung der Maßnahmen für {{country}}",
@@ -72,7 +75,8 @@
             "noElementsForFilter": "Für diesen Filter wurden keine Elemente gefunden.",
             "modalTitle": "Plan verwalten",
             "existingActionsTitle": "Bestehende Maßnahmen",
-            "allClear": "Alles in Ordnung!"
+            "allClear": "Alles in Ordnung!",
+            "unknownPillar": "Keine Säule"
         },
         "actionPlans": {
             "title": "Aktionspläne",
@@ -159,5 +163,8 @@
         "owner_placeholder": "Wer führt dies aus?",
         "dueDate": "Frist",
         "dueDate_placeholder": "Datum auswählen"
+    },
+    "notifications": {
+        "success": "Erfolg"
     }
 }

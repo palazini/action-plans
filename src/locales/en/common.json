@@ -47,7 +47,10 @@
     "loginWithThis": "You will use this to log in",
     "nameTooShort": "Name must be at least 2 characters",
     "passwordTooShort": "Password must be at least 6 characters",
-    "usernameTooShort": "Username must be at least 3 characters"
+    "usernameTooShort": "Username must be at least 3 characters",
+    "invalidCredentials": "Invalid username or password. Please check your credentials.",
+    "usernamePlaceholder": "yourname.lastname",
+    "passwordPlaceholder": "Your secure password"
   },
   "dashboard": {
     "subtitle": "Monitoring actions for {{country}}",
@@ -94,7 +97,8 @@
       "noElementsForFilter": "No elements found for this filter.",
       "modalTitle": "Manage Plan",
       "existingActionsTitle": "Existing Actions",
-      "allClear": "All clear!"
+      "allClear": "All clear!",
+      "unknownPillar": "No pillar"
     },
     "actionPlans": {
       "title": "Action Plans",
@@ -193,5 +197,8 @@
     "problemEn_placeholder": "Describe the current problem...",
     "actionEn": "Action (English)",
     "actionEn_placeholder": "What will be done to solve the problem?"
+  },
+  "notifications": {
+    "success": "Success"
   }
 }

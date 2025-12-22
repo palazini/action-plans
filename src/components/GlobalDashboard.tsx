@@ -90,7 +90,7 @@ export function GlobalDashboard() {
 
     if (error) {
         return (
-            <Alert icon={<IconAlertCircle size={16} />} color="red" title="Erro" variant="filled">
+            <Alert icon={<IconAlertCircle size={16} />} color="red" title={t('actions.error')} variant="filled">
                 {error}
             </Alert>
         );

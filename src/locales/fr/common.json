@@ -40,7 +40,10 @@
     "loginWithThis": "Vous utiliserez ceci pour vous connecter",
     "nameTooShort": "Le nom doit comporter au moins 2 caractères",
     "passwordTooShort": "Le mot de passe doit comporter au moins 6 caractères",
-    "usernameTooShort": "Le nom d'utilisateur doit comporter au moins 3 caractères"
+    "usernameTooShort": "Le nom d'utilisateur doit comporter au moins 3 caractères",
+    "invalidCredentials": "Nom d'utilisateur ou mot de passe incorrect. Veuillez vérifier vos identifiants.",
+    "usernamePlaceholder": "prenom.nom",
+    "passwordPlaceholder": "Votre mot de passe sécurisé"
   },
   "dashboard": {
     "subtitle": "Suivi des actions pour {{country}}",
@@ -69,7 +72,8 @@
       "noElementsForFilter": "Aucun élément trouvé pour ce filtre.",
       "modalTitle": "Gérer le plan",
       "existingActionsTitle": "Actions existantes",
-      "allClear": "Tout est à jour !"
+      "allClear": "Tout est à jour !",
+      "unknownPillar": "Aucun pilier"
     },
     "actionPlans": {
       "title": "Plans d'action",
@@ -156,5 +160,8 @@
     "owner_placeholder": "Qui exécutera ?",
     "dueDate": "Date Limite",
     "dueDate_placeholder": "Sélectionnez la date"
+  },
+  "notifications": {
+    "success": "Succès"
   }
 }

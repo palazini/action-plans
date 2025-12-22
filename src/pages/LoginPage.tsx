@@ -86,7 +86,7 @@ export function LoginPage() {
     } catch (error: any) {
       notifications.show({
         title: t('auth.error'),
-        message: 'Usuário ou senha incorretos. Verifique suas credenciais.',
+        message: t('auth.invalidCredentials'),
         color: 'red',
         icon: <IconLock size={16} />,
       });
@@ -130,7 +130,7 @@ export function LoginPage() {
             <Stack gap="md">
               <TextInput
                 label={t('auth.username')}
-                placeholder="seunome.sobrenome"
+                placeholder={t('auth.usernamePlaceholder')}
                 leftSection={<IconUser size={16} />}
                 size="md"
                 required
@@ -138,7 +138,7 @@ export function LoginPage() {
               />
               <PasswordInput
                 label={t('auth.password')}
-                placeholder="Sua senha segura"
+                placeholder={t('auth.passwordPlaceholder')}
                 leftSection={<IconLock size={16} />}
                 required
                 size="md"

@@ -40,7 +40,10 @@
     "loginWithThis": "您將使用此名稱登入",
     "nameTooShort": "名字至少需要 2 個字元",
     "passwordTooShort": "密碼至少需要 6 個字元",
-    "usernameTooShort": "使用者名稱至少需要 3 個字元"
+    "usernameTooShort": "使用者名稱至少需要 3 個字元",
+    "invalidCredentials": "使用者名稱或密碼錯誤。請確認您的登入資訊。",
+    "usernamePlaceholder": "名字.姓氏",
+    "passwordPlaceholder": "您的安全密碼"
   },
   "dashboard": {
     "subtitle": "{{country}} 的行動監控",
@@ -69,7 +72,8 @@
       "noElementsForFilter": "查無符合此篩選的要素。",
       "modalTitle": "管理計畫",
       "existingActionsTitle": "現有行動",
-      "allClear": "一切正常！"
+      "allClear": "一切正常！",
+      "unknownPillar": "無支柱"
     },
     "actionPlans": {
       "title": "行動計畫",
@@ -156,5 +160,8 @@
     "owner_placeholder": "誰將執行？",
     "dueDate": "截止日期",
     "dueDate_placeholder": "選擇日期"
+  },
+  "notifications": {
+    "success": "成功"
   }
 }

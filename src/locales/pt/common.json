@@ -47,7 +47,10 @@
     "loginWithThis": "Você usará isso para entrar",
     "nameTooShort": "O nome deve ter pelo menos 2 caracteres",
     "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
-    "usernameTooShort": "O nome de usuário deve ter pelo menos 3 caracteres"
+    "usernameTooShort": "O nome de usuário deve ter pelo menos 3 caracteres",
+    "invalidCredentials": "Usuário ou senha incorretos. Verifique suas credenciais.",
+    "usernamePlaceholder": "seunome.sobrenome",
+    "passwordPlaceholder": "Sua senha segura"
   },
   "dashboard": {
     "subtitle": "Monitoramento de ações para {{country}}",
@@ -94,7 +97,8 @@
       "noElementsForFilter": "Nenhum elemento encontrado para este filtro.",
       "modalTitle": "Gerenciar Plano",
       "existingActionsTitle": "Ações Existentes",
-      "allClear": "Tudo em dia!"
+      "allClear": "Tudo em dia!",
+      "unknownPillar": "Sem pilar"
     },
     "actionPlans": {
       "title": "Planos de Ação",
@@ -193,5 +197,8 @@
     "problemEn_placeholder": "Descreva o problema atual...",
     "actionEn": "Ação (Inglês)",
     "actionEn_placeholder": "O que será feito para resolver o problema?"
+  },
+  "notifications": {
+    "success": "Sucesso"
   }
 }

@@ -40,7 +40,10 @@
     "loginWithThis": "Userai questo per accedere",
     "nameTooShort": "Il nome deve contenere almeno 2 caratteri",
     "passwordTooShort": "La password deve contenere almeno 6 caratteri",
-    "usernameTooShort": "Il nome utente deve contenere almeno 3 caratteri"
+    "usernameTooShort": "Il nome utente deve contenere almeno 3 caratteri",
+    "invalidCredentials": "Nome utente o password errati. Verifica le tue credenziali.",
+    "usernamePlaceholder": "nome.cognome",
+    "passwordPlaceholder": "La tua password sicura"
   },
   "dashboard": {
     "subtitle": "Monitoraggio azioni per {{country}}",
@@ -69,7 +72,8 @@
       "noElementsForFilter": "Nessun elemento trovato per questo filtro.",
       "modalTitle": "Gestisci Piano",
       "existingActionsTitle": "Azioni Esistenti",
-      "allClear": "Tutto aggiornato!"
+      "allClear": "Tutto aggiornato!",
+      "unknownPillar": "Nessun pilastro"
     },
     "actionPlans": {
       "title": "Piani d'azione",
@@ -156,5 +160,8 @@
     "owner_placeholder": "Chi eseguirà?",
     "dueDate": "Data Scadenza",
     "dueDate_placeholder": "Seleziona la data"
+  },
+  "notifications": {
+    "success": "Successo"
   }
 }

@@ -87,7 +87,7 @@ export function RegisterPage() {
             if (error) throw error;
 
             notifications.show({
-                title: 'Sucesso',
+                title: t('notifications.success'),
                 message: t('auth.successRegistration'),
                 color: 'green',
             });
@@ -149,10 +149,10 @@ export function RegisterPage() {
                             />
 
                             {username && (
-                                <Alert 
-                                    variant="light" 
-                                    color="blue" 
-                                    title={t('auth.generatedUsername')} 
+                                <Alert
+                                    variant="light"
+                                    color="blue"
+                                    title={t('auth.generatedUsername')}
                                     icon={<IconInfoCircle size={16} />}
                                     styles={{ label: { fontWeight: 700 } }}
                                 >
@@ -210,7 +210,7 @@ export function RegisterPage() {
                         </Group>
                     </Box>
                 </Paper>
-                
+
                 <Text ta="center" size="xs" c="dimmed" mt="xl">
                     Action Plans System &copy; 2024
                 </Text>
