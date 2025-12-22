@@ -1,8 +1,9 @@
-import React, { Suspense } from 'react'; // Importe Suspense
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MantineProvider, Loader, Center } from '@mantine/core'; // Importe componentes de loading
+import { MantineProvider } from '@mantine/core';
 import { BrowserRouter } from 'react-router-dom';
 import { Notifications } from '@mantine/notifications';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import './i18n';
 import { AuthProvider } from './contexts/AuthContext';
@@ -11,24 +12,29 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 
-// Um componente de loading bonito para o estado inicial
-const PageLoader = () => (
-  <Center h="100vh" bg="gray.0">
-    <Loader size="xl" type="dots" />
-  </Center>
-);
+// Configuração do React Query para cache inteligente
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // Dados ficam "frescos" por 5 minutos
+      gcTime: 1000 * 60 * 30, // Cache mantido por 30 minutos
+      retry: 1, // Tentar novamente 1 vez em caso de erro
+      refetchOnWindowFocus: false, // Não refetch ao focar janela
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <MantineProvider defaultColorScheme="light">
-      <Notifications />
-      <Suspense fallback={<PageLoader />}> {/* ADICIONE ISSO AQUI */}
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider defaultColorScheme="light">
+        <Notifications />
         <AuthProvider>
           <BrowserRouter>
             <App />
           </BrowserRouter>
         </AuthProvider>
-      </Suspense>
-    </MantineProvider>
+      </MantineProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 );

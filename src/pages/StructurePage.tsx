@@ -1,5 +1,5 @@
 //src/pages/StructurePage.tsx
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Alert,
   ActionIcon,
@@ -32,23 +32,14 @@ import {
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import {
-  createElement,
-  createPillar,
-  fetchPillarsWithElements,
-  updateElement,
-  type AdminElement,
-  type AdminPillar,
-} from '../services/api';
+import { usePillarsWithElements } from '../hooks/useQueries';
+import { createPillar, createElement, updateElement, type AdminElement, type AdminPillar } from '../services/api';
 
 export function StructurePage() {
   const { t } = useTranslation();
   const { selectedCountry } = useAuth();
 
-  const [pillars, setPillars] = useState<AdminPillar[]>([]);
   const [selectedPillarId, setSelectedPillarId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const [createPillarOpen, setCreatePillarOpen] = useState(false);
   const [createElementOpen, setCreateElementOpen] = useState(false);
@@ -56,32 +47,25 @@ export function StructurePage() {
     null,
   );
 
+  // React Query hooks
+  const {
+    data: pillars = [],
+    isLoading: loading,
+    error: queryError,
+    refetch
+  } = usePillarsWithElements(selectedCountry);
+
+  const error = queryError ? t('dashboard.loadError') : null;
+
   const selectedPillar = pillars.find((p) => p.id === selectedPillarId) ?? null;
 
-  async function load() {
-    setLoading(true);
-    setError(null);
-    try {
-      if (!selectedCountry) return;
-      const data = await fetchPillarsWithElements(selectedCountry);
-      setPillars(data);
-      if (!selectedPillarId && data.length > 0) {
-        setSelectedPillarId(data[0].id);
-      }
-    } catch (err) {
-      console.error(err);
-      setError(t('dashboard.loadError'));
-    } finally {
-      setLoading(false);
-    }
-  }
-
+  // Seleciona automaticamente o primeiro pilar quando os dados carregam
   useEffect(() => {
-    if (selectedCountry) {
-      load();
+    if (!selectedPillarId && pillars.length > 0) {
+      setSelectedPillarId(pillars[0].id);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCountry]);
+  }, [pillars, selectedPillarId]);
+
 
   // Helper para cor do score
   const getScoreColor = (score: number) => {
@@ -285,7 +269,7 @@ export function StructurePage() {
       <CreatePillarModal
         opened={createPillarOpen}
         onClose={() => setCreatePillarOpen(false)}
-        onSaved={load}
+        onSaved={() => refetch()}
         country={selectedCountry!}
       />
 
@@ -294,7 +278,7 @@ export function StructurePage() {
         <CreateElementModal
           opened={createElementOpen}
           onClose={() => setCreateElementOpen(false)}
-          onSaved={load}
+          onSaved={() => refetch()}
           pillar={selectedPillar}
           country={selectedCountry!}
         />
@@ -305,9 +289,9 @@ export function StructurePage() {
         <EditElementModal
           element={editingElement}
           onClose={() => setEditingElement(null)}
-          onSaved={async () => {
+          onSaved={() => {
             setEditingElement(null);
-            await load();
+            refetch();
           }}
         />
       )}

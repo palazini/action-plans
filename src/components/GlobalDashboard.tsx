@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import {
     Card,
     Title,
@@ -18,8 +17,9 @@ import {
     IconAlertCircle,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { fetchGlobalCountryStats, type GlobalCountryStats } from '../services/api';
+import { useGlobalCountryStats } from '../hooks/useQueries';
 import { useAuth } from '../contexts/AuthContext';
+import type { GlobalCountryStats } from '../services/api';
 
 // Mapeamento de bandeiras (Copiado para evitar refactor agora, idealmente ficaria em constants)
 const COUNTRY_CODES: Record<string, string> = {
@@ -39,25 +39,10 @@ const COUNTRY_CODES: Record<string, string> = {
 export function GlobalDashboard() {
     const { t } = useTranslation();
     const { setSelectedCountry } = useAuth();
-    const [stats, setStats] = useState<GlobalCountryStats[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        async function load() {
-            setLoading(true);
-            try {
-                const data = await fetchGlobalCountryStats();
-                setStats(data);
-            } catch (err) {
-                console.error(err);
-                setError(t('dashboard.loadError'));
-            } finally {
-                setLoading(false);
-            }
-        }
-        load();
-    }, [t]);
+    // React Query hook - cache automático!
+    const { data: stats = [], isLoading: loading, error: queryError } = useGlobalCountryStats();
+    const error = queryError ? t('dashboard.loadError') : null;
 
     const getCountryCode = (name: string) => {
         return COUNTRY_CODES[name] || 'GL';

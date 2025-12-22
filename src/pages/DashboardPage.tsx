@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -28,8 +27,7 @@ import {
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { fetchDashboardStats, fetchPillarStats } from '../services/api';
-import type { DashboardStats, PillarStats } from '../types';
+import { useDashboardStats, usePillarStats } from '../hooks/useQueries';
 import { GlobalDashboard } from '../components/GlobalDashboard';
 
 export function DashboardPage() {
@@ -39,45 +37,12 @@ export function DashboardPage() {
 
   const isGlobalView = selectedCountry === 'Global';
 
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [pillarStats, setPillarStats] = useState<PillarStats[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // React Query hooks - cache automático!
+  const { data: stats, isLoading: loadingStats, error: statsError } = useDashboardStats(selectedCountry);
+  const { data: pillarStats = [], isLoading: loadingPillar } = usePillarStats(selectedCountry);
 
-  useEffect(() => {
-    // Se não tiver país selecionado, paramos o loading imediatamente
-    if (!selectedCountry) {
-      setLoading(false);
-      return;
-    }
-
-    // Se for Global, o componente GlobalDashboard gerencia seu próprio fetch
-    if (selectedCountry === 'Global') {
-      setLoading(false);
-      return;
-    }
-
-    async function load() {
-      setLoading(true);
-      setError(null);
-      try {
-        const [general, perPillar] = await Promise.all([
-          fetchDashboardStats(selectedCountry!),
-          fetchPillarStats(selectedCountry!),
-        ]);
-        setStats(general);
-        setPillarStats(perPillar);
-      } catch (err) {
-        console.error(err);
-        setError(t('dashboard.loadError'));
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCountry]);
+  const loading = loadingStats || loadingPillar;
+  const error = statsError ? t('dashboard.loadError') : null;
 
   // Função auxiliar para calcular porcentagem simples
   const getProgress = (value: number, total: number) => {

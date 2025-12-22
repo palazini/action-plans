@@ -1,5 +1,5 @@
 // src/pages/BacklogPage.tsx
-import { useEffect, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   Card,
   Title,
@@ -29,7 +29,7 @@ import {
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { fetchBacklogElements } from '../services/api';
+import { useBacklogElements } from '../hooks/useQueries';
 import type { ElementWithRelations } from '../types';
 import { ActionPlanForm } from '../components/action-plans/ActionPlanForm';
 
@@ -37,41 +37,26 @@ export function BacklogPage() {
   const { t } = useTranslation();
   const { selectedCountry } = useAuth();
 
-  const [elements, setElements] = useState<ElementWithRelations[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<ElementWithRelations | null>(null);
   const [pillarFilter, setPillarFilter] = useState<string>('ALL');
 
   const isGlobalView = selectedCountry === 'Global';
 
-  async function load() {
-    setLoading(true);
-    setError(null);
-    try {
-      if (!selectedCountry) return;
-      const data = await fetchBacklogElements(selectedCountry);
-      setElements(data);
-    } catch (err) {
-      console.error(err);
-      setError(t('backlog.loadError'));
-    } finally {
-      setLoading(false);
-    }
-  }
+  // React Query hook - cache automático e refetch inteligente
+  const {
+    data: elements = [],
+    isLoading: loading,
+    error: queryError,
+    refetch
+  } = useBacklogElements(selectedCountry);
+
+  const error = queryError ? t('backlog.loadError') : null;
 
   // helper para agrupar/filtrar pilar por código/nome (mesmo em países diferentes)
   function getPillarKey(el: ElementWithRelations): string | null {
     if (!el.pillar) return null;
     return el.pillar.code || el.pillar.name || el.pillar.id;
   }
-
-  useEffect(() => {
-    if (selectedCountry) {
-      load();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCountry]);
 
   const pillarOptions = Array.from(
     new Map(
@@ -261,9 +246,9 @@ export function BacklogPage() {
           <Text c="dimmed" size="sm">
             {isGlobalView
               ? t(
-                  'pages.backlog.descriptionGlobal',
-                  'Backlog global de elementos com fundação < 100% em todas as unidades.',
-                )
+                'pages.backlog.descriptionGlobal',
+                'Backlog global de elementos com fundação < 100% em todas as unidades.',
+              )
               : t('pages.backlog.description')}
           </Text>
         </div>
@@ -294,9 +279,9 @@ export function BacklogPage() {
               <Text fw={600} size="sm">
                 {isGlobalView
                   ? t(
-                      'pages.backlog.filterByPillarGlobal',
-                      'Filtrar por pilar (todas as unidades)',
-                    )
+                    'pages.backlog.filterByPillarGlobal',
+                    'Filtrar por pilar (todas as unidades)',
+                  )
                   : t('pages.backlog.filterByPillar')}
               </Text>
             </Group>
@@ -419,9 +404,9 @@ export function BacklogPage() {
             <ActionPlanForm
               element={selected}
               onCancel={() => setSelected(null)}
-              onSuccess={async () => {
+              onSuccess={() => {
                 setSelected(null);
-                await load();
+                refetch();
               }}
               country={selected.country ?? selectedCountry!}
             />

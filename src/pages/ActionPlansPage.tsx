@@ -1,5 +1,5 @@
 // src/pages/ActionPlansPage.tsx
-import { useEffect, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   Alert,
   Badge,
@@ -37,7 +37,7 @@ import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { fetchActionPlans, updateActionPlanStatus } from '../services/api';
+import { useActionPlans, useUpdateActionPlanStatus } from '../hooks/useQueries';
 import type { ActionPlanStatus, ActionPlanWithElement } from '../types';
 import { EditActionPlanForm } from '../components/action-plans/EditActionPlanForm';
 
@@ -67,10 +67,6 @@ export function ActionPlansPage() {
   const { t, i18n } = useTranslation();
   const { selectedCountry } = useAuth();
 
-  const [plans, setPlans] = useState<ActionPlanWithElement[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [pillarFilter, setPillarFilter] = useState<string>('ALL');
   const [ownerFilter, setOwnerFilter] = useState<string>('');
@@ -84,6 +80,18 @@ export function ActionPlansPage() {
 
   const currentLang =
     i18n.language && i18n.language.startsWith('en') ? 'en' : 'pt';
+
+  // React Query hooks
+  const {
+    data: plans = [],
+    isLoading: loading,
+    error: queryError,
+    refetch
+  } = useActionPlans(selectedCountry);
+
+  const updateStatusMutation = useUpdateActionPlanStatus();
+
+  const error = queryError ? t('table.noPlans') : null;
 
   function resolveProblem(plan: ActionPlanWithElement): string {
     if (currentLang === 'en') {
@@ -121,36 +129,13 @@ export function ActionPlansPage() {
     );
   }
 
-  async function load() {
-    setLoading(true);
-    setError(null);
-    try {
-      if (!selectedCountry) return;
-      const data = await fetchActionPlans(selectedCountry);
-      setPlans(data);
-    } catch (err) {
-      console.error(err);
-      setError(t('table.noPlans'));
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    if (selectedCountry) {
-      load();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCountry]);
-
   async function handleChangeStatus(
     planId: string,
     newStatus: ActionPlanStatus,
   ) {
     setUpdatingId(planId);
     try {
-      await updateActionPlanStatus(planId, newStatus);
-      await load();
+      await updateStatusMutation.mutateAsync({ id: planId, status: newStatus });
     } catch (err) {
       console.error(err);
     } finally {
@@ -725,9 +710,9 @@ export function ActionPlansPage() {
           <EditActionPlanForm
             plan={editingPlan}
             onCancel={() => setEditingPlan(null)}
-            onSuccess={async () => {
+            onSuccess={() => {
               setEditingPlan(null);
-              await load();
+              refetch();
             }}
           />
         )}
