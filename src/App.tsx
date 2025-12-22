@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Center, Loader } from '@mantine/core';
 import { MainLayout } from './layout/MainLayout';
 import { AuthGuard } from './components/AuthGuard';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Lazy load pages para melhor performance
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
@@ -25,32 +26,34 @@ function PageLoader() {
 
 export default function App() {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/app"
-          element={
-            <AuthGuard>
-              <MainLayout />
-            </AuthGuard>
-          }
-        >
-          <Route index element={<DashboardPage />} />
-          <Route path="backlog" element={<BacklogPage />} />
-          <Route path="plans" element={<ActionPlansPage />} />
-          <Route path="structure" element={<StructurePage />} />
-          <Route path="*" element={<Navigate to="/app" replace />} />
-        </Route>
+          {/* Protected Routes */}
+          <Route
+            path="/app"
+            element={
+              <AuthGuard>
+                <MainLayout />
+              </AuthGuard>
+            }
+          >
+            <Route index element={<DashboardPage />} />
+            <Route path="backlog" element={<BacklogPage />} />
+            <Route path="plans" element={<ActionPlansPage />} />
+            <Route path="structure" element={<StructurePage />} />
+            <Route path="*" element={<Navigate to="/app" replace />} />
+          </Route>
 
-        {/* Catch all redirect to landing */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Suspense>
+          {/* Catch all redirect to landing */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
