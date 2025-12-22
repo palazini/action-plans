@@ -23,3 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 
+# Database backup files
+*.sql
+*_rows.sql
+backup.sql
+backup_completo.sql
+schema.sql
+setup_novo_projeto.sql
