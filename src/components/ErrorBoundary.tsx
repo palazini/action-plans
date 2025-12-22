@@ -70,13 +70,13 @@ export class ErrorBoundary extends Component<Props, State> {
                                 </ThemeIcon>
 
                                 <Title order={2} ta="center" c="dark.7">
-                                    Ops, algo deu errado
+                                    Oops, something went wrong
                                 </Title>
 
                                 <Text ta="center" c="dimmed" size="md">
-                                    Ocorreu um erro inesperado na aplicação.
+                                    An unexpected error occurred.
                                     <br />
-                                    Por favor, tente recarregar a página.
+                                    Please try reloading the page.
                                 </Text>
 
                                 {import.meta.env.DEV && this.state.error && (
@@ -104,7 +104,7 @@ export class ErrorBoundary extends Component<Props, State> {
                                         fullWidth
                                         size="md"
                                     >
-                                        Recarregar Página
+                                        Reload Page
                                     </Button>
 
                                     <Button
@@ -113,7 +113,7 @@ export class ErrorBoundary extends Component<Props, State> {
                                         fullWidth
                                         size="md"
                                     >
-                                        Voltar para o Início
+                                        Go to Home
                                     </Button>
                                 </Stack>
                             </Stack>
