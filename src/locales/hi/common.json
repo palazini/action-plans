@@ -77,7 +77,9 @@
     },
     "actionPlans": {
       "title": "कार्य योजनाएं",
-      "description": "सभी पंजीकृत योजनाओं और उनकी स्थिति का प्रबंधन करें。"
+      "description": "सभी पंजीकृत योजनाओं और उनकी स्थिति का प्रबंधन करें。",
+      "descriptionGlobal": "कार्रवाई योजनाओं की वैश्विक सूची (वे सभी इकाइयाँ जिन्हें आप देख सकते हैं)।",
+      "useHeaderExport": "पृष्ठ के शीर्ष पर «ग्लोबल निर्यात» बटन का उपयोग करें।"
     },
     "structure": {
       "title": "संगठनात्मक संरचना",
@@ -87,7 +89,9 @@
       "elementsCardTitle": "तत्व",
       "elementsCardSubtitle": "स्तंभ के भीतर मूल्यांकित आइटम",
       "noPillarSelected": "विवरण देखने के लिए एक स्तंभ चुनें",
-      "noElementsInPillar": "इस स्तंभ में कोई तत्व नहीं है"
+      "noElementsInPillar": "इस स्तंभ में कोई तत्व नहीं है",
+      "lockedTooltip": "स्तंभ और तत्व वैश्विक रूप से मानकीकृत हैं। आप केवल अपने देश का स्कोर संपादित कर सकते हैं।",
+      "globalStandard": "वैश्विक मानक"
     }
   },
   "table": {
@@ -135,7 +139,11 @@
     "descriptionEn": "विवरण (अंग्रेज़ी)",
     "notesPt": "नोट्स (स्थानीय)",
     "notesEn": "नोट्स (अंग्रेज़ी)",
+    "notes": "टिप्पणियाँ",
+    "notesDesc": "इस तत्व के लिए देश-विशिष्ट टिप्पणियाँ",
     "foundationScore": "स्कोर",
+    "foundationScoreDesc": "आपके देश के लिए तत्व की परिपक्वता स्कोर (0–100)",
+    "context": "संदर्भ",
     "elementsCount": "आइटम",
     "save": "सहेजें",
     "cancel": "रद्द करें"
@@ -159,7 +167,14 @@
     "owner": "जिम्मेदार",
     "owner_placeholder": "कौन निष्पादित करेगा?",
     "dueDate": "अंतिम तिथि",
-    "dueDate_placeholder": "तारीख चुनें"
+    "dueDate_placeholder": "तारीख चुनें",
+    "nativeLocal": "(मूल / स्थानीय)",
+    "globalOptional": "(वैश्विक / वैकल्पिक)",
+    "english": "अंग्रेज़ी",
+    "problemEn": "समस्या (अंग्रेज़ी)",
+    "problemEn_placeholder": "वर्तमान समस्या का वर्णन करें…",
+    "actionEn": "कार्रवाई (अंग्रेज़ी)",
+    "actionEn_placeholder": "समस्या को हल करने के लिए क्या किया जाएगा?"
   },
   "notifications": {
     "success": "सफलता"

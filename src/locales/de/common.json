@@ -80,7 +80,9 @@
         },
         "actionPlans": {
             "title": "Aktionspläne",
-            "description": "Alle erfassten Pläne und deren Status verwalten."
+            "description": "Alle erfassten Pläne und deren Status verwalten.",
+            "descriptionGlobal": "Globale Liste der Aktionspläne (alle Einheiten, die Sie einsehen können).",
+            "useHeaderExport": "Verwenden Sie die Schaltfläche „Global exportieren“ oben auf der Seite."
         },
         "structure": {
             "title": "Organisationsstruktur",
@@ -90,7 +92,9 @@
             "elementsCardTitle": "Elemente",
             "elementsCardSubtitle": "In der Säule bewertete Elemente",
             "noPillarSelected": "Wählen Sie eine Säule aus, um Details anzuzeigen",
-            "noElementsInPillar": "Diese Säule enthält keine Elemente"
+            "noElementsInPillar": "Diese Säule enthält keine Elemente",
+            "lockedTooltip": "Säulen und Elemente sind global standardisiert. Sie können nur die Bewertung Ihres Landes bearbeiten.",
+            "globalStandard": "Globaler Standard"
         }
     },
     "table": {
@@ -138,7 +142,11 @@
         "descriptionEn": "Beschreibung (Englisch)",
         "notesPt": "Notizen (lokal)",
         "notesEn": "Notizen (Englisch)",
+        "notes": "Notizen",
+        "notesDesc": "Länderspezifische Notizen für dieses Element",
         "foundationScore": "Punktzahl",
+        "foundationScoreDesc": "Reifegradbewertung des Elements für Ihr Land (0–100)",
+        "context": "Kontext",
         "elementsCount": "Positionen",
         "save": "Speichern",
         "cancel": "Abbrechen"
@@ -162,7 +170,14 @@
         "owner": "Verantwortlicher",
         "owner_placeholder": "Wer führt dies aus?",
         "dueDate": "Frist",
-        "dueDate_placeholder": "Datum auswählen"
+        "dueDate_placeholder": "Datum auswählen",
+        "nativeLocal": "(Nativ / Lokal)",
+        "globalOptional": "(Global / Optional)",
+        "english": "Englisch",
+        "problemEn": "Problem (Englisch)",
+        "problemEn_placeholder": "Beschreiben Sie das aktuelle Problem…",
+        "actionEn": "Maßnahme (Englisch)",
+        "actionEn_placeholder": "Was wird getan, um das Problem zu lösen?"
     },
     "notifications": {
         "success": "Erfolg"

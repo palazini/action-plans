@@ -77,7 +77,9 @@
     },
     "actionPlans": {
       "title": "Piani d'azione",
-      "description": "Gestisci tutti i piani registrati e il loro stato."
+      "description": "Gestisci tutti i piani registrati e il loro stato.",
+      "descriptionGlobal": "Elenco globale dei piani d’azione (tutte le unità che puoi visualizzare).",
+      "useHeaderExport": "Utilizza il pulsante «Esporta globale» nella parte superiore della pagina."
     },
     "structure": {
       "title": "Struttura Organizzativa",
@@ -87,7 +89,9 @@
       "elementsCardTitle": "Elementi",
       "elementsCardSubtitle": "Voci valutate all'interno del pilastro",
       "noPillarSelected": "Seleziona un pilastro per vedere i dettagli",
-      "noElementsInPillar": "Questo pilastro non ha elementi"
+      "noElementsInPillar": "Questo pilastro non ha elementi",
+      "lockedTooltip": "I pilastri e gli elementi sono standardizzati a livello globale. Puoi modificare solo il punteggio del tuo paese.",
+      "globalStandard": "Standard globale"
     }
   },
   "table": {
@@ -135,7 +139,11 @@
     "descriptionEn": "Desc. (Inglese)",
     "notesPt": "Note (Locale)",
     "notesEn": "Note (Inglese)",
+    "notes": "Note",
+    "notesDesc": "Note specifiche del paese per questo elemento",
     "foundationScore": "Score",
+    "foundationScoreDesc": "Punteggio di maturità dell’elemento per il tuo paese (0–100)",
+    "context": "Contesto",
     "elementsCount": "Voci",
     "save": "Salva",
     "cancel": "Annulla"
@@ -159,7 +167,14 @@
     "owner": "Responsabile",
     "owner_placeholder": "Chi eseguirà?",
     "dueDate": "Data Scadenza",
-    "dueDate_placeholder": "Seleziona la data"
+    "dueDate_placeholder": "Seleziona la data",
+    "nativeLocal": "(Nativo / Locale)",
+    "globalOptional": "(Globale / Opzionale)",
+    "english": "Inglese",
+    "problemEn": "Problema (Inglese)",
+    "problemEn_placeholder": "Descrivi il problema attuale…",
+    "actionEn": "Azione (Inglese)",
+    "actionEn_placeholder": "Cosa verrà fatto per risolvere il problema?"
   },
   "notifications": {
     "success": "Successo"

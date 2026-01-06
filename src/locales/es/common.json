@@ -77,7 +77,9 @@
     },
     "actionPlans": {
       "title": "Planes de Acción",
-      "description": "Gestione todos los planes registrados y su estado."
+      "description": "Gestione todos los planes registrados y su estado.",
+      "descriptionGlobal": "Lista global de planes de acción (todas las unidades que puede ver).",
+      "useHeaderExport": "Utilice el botón «Exportar global» en la parte superior de la página."
     },
     "structure": {
       "title": "Estructura Organizacional",
@@ -87,7 +89,9 @@
       "elementsCardTitle": "Elementos",
       "elementsCardSubtitle": "Ítems evaluados dentro del pilar",
       "noPillarSelected": "Seleccione un pilar para ver detalles",
-      "noElementsInPillar": "Este pilar no tiene elementos"
+      "noElementsInPillar": "Este pilar no tiene elementos",
+      "lockedTooltip": "Los pilares y los elementos están estandarizados globalmente. Solo puede editar la puntuación de su país.",
+      "globalStandard": "Estándar global"
     }
   },
   "table": {
@@ -135,7 +139,11 @@
     "descriptionEn": "Desc. (Inglés)",
     "notesPt": "Notas (Local)",
     "notesEn": "Notas (Inglés)",
+    "notes": "Notas",
+    "notesDesc": "Notas específicas del país para este elemento",
     "foundationScore": "Score",
+    "foundationScoreDesc": "Puntuación de madurez del elemento para su país (0–100)",
+    "context": "Contexto",
     "elementsCount": "Ítems",
     "save": "Guardar",
     "cancel": "Cancelar"
@@ -159,7 +167,14 @@
     "owner": "Responsable",
     "owner_placeholder": "¿Quién ejecutará?",
     "dueDate": "Fecha Límite",
-    "dueDate_placeholder": "Seleccione la fecha"
+    "dueDate_placeholder": "Seleccione la fecha",
+    "nativeLocal": "(Nativo / Local)",
+    "globalOptional": "(Global / Opcional)",
+    "english": "Inglés",
+    "problemEn": "Problema (Inglés)",
+    "problemEn_placeholder": "Describa el problema actual…",
+    "actionEn": "Acción (Inglés)",
+    "actionEn_placeholder": "¿Qué se hará para resolver el problema?"
   },
   "notifications": {
     "success": "Éxito"

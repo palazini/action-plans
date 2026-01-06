@@ -77,7 +77,9 @@
     },
     "actionPlans": {
       "title": "Plans d'action",
-      "description": "Gérez tous les plans enregistrés et leur statut."
+      "description": "Gérez tous les plans enregistrés et leur statut.",
+      "descriptionGlobal": "Liste globale des plans d’action (toutes les unités que vous pouvez consulter).",
+      "useHeaderExport": "Utilisez le bouton « Exportation globale » en haut de la page."
     },
     "structure": {
       "title": "Structure Organisationnelle",
@@ -87,7 +89,9 @@
       "elementsCardTitle": "Éléments",
       "elementsCardSubtitle": "Items évalués dans le pilier",
       "noPillarSelected": "Sélectionnez un pilier pour voir les détails",
-      "noElementsInPillar": "Ce pilier n'a aucun élément"
+      "noElementsInPillar": "Ce pilier n'a aucun élément",
+      "lockedTooltip": "Les piliers et les éléments sont standardisés au niveau mondial. Vous ne pouvez modifier que le score de votre pays.",
+      "globalStandard": "Norme globale"
     }
   },
   "table": {
@@ -135,7 +139,11 @@
     "descriptionEn": "Desc. (Anglais)",
     "notesPt": "Notes (Local)",
     "notesEn": "Notes (Anglais)",
+    "notes": "Notes",
+    "notesDesc": "Notes spécifiques au pays pour cet élément",
     "foundationScore": "Score",
+    "foundationScoreDesc": "Score de maturité de l’élément pour votre pays (0–100)",
+    "context": "Contexte",
     "elementsCount": "Items",
     "save": "Enregistrer",
     "cancel": "Annuler"
@@ -159,7 +167,14 @@
     "owner": "Responsable",
     "owner_placeholder": "Qui exécutera ?",
     "dueDate": "Date Limite",
-    "dueDate_placeholder": "Sélectionnez la date"
+    "dueDate_placeholder": "Sélectionnez la date",
+    "nativeLocal": "(Natif / Local)",
+    "globalOptional": "(Global / Optionnel)",
+    "english": "Anglais",
+    "problemEn": "Problème (Anglais)",
+    "problemEn_placeholder": "Décrivez le problème actuel…",
+    "actionEn": "Action (Anglais)",
+    "actionEn_placeholder": "Que sera fait pour résoudre le problème ?"
   },
   "notifications": {
     "success": "Succès"

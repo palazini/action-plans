@@ -77,7 +77,9 @@
     },
     "actionPlans": {
       "title": "行動計畫",
-      "description": "管理所有註冊計畫及其狀態。"
+      "description": "管理所有註冊計畫及其狀態。",
+      "descriptionGlobal": "行動計畫的全球清單（您可檢視的所有單位）。",
+      "useHeaderExport": "請使用頁面頂部的「全球匯出」按鈕。"
     },
     "structure": {
       "title": "組織結構",
@@ -87,7 +89,9 @@
       "elementsCardTitle": "要素",
       "elementsCardSubtitle": "支柱內的評估項目",
       "noPillarSelected": "選擇支柱以檢視詳細資訊",
-      "noElementsInPillar": "此支柱尚無要素"
+      "noElementsInPillar": "此支柱尚無要素",
+      "lockedTooltip": "支柱與元素已在全球層級標準化。您只能編輯您國家的分數。",
+      "globalStandard": "全球標準"
     }
   },
   "table": {
@@ -135,7 +139,11 @@
     "descriptionEn": "描述 (英語)",
     "notesPt": "備註 (本地)",
     "notesEn": "備註 (英語)",
+    "notes": "備註",
+    "notesDesc": "此元素的國家別備註",
     "foundationScore": "分數",
+    "foundationScoreDesc": "您國家的元素成熟度分數（0–100）",
+    "context": "背景",
     "elementsCount": "項目數",
     "save": "儲存",
     "cancel": "取消"
@@ -159,7 +167,14 @@
     "owner": "負責人",
     "owner_placeholder": "誰將執行？",
     "dueDate": "截止日期",
-    "dueDate_placeholder": "選擇日期"
+    "dueDate_placeholder": "選擇日期",
+    "nativeLocal": "（母語／本地）",
+    "globalOptional": "（全球／選填）",
+    "english": "英文",
+    "problemEn": "問題（英文）",
+    "problemEn_placeholder": "描述目前的問題……",
+    "actionEn": "行動（英文）",
+    "actionEn_placeholder": "將採取哪些措施來解決問題？"
   },
   "notifications": {
     "success": "成功"
