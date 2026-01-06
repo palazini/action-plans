@@ -15,7 +15,7 @@ export type ActionPlanStatus =
 
 export type ActionPlan = {
   id: string;
-  element_id: string;
+  element_master_id: string; // Referencia elements_master
   problem: string;
   solution: string;
   owner_name: string;

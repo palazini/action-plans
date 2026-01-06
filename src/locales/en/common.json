@@ -115,7 +115,9 @@
       "elementsCardTitle": "Elements",
       "elementsCardSubtitle": "Items evaluated within pillar",
       "noPillarSelected": "Select a pillar to view details",
-      "noElementsInPillar": "This pillar has no elements"
+      "noElementsInPillar": "This pillar has no elements",
+      "lockedTooltip": "Pillars and elements are globally standardized. You can only edit your country's score.",
+      "globalStandard": "Global Standard"
     }
   },
   "table": {
@@ -157,6 +159,7 @@
     "editPillar": "Edit",
     "newElement": "New Element",
     "editElement": "Edit",
+    "editScore": "Edit Score",
     "code": "Code",
     "namePt": "Name (Local)",
     "nameEn": "Name (English)",
@@ -164,7 +167,10 @@
     "descriptionEn": "Description (English)",
     "notesPt": "Notes (Local)",
     "notesEn": "Notes (English)",
+    "notes": "Notes",
+    "notesDesc": "Country-specific notes for this element",
     "foundationScore": "Score",
+    "foundationScoreDesc": "Element maturity score for your country (0-100)",
     "elementsCount": "Items",
     "save": "Save",
     "cancel": "Cancel",

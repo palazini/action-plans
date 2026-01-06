@@ -5,143 +5,148 @@ import type {
   DashboardStats,
   ElementWithRelations,
   ActionPlanStatus,
-  Pillar,
   PillarStats,
   ActionPlanWithElement,
 } from '../types';
 
-// Forma "crua" que o Supabase retorna a linha de elemento com joins (backlog)
-type RawElementRow = {
-  id: string;
-  code: string | null;
-  name: string;
-  foundation_score: number;
-  notes: string | null;
-  country: string;
-  pillar: Pillar[] | Pillar | null;
-  action_plans:
-  | {
-    id: string;
-    status: ActionPlanStatus;
-    problem: string;
-    solution: string;
-    owner_name: string;
-    due_date: string | null;
-    created_at: string;
-  }[]
-  | null;
-};
-
-// Forma "crua" dos planos de ação vindos do Supabase (lista de planos)
-type RawActionPlanRow = {
-  id: string;
-  problem: string | null;
-  solution: string | null;
-  problem_pt: string | null;
-  problem_en: string | null;
-  action_pt: string | null;
-  action_en: string | null;
-  owner_name: string;
-  due_date: string | null;
-  status: ActionPlanStatus;
-  created_at: string;
-  updated_at: string;
-  country: string;
-  // join com elements + pillars vem como "qualquer coisa" (às vezes array)
-  element: any;
-};
-
 /**
  * Elementos com FOUNDATION < 100 + pilar + planos (detalhados)
+ * Usa as novas tabelas globais: elements_master, pillars_master, country_element_scores
  */
 export async function fetchBacklogElements(country: string): Promise<ElementWithRelations[]> {
-  let query = supabase
-    .from('elements')
-    .select(
-      `
-      id,
-      code,
-      name,
-      foundation_score,
-      notes,
-      country,
-      pillar:pillars (
-        id,
-        code,
-        name,
-        description
-      ),
-      action_plans (
-        id,
-        status,
-        problem,
-        solution,
-        owner_name,
-        due_date,
-        created_at
-      )
-    `,
-    )
+  // 1. Buscar scores do país com foundation_score < 100
+  let scoresQuery = supabase
+    .from('country_element_scores')
+    .select('element_id, country, foundation_score, notes')
     .lt('foundation_score', 100);
 
   if (country !== 'Global') {
-    query = query.eq('country', country);
+    scoresQuery = scoresQuery.eq('country', country);
   }
 
-  const { data, error } = await query;
+  const { data: scoresData, error: scoresError } = await scoresQuery;
+  if (scoresError) throw scoresError;
 
-  if (error) {
-    throw error;
+  const scores = (scoresData ?? []) as any[];
+  if (scores.length === 0) return [];
+
+  // 2. Buscar elementos globais correspondentes
+  const elementIds = scores.map(s => s.element_id);
+
+  const { data: elementsData, error: elementsError } = await supabase
+    .from('elements_master')
+    .select(`
+      id,
+      code,
+      name_local,
+      name_en,
+      pillar_id,
+      pillar:pillars_master (
+        id,
+        code,
+        name_local,
+        name_en,
+        description_local
+      )
+    `)
+    .in('id', elementIds);
+
+  if (elementsError) throw elementsError;
+
+  // 3. Buscar action_plans relacionados a esses elementos
+  // Note: action_plans.element_id agora aponta para elements_master OU ainda para elements antigo
+  // Precisamos verificar ambos
+  const { data: plansData, error: plansError } = await supabase
+    .from('action_plans')
+    .select(`
+      id,
+      element_master_id,
+      status,
+      problem,
+      solution,
+      owner_name,
+      due_date,
+      created_at,
+      country
+    `)
+    .in('element_master_id', elementIds);
+
+  if (plansError) throw plansError;
+
+  // 4. Criar mapa de scores
+  const scoresMap = new Map<string, { score: number; notes: string | null; country: string }>();
+  for (const s of scores) {
+    const key = `${s.element_id}_${s.country}`;
+    scoresMap.set(key, { score: s.foundation_score, notes: s.notes, country: s.country });
   }
 
-  const rows = (data ?? []) as unknown as RawElementRow[];
+  // 5. Criar mapa de planos por element_master_id
+  const plansMap = new Map<string, any[]>();
+  for (const plan of (plansData ?? [])) {
+    const key = plan.element_master_id;
+    if (!plansMap.has(key)) {
+      plansMap.set(key, []);
+    }
+    plansMap.get(key)!.push(plan);
+  }
 
-  const normalized: ElementWithRelations[] = rows.map((row) => ({
-    id: row.id,
-    code: row.code,
-    name: row.name,
-    foundation_score: row.foundation_score,
-    notes: row.notes,
-    country: row.country, // 👈 novo
-    pillar: Array.isArray(row.pillar)
-      ? row.pillar[0] ?? null
-      : row.pillar ?? null,
-    action_plans: row.action_plans ?? [],
-  }));
+  // 6. Montar resultado
+  const elements = (elementsData ?? []) as any[];
+  const result: ElementWithRelations[] = [];
 
-  return normalized;
+  for (const el of elements) {
+    // Encontrar o score deste elemento
+    // Se for Global, podemos ter múltiplos scores; vamos iterar
+    const matchingScores = scores.filter(s => s.element_id === el.id);
+
+    for (const scoreEntry of matchingScores) {
+      const pillarRaw = el.pillar;
+      const pillar = Array.isArray(pillarRaw) ? pillarRaw[0] : pillarRaw;
+
+      result.push({
+        id: el.id,
+        code: el.code,
+        name: el.name_local ?? el.name_en ?? '',
+        foundation_score: scoreEntry.foundation_score,
+        notes: scoreEntry.notes,
+        country: scoreEntry.country,
+        pillar: pillar ? {
+          id: pillar.id,
+          code: pillar.code,
+          name: pillar.name_local ?? pillar.name_en ?? '',
+          description: pillar.description_local
+        } : null,
+        action_plans: (plansMap.get(el.id) ?? []).filter(p =>
+          p.country === scoreEntry.country
+        ),
+      });
+    }
+  }
+
+  return result;
 }
 /**
  * Estatísticas gerais do dashboard
+ * Usa as novas tabelas globais
  */
 export async function fetchDashboardStats(country: string): Promise<DashboardStats> {
-  // query base de contagem
-  let totalQuery = supabase
-    .from('elements')
+  // Total de elementos globais (é fixo - 27)
+  const { count: totalElements, error: totalError } = await supabase
+    .from('elements_master')
     .select('*', { count: 'exact', head: true });
 
-  // se NÃO for Global, filtra por país
-  if (country !== 'Global') {
-    totalQuery = totalQuery.eq('country', country);
-  }
+  if (totalError) throw totalError;
 
-  const [totalRes, backlog] = await Promise.all([
-    totalQuery,
-    fetchBacklogElements(country),
-  ]);
+  // Buscar backlog (já usa tabelas novas)
+  const backlog = await fetchBacklogElements(country);
 
-  if (totalRes.error) {
-    throw totalRes.error;
-  }
-
-  const totalElements = totalRes.count ?? 0;
   const gapElements = backlog.length;
   const elementsWithoutPlan = backlog.filter(
     (el) => !el.action_plans || el.action_plans.length === 0,
   ).length;
 
   return {
-    totalElements,
+    totalElements: totalElements ?? 0,
     gapElements,
     elementsWithoutPlan,
   };
@@ -158,37 +163,54 @@ export type GlobalCountryStats = {
 
 /**
  * Estatísticas detalhadas por país (para o dashboard Global)
+ * Usa as novas tabelas globais
  */
 export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
-  // Busca todos os elementos de todos os países + planos
-  // Note: count='exact' não ajuda muito pois vamos agrupar em memória
-  const { data, error } = await supabase.from('elements').select(`
-    id,
-    country,
-    foundation_score,
-    action_plans (
-      id,
-      status
-    )
-  `);
+  // 1. Contar total de elementos (fixo - 27)
+  const { count: totalElements, error: countError } = await supabase
+    .from('elements_master')
+    .select('*', { count: 'exact', head: true });
 
-  if (error) {
-    throw error;
+  if (countError) throw countError;
+
+  // 2. Buscar todos os scores de todos os países
+  const { data: scoresData, error: scoresError } = await supabase
+    .from('country_element_scores')
+    .select('element_id, country, foundation_score');
+
+  if (scoresError) throw scoresError;
+
+  // 3. Buscar todos os action_plans
+  const { data: plansData, error: plansError } = await supabase
+    .from('action_plans')
+    .select('element_master_id, country, status');
+
+  if (plansError) throw plansError;
+
+  // 4. Criar mapa de planos por element_master_id + country
+  const plansMap = new Map<string, { total: number; completed: number }>();
+  for (const plan of (plansData ?? [])) {
+    const key = `${plan.element_master_id}_${plan.country}`;
+    if (!plansMap.has(key)) {
+      plansMap.set(key, { total: 0, completed: 0 });
+    }
+    const entry = plansMap.get(key)!;
+    entry.total += 1;
+    if (plan.status === 'DONE') entry.completed += 1;
   }
 
-  const rows = (data ?? []) as any[];
-
-  // Agrupamento em memória
+  // 5. Agrupar por país
   const map = new Map<string, GlobalCountryStats>();
+  const scores = (scoresData ?? []) as any[];
 
-  for (const row of rows) {
-    const country = row.country;
-    if (!country) continue; // Ignora se não tiver país
+  for (const score of scores) {
+    const country = score.country;
+    if (!country) continue;
 
     if (!map.has(country)) {
       map.set(country, {
         country,
-        totalElements: 0,
+        totalElements: totalElements ?? 0,
         gapElements: 0,
         elementsWithPlan: 0,
         completedActionPlans: 0,
@@ -198,23 +220,20 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
 
     const stats = map.get(country)!;
 
-    stats.totalElements += 1;
-
     // GAP: foundation_score < 100
-    if ((row.foundation_score ?? 100) < 100) {
+    if ((score.foundation_score ?? 100) < 100) {
       stats.gapElements += 1;
 
-      // Se é gap, checamos se tem planos
-      if (!row.action_plans || row.action_plans.length === 0) {
-        stats.elementsWithoutPlan += 1;
-      }
-    }
+      // score.element_id é o ID do elements_master, mesmo que plansMap usa element_master_id
+      const planKey = `${score.element_id}_${country}`;
+      const planInfo = plansMap.get(planKey);
 
-    // Planos (Conta elementos que têm pelo menos 1 plano)
-    if (row.action_plans && Array.isArray(row.action_plans) && row.action_plans.length > 0) {
-      stats.elementsWithPlan += 1;
-      const completed = row.action_plans.filter((p: any) => p.status === 'DONE').length;
-      stats.completedActionPlans += completed;
+      if (!planInfo || planInfo.total === 0) {
+        stats.elementsWithoutPlan += 1;
+      } else {
+        stats.elementsWithPlan += 1;
+        stats.completedActionPlans += planInfo.completed;
+      }
     }
   }
 
@@ -261,8 +280,10 @@ export async function fetchPillarStats(country: string): Promise<PillarStats[]> 
 
 /**
  * Lista todos os planos de ação com elemento + pilar
+ * Usa element_master_id para buscar dados de elements_master
  */
 export async function fetchActionPlans(country: string): Promise<ActionPlanWithElement[]> {
+  // 1. Buscar action_plans
   let query = supabase
     .from('action_plans')
     .select(`
@@ -279,19 +300,7 @@ export async function fetchActionPlans(country: string): Promise<ActionPlanWithE
       country,
       created_at,
       updated_at,
-      element:elements (
-        id,
-        code,
-        name,
-        foundation_score,
-        notes,
-        pillar:pillars (
-          id,
-          code,
-          name,
-          description
-        )
-      )
+      element_master_id
     `)
     .order('created_at', { ascending: true });
 
@@ -305,32 +314,91 @@ export async function fetchActionPlans(country: string): Promise<ActionPlanWithE
     throw error;
   }
 
-  const rows = (data ?? []) as unknown as RawActionPlanRow[];
+  const rows = (data ?? []) as any[];
+  if (rows.length === 0) return [];
 
+  // 2. Coletar todos os element_master_ids
+  const masterIds = rows
+    .map(r => r.element_master_id)
+    .filter(id => id != null);
+
+  // 3. Buscar elementos globais
+  const { data: elementsData, error: elementsError } = await supabase
+    .from('elements_master')
+    .select(`
+      id,
+      code,
+      name_local,
+      name_en,
+      pillar_id,
+      pillar:pillars_master (
+        id,
+        code,
+        name_local,
+        name_en,
+        description_local
+      )
+    `)
+    .in('id', masterIds.length > 0 ? masterIds : ['00000000-0000-0000-0000-000000000000']);
+
+  if (elementsError) throw elementsError;
+
+  // 4. Buscar scores relevates
+  let scoresQuery = supabase
+    .from('country_element_scores')
+    .select('element_id, country, foundation_score')
+    .in('element_id', masterIds.length > 0 ? masterIds : ['00000000-0000-0000-0000-000000000000']);
+
+  // Se for um país específico, filtra. Se for Global, busca de todos os países (pois temos planos de vários países)
+  if (country !== 'Global') {
+    scoresQuery = scoresQuery.eq('country', country);
+  }
+
+  const { data: scoresData, error: scoresError } = await scoresQuery;
+  if (scoresError) throw scoresError;
+
+  // Mapa: elementId_country -> score
+  const scoresMap = new Map<string, number>();
+  for (const s of (scoresData ?? [])) {
+    scoresMap.set(`${s.element_id}_${s.country}`, s.foundation_score);
+  }
+
+  // 5. Criar mapa de elementos
+  const elementsMap = new Map<string, any>();
+  for (const el of (elementsData ?? [])) {
+    elementsMap.set(el.id, el);
+  }
+
+  // 6. Mapear resultado
   const mapped = rows.map((row) => {
     let element: ElementWithRelations | null = null;
 
-    if (row.element) {
-      const rawElement = Array.isArray(row.element)
-        ? row.element[0] ?? null
-        : row.element;
+    const elementId = row.element_master_id;
+    const rawElement = elementsMap.get(elementId);
 
-      if (rawElement) {
-        const rawPillar = rawElement.pillar;
-        const normalizedPillar = Array.isArray(rawPillar)
-          ? rawPillar[0] ?? null
-          : rawPillar ?? null;
+    if (rawElement) {
+      const pillarRaw = rawElement.pillar;
+      const pillar = Array.isArray(pillarRaw) ? pillarRaw[0] : pillarRaw;
 
-        element = {
-          id: rawElement.id,
-          code: rawElement.code,
-          name: rawElement.name,
-          foundation_score: rawElement.foundation_score,
-          notes: rawElement.notes,
-          pillar: normalizedPillar,
-          action_plans: rawElement.action_plans ?? [],
-        };
-      }
+      // Busca score específico para o elemento E país do plano
+      // Se for Global, cada plano tem seu row.country
+      const scoreKey = `${elementId}_${row.country}`;
+      const score = scoresMap.get(scoreKey) ?? 0;
+
+      element = {
+        id: rawElement.id,
+        code: rawElement.code,
+        name: rawElement.name_local ?? rawElement.name_en ?? '',
+        foundation_score: score,
+        notes: null,
+        pillar: pillar ? {
+          id: pillar.id,
+          code: pillar.code,
+          name: pillar.name_local ?? pillar.name_en ?? '',
+          description: pillar.description_local
+        } : null,
+        action_plans: [],
+      };
     }
 
     return {
@@ -370,7 +438,7 @@ export async function createActionPlan(
     input;
 
   const payload: any = {
-    element_id: elementId,
+    element_master_id: elementId, // Usa nova coluna que referencia elements_master
     // “genérico” (mantém compatibilidade com o que já existia)
     problem,
     solution,
@@ -470,7 +538,7 @@ export async function updateActionPlanStatus(
   }
 }
 
-// --- ADMIN: Pilares & Elementos ---------------------------------------------
+// --- ADMIN: Pilares & Elementos (Globais) ------------------------------------
 
 export type AdminElement = {
   id: string;
@@ -479,10 +547,11 @@ export type AdminElement = {
   foundation_score: number;
   notes: string | null;
   pillar_id: string;
-  name_pt: string | null;
+  name_local: string | null;
   name_en: string | null;
-  notes_pt: string | null;
-  notes_en: string | null;
+  explanation_local: string | null;
+  explanation_en: string | null;
+  score_id?: string | null; // ID do registro em country_element_scores
 };
 
 export type AdminPillar = {
@@ -490,157 +559,149 @@ export type AdminPillar = {
   code: string | null;
   name: string;
   description: string | null;
-  name_pt: string | null;
+  name_local: string | null;
   name_en: string | null;
-  description_pt: string | null;
+  description_local: string | null;
   description_en: string | null;
   elements: AdminElement[];
 };
 
 /**
- * Lista todos os pilares com seus elementos (para administração)
+ * Lista todos os pilares globais com seus elementos e scores do país
+ * Usa as novas tabelas: pillars_master, elements_master, country_element_scores
  */
 export async function fetchPillarsWithElements(country: string): Promise<AdminPillar[]> {
-  const { data, error } = await supabase
-    .from('pillars')
+  // 1. Buscar pilares globais
+  const { data: pillarsData, error: pillarsError } = await supabase
+    .from('pillars_master')
     .select(`
       id,
       code,
-      name,
-      name_pt,
+      name_local,
       name_en,
-      description,
-      description_pt,
-      description_en,
-      elements (
-        id,
-        code,
-        name,
-        name_pt,
-        name_en,
-        foundation_score,
-        notes,
-        notes_pt,
-        notes_en,
-        pillar_id
-      )
+      description_local,
+      description_en
     `)
-    .eq('country', country)
     .order('code', { ascending: true });
 
-  if (error) {
-    throw error;
+  if (pillarsError) {
+    throw pillarsError;
   }
 
-  const rows = (data ?? []) as any[];
+  // 2. Buscar elementos globais
+  const { data: elementsData, error: elementsError } = await supabase
+    .from('elements_master')
+    .select(`
+      id,
+      pillar_id,
+      code,
+      name_local,
+      name_en,
+      explanation_local,
+      explanation_en
+    `)
+    .order('code', { ascending: true });
 
-  return rows.map((row) => ({
-    id: row.id,
-    code: row.code,
-    name: row.name,
-    description: row.description,
-    name_pt: row.name_pt ?? row.name,
-    name_en: row.name_en ?? null,
-    description_pt: row.description_pt ?? row.description,
-    description_en: row.description_en ?? null,
-    elements: (row.elements ?? []).map((el: any) => ({
-      id: el.id,
-      code: el.code,
-      name: el.name,
-      foundation_score: el.foundation_score,
-      notes: el.notes,
-      pillar_id: el.pillar_id,
-      name_pt: el.name_pt ?? el.name,
-      name_en: el.name_en ?? null,
-      notes_pt: el.notes_pt ?? el.notes,
-      notes_en: el.notes_en ?? null,
-    })),
-  }));
+  if (elementsError) {
+    throw elementsError;
+  }
+
+  // 3. Buscar scores do país (ou todos se Global)
+  let scoresQuery = supabase
+    .from('country_element_scores')
+    .select('id, element_id, country, foundation_score, notes');
+
+  if (country !== 'Global') {
+    scoresQuery = scoresQuery.eq('country', country);
+  }
+
+  const { data: scoresData, error: scoresError } = await scoresQuery;
+
+  if (scoresError) {
+    throw scoresError;
+  }
+
+  // 4. Criar mapa de scores por element_id + country
+  const scoresMap = new Map<string, { id: string; score: number; notes: string | null }>();
+  for (const score of (scoresData ?? [])) {
+    const key = `${score.element_id}_${score.country}`;
+    scoresMap.set(key, {
+      id: score.id,
+      score: score.foundation_score ?? 0,
+      notes: score.notes
+    });
+  }
+
+  // Para modo Global, pegar o score mais baixo ou 0
+  const getScoreForElement = (elementId: string): { id?: string; score: number; notes: string | null } => {
+    if (country !== 'Global') {
+      const key = `${elementId}_${country}`;
+      const found = scoresMap.get(key);
+      return found ? { id: found.id, score: found.score, notes: found.notes } : { score: 0, notes: null };
+    }
+    // Para Global, retorna 0 (score é gerenciado por país)
+    return { score: 0, notes: null };
+  };
+
+  // 5. Montar estrutura final
+  const pillars = (pillarsData ?? []) as any[];
+  const elements = (elementsData ?? []) as any[];
+
+  return pillars.map((pillar) => {
+    const pillarElements = elements
+      .filter((el) => el.pillar_id === pillar.id)
+      .map((el) => {
+        const scoreInfo = getScoreForElement(el.id);
+        return {
+          id: el.id,
+          code: el.code,
+          name: el.name_local ?? el.name_en ?? '',
+          foundation_score: scoreInfo.score,
+          notes: scoreInfo.notes,
+          pillar_id: el.pillar_id,
+          name_local: el.name_local,
+          name_en: el.name_en,
+          explanation_local: el.explanation_local,
+          explanation_en: el.explanation_en,
+          score_id: scoreInfo.id
+        };
+      });
+
+    return {
+      id: pillar.id,
+      code: pillar.code,
+      name: pillar.name_local ?? pillar.name_en ?? '',
+      description: pillar.description_local,
+      name_local: pillar.name_local,
+      name_en: pillar.name_en,
+      description_local: pillar.description_local,
+      description_en: pillar.description_en,
+      elements: pillarElements
+    };
+  });
 }
 
 /**
- * Cria um novo pilar
+ * Atualiza o score de um elemento para um país específico
+ * Usa a tabela country_element_scores (upsert)
  */
-export async function createPillar(input: {
-  code?: string;
-  namePt: string;
-  nameEn?: string;
-  descriptionPt?: string;
-  descriptionEn?: string;
+export async function updateElementScore(input: {
+  elementId: string;
   country: string;
-}): Promise<void> {
-  const payload: any = {
-    code: input.code ?? null,
-    name: input.namePt,
-    name_pt: input.namePt,
-    name_en: input.nameEn ?? null,
-    description: input.descriptionPt ?? null,
-    description_pt: input.descriptionPt ?? null,
-    description_en: input.descriptionEn ?? null,
-    country: input.country,
-  };
-
-  const { error } = await supabase.from('pillars').insert(payload);
-  if (error) throw error;
-}
-
-/**
- * Cria um novo elemento dentro de um pilar
- */
-export async function createElement(input: {
-  pillarId: string;
-  code?: string;
-  namePt: string;
-  nameEn?: string;
   foundationScore: number;
-  notesPt?: string;
-  notesEn?: string;
-  country: string;
+  notes?: string | null;
 }): Promise<void> {
-  const payload: any = {
-    pillar_id: input.pillarId,
-    code: input.code ?? null,
-    name: input.namePt,
-    name_pt: input.namePt,
-    name_en: input.nameEn ?? null,
-    foundation_score: input.foundationScore,
-    notes: input.notesPt ?? null,
-    notes_pt: input.notesPt ?? null,
-    notes_en: input.notesEn ?? null,
-    country: input.country,
-  };
-
-  const { error } = await supabase.from('elements').insert(payload);
-  if (error) throw error;
-}
-
-/**
- * Atualiza um elemento (inclui mudança de FOUNDATION)
- */
-export async function updateElement(input: {
-  id: string;
-  code?: string;
-  namePt: string;
-  nameEn?: string;
-  foundationScore: number;
-  notesPt?: string | null;
-  notesEn?: string | null;
-}): Promise<void> {
-  const payload: any = {
-    code: input.code ?? null,
-    name: input.namePt,
-    name_pt: input.namePt,
-    name_en: input.nameEn ?? null,
-    foundation_score: input.foundationScore,
-    notes: input.notesPt ?? null,
-    notes_pt: input.notesPt ?? null,
-    notes_en: input.notesEn ?? null,
-  };
-
   const { error } = await supabase
-    .from('elements')
-    .update(payload)
-    .eq('id', input.id);
+    .from('country_element_scores')
+    .upsert({
+      element_id: input.elementId,
+      country: input.country,
+      foundation_score: input.foundationScore,
+      notes: input.notes ?? null,
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'element_id,country'
+    });
 
   if (error) throw error;
 }

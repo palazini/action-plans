@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import {
   Alert,
   ActionIcon,
-  Button,
   Card,
   Center,
   Group,
@@ -13,39 +12,37 @@ import {
   SimpleGrid,
   Table,
   Text,
-  TextInput,
   Textarea,
   Title,
   Stack,
   ThemeIcon,
   Badge,
-  rem
+  rem,
+  Tooltip,
+  Paper
 } from '@mantine/core';
 import {
   IconAlertCircle,
   IconPencil,
-  IconPlus,
   IconLayoutKanban,
   IconComponents,
   IconArrowRight,
-  IconDatabaseOff
+  IconDatabaseOff,
+  IconInfoCircle,
+  IconLock
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { usePillarsWithElements } from '../hooks/useQueries';
-import { createPillar, createElement, updateElement, type AdminElement, type AdminPillar } from '../services/api';
+import { updateElementScore, type AdminElement } from '../services/api';
+
 
 export function StructurePage() {
   const { t } = useTranslation();
   const { selectedCountry } = useAuth();
 
   const [selectedPillarId, setSelectedPillarId] = useState<string | null>(null);
-
-  const [createPillarOpen, setCreatePillarOpen] = useState(false);
-  const [createElementOpen, setCreateElementOpen] = useState(false);
-  const [editingElement, setEditingElement] = useState<AdminElement | null>(
-    null,
-  );
+  const [editingElement, setEditingElement] = useState<AdminElement | null>(null);
 
   // React Query hooks
   const {
@@ -83,6 +80,22 @@ export function StructurePage() {
             {t('pages.structure.description')}
           </Text>
         </div>
+
+        {/* Indicador de pilares/elementos fixos */}
+        <Tooltip
+          label={t('pages.structure.lockedTooltip', 'Os pilares e elementos são padronizados globalmente. Você pode editar apenas o score do seu país.')}
+          multiline
+          w={280}
+        >
+          <Badge
+            leftSection={<IconLock size={12} />}
+            variant="light"
+            color="gray"
+            size="lg"
+          >
+            {t('pages.structure.globalStandard', 'Padrão Global')}
+          </Badge>
+        </Tooltip>
       </Group>
 
       {error && (
@@ -114,14 +127,6 @@ export function StructurePage() {
                   <Text size="xs" c="dimmed">{t('pages.structure.pillarsCardSubtitle')}</Text>
                 </div>
               </Group>
-              <Button
-                size="xs"
-                variant="light"
-                leftSection={<IconPlus size={14} />}
-                onClick={() => setCreatePillarOpen(true)}
-              >
-                {t('structure.newPillar')}
-              </Button>
             </Group>
 
             {pillars.length === 0 ? (
@@ -164,7 +169,7 @@ export function StructurePage() {
                           </Badge>
                         </Table.Td>
                         <Table.Td>
-                          <Text size="sm" fw={500}>{pillar.name_pt || pillar.name}</Text>
+                          <Text size="sm" fw={500}>{pillar.name_local || pillar.name}</Text>
                         </Table.Td>
                         <Table.Td style={{ textAlign: 'center' }}>
                           <Badge size="sm" circle variant={isSelected ? 'filled' : 'light'}>
@@ -194,16 +199,6 @@ export function StructurePage() {
                   <Text size="xs" c="dimmed">{t('pages.structure.elementsCardSubtitle')}</Text>
                 </div>
               </Group>
-
-              <Button
-                size="xs"
-                variant="light"
-                leftSection={<IconPlus size={14} />}
-                onClick={() => setCreateElementOpen(true)}
-                disabled={!selectedPillar}
-              >
-                {t('structure.newElement')}
-              </Button>
             </Group>
 
             {!selectedPillar ? (
@@ -238,7 +233,24 @@ export function StructurePage() {
                         <Text size="xs" c="dimmed" fw={700}>{el.code ?? '-'}</Text>
                       </Table.Td>
                       <Table.Td>
-                        <Text size="sm" fw={500}>{el.name_pt || el.name}</Text>
+                        <Group gap="xs">
+                          <Text size="sm" fw={500}>{el.name_local || el.name}</Text>
+                          {/* Mostra ícone de info se tiver explicação */}
+                          {(el.explanation_local || el.explanation_en) && (
+                            <Tooltip
+                              label={el.explanation_local || el.explanation_en}
+                              multiline
+                              w={300}
+                              withArrow
+                            >
+                              <IconInfoCircle
+                                size={14}
+                                color="var(--mantine-color-blue-5)"
+                                style={{ cursor: 'help' }}
+                              />
+                            </Tooltip>
+                          )}
+                        </Group>
                       </Table.Td>
                       <Table.Td>
                         <Badge variant="dot" color={getScoreColor(el.foundation_score)}>
@@ -246,15 +258,17 @@ export function StructurePage() {
                         </Badge>
                       </Table.Td>
                       <Table.Td align="right">
-                        <ActionIcon
-                          variant="subtle"
-                          color="blue"
-                          size="sm"
-                          onClick={() => setEditingElement(el)}
-                          aria-label={t('structure.editElement')}
-                        >
-                          <IconPencil size={16} />
-                        </ActionIcon>
+                        <Tooltip label={t('structure.editScore', 'Editar Score')}>
+                          <ActionIcon
+                            variant="subtle"
+                            color="blue"
+                            size="sm"
+                            onClick={() => setEditingElement(el)}
+                            aria-label={t('structure.editElement')}
+                          >
+                            <IconPencil size={16} />
+                          </ActionIcon>
+                        </Tooltip>
                       </Table.Td>
                     </Table.Tr>
                   ))}
@@ -265,29 +279,11 @@ export function StructurePage() {
         </SimpleGrid>
       )}
 
-      {/* Modal: criar pilar */}
-      <CreatePillarModal
-        opened={createPillarOpen}
-        onClose={() => setCreatePillarOpen(false)}
-        onSaved={() => refetch()}
-        country={selectedCountry!}
-      />
-
-      {/* Modal: criar elemento */}
-      {selectedPillar && (
-        <CreateElementModal
-          opened={createElementOpen}
-          onClose={() => setCreateElementOpen(false)}
-          onSaved={() => refetch()}
-          pillar={selectedPillar}
-          country={selectedCountry!}
-        />
-      )}
-
-      {/* Modal: editar elemento */}
-      {editingElement && (
-        <EditElementModal
+      {/* Modal: editar score do elemento */}
+      {editingElement && selectedCountry && (
+        <EditScoreModal
           element={editingElement}
+          country={selectedCountry}
           onClose={() => setEditingElement(null)}
           onSaved={() => {
             setEditingElement(null);
@@ -299,291 +295,38 @@ export function StructurePage() {
   );
 }
 
-/* ------------------------ Modais auxiliares ------------------------ */
+/* ------------------------ Modal: Editar Score ------------------------ */
 
-type CreatePillarModalProps = {
-  opened: boolean;
-  onClose: () => void;
-  onSaved: () => void;
-  country: string;
-};
-
-function CreatePillarModal({
-  opened,
-  onClose,
-  onSaved,
-  country,
-}: CreatePillarModalProps) {
-  const { t } = useTranslation();
-
-  const [code, setCode] = useState('');
-  const [namePt, setNamePt] = useState('');
-  const [nameEn, setNameEn] = useState('');
-  const [descriptionPt, setDescriptionPt] = useState('');
-  const [descriptionEn, setDescriptionEn] = useState('');
-  const [saving, setSaving] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!namePt.trim()) return;
-
-    setSaving(true);
-    try {
-      await createPillar({
-        code: code.trim() || undefined,
-        namePt: namePt.trim(),
-        nameEn: nameEn.trim() || undefined,
-        descriptionPt: descriptionPt.trim() || undefined,
-        descriptionEn: descriptionEn.trim() || undefined,
-        country,
-      });
-      onClose();
-      onSaved();
-      setCode('');
-      setNamePt('');
-      setNameEn('');
-      setDescriptionPt('');
-      setDescriptionEn('');
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={<Text fw={700}>{t('structure.newPillar')}</Text>}
-      centered
-      size="lg"
-      overlayProps={{ blur: 3 }}
-    >
-      <form onSubmit={handleSubmit}>
-        <Stack gap="sm">
-          <Group grow>
-            <TextInput
-              label={t('structure.code')}
-              placeholder="EX: SAF"
-              value={code}
-              onChange={(e) => setCode(e.currentTarget.value)}
-            />
-            <TextInput
-              label={t('structure.namePt')}
-              placeholder="Ex: Segurança"
-              required
-              value={namePt}
-              onChange={(e) => setNamePt(e.currentTarget.value)}
-            />
-          </Group>
-
-          <TextInput
-            label={t('structure.nameEn')}
-            placeholder="Ex: Safety"
-            value={nameEn}
-            onChange={(e) => setNameEn(e.currentTarget.value)}
-          />
-
-          <Textarea
-            label={t('structure.descriptionPt')}
-            value={descriptionPt}
-            onChange={(e) => setDescriptionPt(e.currentTarget.value)}
-            minRows={2}
-          />
-          <Textarea
-            label={t('structure.descriptionEn')}
-            value={descriptionEn}
-            onChange={(e) => setDescriptionEn(e.currentTarget.value)}
-            minRows={2}
-          />
-
-          <Group justify="flex-end" mt="md">
-            <Button
-              variant="subtle"
-              onClick={onClose}
-              disabled={saving}
-            >
-              {t('structure.cancel')}
-            </Button>
-            <Button type="submit" loading={saving}>
-              {t('structure.save')}
-            </Button>
-          </Group>
-        </Stack>
-      </form>
-    </Modal>
-  );
-}
-
-type CreateElementModalProps = {
-  opened: boolean;
-  onClose: () => void;
-  onSaved: () => void;
-  pillar: AdminPillar;
-  country: string;
-};
-
-function CreateElementModal({
-  opened,
-  onClose,
-  onSaved,
-  pillar,
-  country,
-}: CreateElementModalProps) {
-  const { t } = useTranslation();
-
-  const [code, setCode] = useState('');
-  const [namePt, setNamePt] = useState('');
-  const [nameEn, setNameEn] = useState('');
-  const [foundationScore, setFoundationScore] = useState<number>(0);
-  const [notesPt, setNotesPt] = useState('');
-  const [notesEn, setNotesEn] = useState('');
-  const [saving, setSaving] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!namePt.trim()) return;
-
-    setSaving(true);
-    try {
-      await createElement({
-        pillarId: pillar.id,
-        code: code.trim() || undefined,
-        namePt: namePt.trim(),
-        nameEn: nameEn.trim() || undefined,
-        foundationScore,
-        notesPt: notesPt.trim() || undefined,
-        notesEn: notesEn.trim() || undefined,
-        country,
-      });
-      onClose();
-      onSaved();
-      setCode('');
-      setNamePt('');
-      setNameEn('');
-      setFoundationScore(0);
-      setNotesPt('');
-      setNotesEn('');
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={<Text fw={700}>{t('structure.newElement')}</Text>}
-      centered
-      size="lg"
-      overlayProps={{ blur: 3 }}
-    >
-      <form onSubmit={handleSubmit}>
-        <Stack gap="sm">
-          <Alert variant="light" color="blue" title={t('structure.context')} icon={<IconLayoutKanban size={16} />}>
-            {t('table.pillar')}: <Text span fw={700}>{pillar.code ?? '-'}</Text> — {pillar.name_pt || pillar.name}
-          </Alert>
-
-          <Group grow>
-            <TextInput
-              label={t('structure.code')}
-              value={code}
-              onChange={(e) => setCode(e.currentTarget.value)}
-            />
-            <NumberInput
-              label={t('structure.foundationScore')}
-              value={foundationScore}
-              onChange={(val) => setFoundationScore(Number(val) || 0)}
-              min={0}
-              max={100}
-            />
-          </Group>
-
-          <TextInput
-            label={t('structure.namePt')}
-            required
-            value={namePt}
-            onChange={(e) => setNamePt(e.currentTarget.value)}
-          />
-          <TextInput
-            label={t('structure.nameEn')}
-            value={nameEn}
-            onChange={(e) => setNameEn(e.currentTarget.value)}
-          />
-
-          <Textarea
-            label={t('structure.notesPt')}
-            value={notesPt}
-            onChange={(e) => setNotesPt(e.currentTarget.value)}
-            minRows={2}
-          />
-          <Textarea
-            label={t('structure.notesEn')}
-            value={notesEn}
-            onChange={(e) => setNotesEn(e.currentTarget.value)}
-            minRows={2}
-          />
-
-          <Group justify="flex-end" mt="md">
-            <Button
-              variant="subtle"
-              onClick={onClose}
-              disabled={saving}
-            >
-              {t('structure.cancel')}
-            </Button>
-            <Button type="submit" loading={saving}>
-              {t('structure.save')}
-            </Button>
-          </Group>
-        </Stack>
-      </form>
-    </Modal>
-  );
-}
-
-type EditElementModalProps = {
+type EditScoreModalProps = {
   element: AdminElement;
+  country: string;
   onClose: () => void;
   onSaved: () => void;
 };
 
-function EditElementModal({
+function EditScoreModal({
   element,
+  country,
   onClose,
   onSaved,
-}: EditElementModalProps) {
+}: EditScoreModalProps) {
   const { t } = useTranslation();
 
-  const [code, setCode] = useState(element.code ?? '');
-  const [namePt, setNamePt] = useState(element.name_pt ?? element.name);
-  const [nameEn, setNameEn] = useState(element.name_en ?? '');
-  const [foundationScore, setFoundationScore] = useState<number>(
-    element.foundation_score,
-  );
-  const [notesPt, setNotesPt] = useState(element.notes_pt ?? element.notes ?? '');
-  const [notesEn, setNotesEn] = useState(element.notes_en ?? '');
+  const [foundationScore, setFoundationScore] = useState<number>(element.foundation_score);
+  const [notes, setNotes] = useState(element.notes ?? '');
   const [saving, setSaving] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!namePt.trim()) return;
 
     setSaving(true);
     try {
-      await updateElement({
-        id: element.id,
-        code: code.trim() || undefined,
-        namePt: namePt.trim(),
-        nameEn: nameEn.trim() || undefined,
+      await updateElementScore({
+        elementId: element.id,
+        country,
         foundationScore,
-        notesPt: notesPt.trim() || null,
-        notesEn: notesEn.trim() || null,
+        notes: notes.trim() || null,
       });
-      onClose();
       onSaved();
     } catch (err) {
       console.error(err);
@@ -596,64 +339,64 @@ function EditElementModal({
     <Modal
       opened
       onClose={onClose}
-      title={<Text fw={700}>{t('structure.editElement')}</Text>}
+      title={<Text fw={700}>{t('structure.editScore', 'Editar Score')}</Text>}
       centered
-      size="lg"
+      size="md"
       overlayProps={{ blur: 3 }}
     >
       <form onSubmit={handleSubmit}>
-        <Stack gap="sm">
-          <Group grow>
-            <TextInput
-              label={t('structure.code')}
-              value={code}
-              onChange={(e) => setCode(e.currentTarget.value)}
-            />
-            <NumberInput
-              label={t('structure.foundationScore')}
-              value={foundationScore}
-              onChange={(val) => setFoundationScore(Number(val) || 0)}
-              min={0}
-              max={100}
-            />
-          </Group>
+        <Stack gap="md">
+          {/* Info do elemento (read-only) */}
+          <Paper p="sm" bg="gray.0" radius="md">
+            <Group gap="xs" mb="xs">
+              <Badge variant="outline" color="gray" size="sm">
+                {element.code ?? '-'}
+              </Badge>
+              <Text size="sm" fw={600}>{element.name_local || element.name}</Text>
+            </Group>
+            {element.explanation_en && (
+              <Text size="xs" c="dimmed" fs="italic">
+                {element.explanation_en}
+              </Text>
+            )}
+          </Paper>
 
-          <TextInput
-            label={t('structure.namePt')}
-            required
-            value={namePt}
-            onChange={(e) => setNamePt(e.currentTarget.value)}
-          />
-          <TextInput
-            label={t('structure.nameEn')}
-            value={nameEn}
-            onChange={(e) => setNameEn(e.currentTarget.value)}
+          <NumberInput
+            label={t('structure.foundationScore')}
+            description={t('structure.foundationScoreDesc', 'Score de maturidade do elemento no seu país (0-100)')}
+            value={foundationScore}
+            onChange={(val) => setFoundationScore(Number(val) || 0)}
+            min={0}
+            max={100}
+            suffix="%"
           />
 
           <Textarea
-            label={t('structure.notesPt')}
-            value={notesPt}
-            onChange={(e) => setNotesPt(e.currentTarget.value)}
-            minRows={2}
-          />
-          <Textarea
-            label={t('structure.notesEn')}
-            value={notesEn}
-            onChange={(e) => setNotesEn(e.currentTarget.value)}
+            label={t('structure.notes', 'Observações')}
+            description={t('structure.notesDesc', 'Notas específicas do seu país para este elemento')}
+            value={notes}
+            onChange={(e) => setNotes(e.currentTarget.value)}
             minRows={2}
           />
 
           <Group justify="flex-end" mt="md">
-            <Button
+            <ActionIcon
               variant="subtle"
               onClick={onClose}
               disabled={saving}
+              size="lg"
             >
-              {t('structure.cancel')}
-            </Button>
-            <Button type="submit" loading={saving}>
-              {t('structure.save')}
-            </Button>
+              ✕
+            </ActionIcon>
+            <ActionIcon
+              type="submit"
+              loading={saving}
+              variant="filled"
+              color="blue"
+              size="lg"
+            >
+              ✓
+            </ActionIcon>
           </Group>
         </Stack>
       </form>

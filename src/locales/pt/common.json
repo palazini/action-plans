@@ -115,7 +115,9 @@
       "elementsCardTitle": "Elementos",
       "elementsCardSubtitle": "Itens avaliados dentro do pilar",
       "noPillarSelected": "Selecione um pilar para visualizar",
-      "noElementsInPillar": "Este pilar não possui elementos"
+      "noElementsInPillar": "Este pilar não possui elementos",
+      "lockedTooltip": "Os pilares e elementos são padronizados globalmente. Você pode editar apenas o score do seu país.",
+      "globalStandard": "Padrão Global"
     }
   },
   "table": {
@@ -157,6 +159,7 @@
     "editPillar": "Editar",
     "newElement": "Novo Elemento",
     "editElement": "Editar",
+    "editScore": "Editar Score",
     "code": "Cód.",
     "namePt": "Nome (Local)",
     "nameEn": "Nome (Inglês)",
@@ -164,7 +167,10 @@
     "descriptionEn": "Descrição (Inglês)",
     "notesPt": "Notas (Local)",
     "notesEn": "Notas (Inglês)",
+    "notes": "Observações",
+    "notesDesc": "Notas específicas do seu país para este elemento",
     "foundationScore": "Score",
+    "foundationScoreDesc": "Score de maturidade do elemento no seu país (0-100)",
     "elementsCount": "Qtd. Itens",
     "save": "Salvar",
     "cancel": "Cancelar",

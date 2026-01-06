@@ -10,9 +10,7 @@ import {
     createActionPlan,
     updateActionPlan,
     updateActionPlanStatus,
-    createPillar,
-    createElement,
-    updateElement,
+    updateElementScore,
     type GlobalCountryStats,
     type AdminPillar,
 } from '../services/api';
@@ -128,39 +126,17 @@ export function useUpdateActionPlanStatus() {
     });
 }
 
-export function useCreatePillar() {
+export function useUpdateElementScore() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: createPillar,
+        mutationFn: updateElementScore,
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: queryKeys.pillars(variables.country) });
-        },
-    });
-}
-
-export function useCreateElement() {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: createElement,
-        onSuccess: (_, variables) => {
+            // Invalida caches de pilares e backlog do país
             queryClient.invalidateQueries({ queryKey: queryKeys.pillars(variables.country) });
             queryClient.invalidateQueries({ queryKey: queryKeys.backlog(variables.country) });
+            queryClient.invalidateQueries({ queryKey: queryKeys.dashboard(variables.country) });
         },
     });
 }
 
-export function useUpdateElement() {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: updateElement,
-        onSuccess: () => {
-            // Invalida todos os caches de pilares e backlog
-            queryClient.invalidateQueries({ queryKey: ['pillars'] });
-            queryClient.invalidateQueries({ queryKey: ['backlog'] });
-            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-        },
-    });
-}
