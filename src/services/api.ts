@@ -551,6 +551,8 @@ export type AdminElement = {
   name_en: string | null;
   explanation_local: string | null;
   explanation_en: string | null;
+  foundation_criteria_local: string | null;
+  foundation_criteria_en: string | null;
   score_id?: string | null; // ID do registro em country_element_scores
 };
 
@@ -597,8 +599,11 @@ export async function fetchPillarsWithElements(country: string): Promise<AdminPi
       code,
       name_local,
       name_en,
+      name_en,
       explanation_local,
-      explanation_en
+      explanation_en,
+      foundation_criteria_local,
+      foundation_criteria_en
     `)
     .order('code', { ascending: true });
 
@@ -663,6 +668,8 @@ export async function fetchPillarsWithElements(country: string): Promise<AdminPi
           name_en: el.name_en,
           explanation_local: el.explanation_local,
           explanation_en: el.explanation_en,
+          foundation_criteria_local: el.foundation_criteria_local,
+          foundation_criteria_en: el.foundation_criteria_en,
           score_id: scoreInfo.id
         };
       });

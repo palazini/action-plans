@@ -240,7 +240,7 @@ export function StructurePage() {
                             <Tooltip
                               label={el.explanation_local || el.explanation_en}
                               multiline
-                              w={300}
+                              w={400}
                               withArrow
                             >
                               <IconInfoCircle
@@ -253,9 +253,25 @@ export function StructurePage() {
                         </Group>
                       </Table.Td>
                       <Table.Td>
-                        <Badge variant="dot" color={getScoreColor(el.foundation_score)}>
-                          {el.foundation_score}%
-                        </Badge>
+                        <Group gap="xs">
+                          <Badge variant="dot" color={getScoreColor(el.foundation_score)}>
+                            {el.foundation_score}%
+                          </Badge>
+                          {(el.foundation_criteria_local || el.foundation_criteria_en) && (
+                            <Tooltip
+                              label={el.foundation_criteria_local || el.foundation_criteria_en}
+                              multiline
+                              w={300}
+                              withArrow
+                            >
+                              <IconInfoCircle
+                                size={14}
+                                color="var(--mantine-color-gray-5)"
+                                style={{ cursor: 'help' }}
+                              />
+                            </Tooltip>
+                          )}
+                        </Group>
                       </Table.Td>
                       <Table.Td align="right">
                         <Tooltip label={t('structure.editScore', 'Editar Score')}>
