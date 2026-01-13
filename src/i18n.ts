@@ -14,11 +14,6 @@ const stored =
     ? (localStorage.getItem('lang') as string | null)
     : null;
 
-const browserLang =
-  typeof navigator !== 'undefined' && navigator.language
-    ? navigator.language.split('-')[0]
-    : 'en';
-
 i18n
   .use(initReactI18next)
   .init({
@@ -32,7 +27,7 @@ i18n
       hi: { translation: hi },
       de: { translation: de },
     },
-    lng: stored || browserLang,
+    lng: stored || 'en', // Default to English
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,

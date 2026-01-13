@@ -7,7 +7,11 @@ import type {
   ActionPlanStatus,
   PillarStats,
   ActionPlanWithElement,
+  MaturityLevel,
+  LevelScore,
+  ElementWithLevelScores,
 } from '../types';
+import { MATURITY_LEVELS } from '../types';
 
 /**
  * Elementos com FOUNDATION < 100 + pilar + planos (detalhados)
@@ -46,7 +50,9 @@ export async function fetchBacklogElements(country: string): Promise<ElementWith
         code,
         name_local,
         name_en,
-        description_local
+        name_en,
+        description_local,
+        is_active
       )
     `)
     .in('id', elementIds);
@@ -103,6 +109,12 @@ export async function fetchBacklogElements(country: string): Promise<ElementWith
       const pillarRaw = el.pillar;
       const pillar = Array.isArray(pillarRaw) ? pillarRaw[0] : pillarRaw;
 
+      // Skip if pillar is inactive
+      if (pillar && pillar.is_active === false) continue;
+
+      // Skip if element itself is inactive (Legacy)
+      if (el.is_active === false) continue;
+
       result.push({
         id: el.id,
         code: el.code,
@@ -130,12 +142,16 @@ export async function fetchBacklogElements(country: string): Promise<ElementWith
  * Usa as novas tabelas globais
  */
 export async function fetchDashboardStats(country: string): Promise<DashboardStats> {
-  // Total de elementos globais (é fixo - 27)
-  const { count: totalElements, error: totalError } = await supabase
+  // Total de elementos globais (ativos apenas)
+  const { data: activeElements, error: activeError } = await supabase
     .from('elements_master')
-    .select('*', { count: 'exact', head: true });
+    .select('id, pillars_master!inner(is_active)')
+    .eq('pillars_master.is_active', true)
+    .eq('is_active', true); // Added strict check for element active status
 
-  if (totalError) throw totalError;
+  if (activeError) throw activeError;
+  const activeElementIds = new Set((activeElements ?? []).map(e => e.id));
+  const totalElements = activeElementIds.size;
 
   // Buscar backlog (já usa tabelas novas)
   const backlog = await fetchBacklogElements(country);
@@ -145,10 +161,37 @@ export async function fetchDashboardStats(country: string): Promise<DashboardSta
     (el) => !el.action_plans || el.action_plans.length === 0,
   ).length;
 
+  // Count fully completed elements per level
+  const { data: levelScores, error: levelError } = await supabase
+    .from('country_level_scores')
+    .select('level, score, element_id')
+    .eq('country', country)
+    .eq('score', 100);
+
+  if (levelError) throw levelError;
+
+  const maturityCounts: Record<string, number> = {
+    FOUNDATION: 0,
+    BRONZE: 0,
+    SILVER: 0,
+    GOLD: 0,
+    PLATINUM: 0,
+  };
+
+  (levelScores || []).forEach((item: any) => {
+    // Only count active elements (requires element_id in select)
+    if (activeElementIds.has(item.element_id)) {
+      if (maturityCounts[item.level] !== undefined) {
+        maturityCounts[item.level]++;
+      }
+    }
+  });
+
   return {
     totalElements: totalElements ?? 0,
     gapElements,
     elementsWithoutPlan,
+    maturityCounts: maturityCounts as any,
   };
 }
 
@@ -166,12 +209,16 @@ export type GlobalCountryStats = {
  * Usa as novas tabelas globais
  */
 export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
-  // 1. Contar total de elementos (fixo - 27)
-  const { count: totalElements, error: countError } = await supabase
+  // 1. Fetch active elements IDs
+  const { data: activeElements, error: activeError } = await supabase
     .from('elements_master')
-    .select('*', { count: 'exact', head: true });
+    .select('id, pillars_master!inner(is_active)')
+    .eq('pillars_master.is_active', true)
+    .eq('is_active', true); // Added strict check
 
-  if (countError) throw countError;
+  if (activeError) throw activeError;
+  const activeElementIds = new Set((activeElements ?? []).map(e => e.id));
+  const totalElements = activeElementIds.size;
 
   // 2. Buscar todos os scores de todos os países
   const { data: scoresData, error: scoresError } = await supabase
@@ -190,6 +237,10 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
   // 4. Criar mapa de planos por element_master_id + country
   const plansMap = new Map<string, { total: number; completed: number }>();
   for (const plan of (plansData ?? [])) {
+    // START FILTER
+    if (!activeElementIds.has(plan.element_master_id)) continue;
+    // END FILTER
+
     const key = `${plan.element_master_id}_${plan.country}`;
     if (!plansMap.has(key)) {
       plansMap.set(key, { total: 0, completed: 0 });
@@ -432,9 +483,10 @@ export async function createActionPlan(
     problemEn?: string;
     actionEn?: string;
     country: string;
+    maturityLevel?: MaturityLevel;
   },
 ): Promise<void> {
-  const { elementId, problem, solution, ownerName, dueDate, problemEn, actionEn, country } =
+  const { elementId, problem, solution, ownerName, dueDate, problemEn, actionEn, country, maturityLevel } =
     input;
 
   const payload: any = {
@@ -447,6 +499,7 @@ export async function createActionPlan(
     action_pt: solution,
     owner_name: ownerName,
     country,
+    maturity_level: maturityLevel || 'FOUNDATION',
   };
 
   if (dueDate) {
@@ -561,6 +614,7 @@ export type AdminPillar = {
   code: string | null;
   name: string;
   description: string | null;
+  is_active: boolean;
   name_local: string | null;
   name_en: string | null;
   description_local: string | null;
@@ -581,8 +635,10 @@ export async function fetchPillarsWithElements(country: string): Promise<AdminPi
       code,
       name_local,
       name_en,
+      name_en,
       description_local,
-      description_en
+      description_en,
+      is_active
     `)
     .order('code', { ascending: true });
 
@@ -683,6 +739,7 @@ export async function fetchPillarsWithElements(country: string): Promise<AdminPi
       name_en: pillar.name_en,
       description_local: pillar.description_local,
       description_en: pillar.description_en,
+      is_active: pillar.is_active ?? false,
       elements: pillarElements
     };
   });
@@ -711,4 +768,217 @@ export async function updateElementScore(input: {
     });
 
   if (error) throw error;
+}
+
+// ============================================
+// MATURITY LEVEL API FUNCTIONS
+// ============================================
+
+/**
+ * Fetch all pillars with elements and their maturity level scores for a country
+ */
+export async function fetchPillarsWithLevelScores(country: string): Promise<{
+  pillars: {
+    id: string;
+    code: string;
+    name: string;
+    is_active: boolean;
+    elements: ElementWithLevelScores[];
+  }[];
+}> {
+  // 1. Fetch all pillars
+  const { data: pillarsData, error: pillarsError } = await supabase
+    .from('pillars_master')
+    .select('id, code, name_local, name_en, is_active')
+    .order('code', { ascending: true });
+
+  if (pillarsError) throw pillarsError;
+
+  // 2. Fetch all elements
+  const { data: elementsData, error: elementsError } = await supabase
+    .from('elements_master')
+    .select('id, code, name_local, name_en, pillar_id, criteria')
+    .order('code', { ascending: true });
+
+  if (elementsError) throw elementsError;
+
+  // 3. Fetch level scores for the country
+  let scoresQuery = supabase
+    .from('country_level_scores')
+    .select('id, element_id, level, score, notes, updated_at');
+
+  if (country !== 'Global') {
+    scoresQuery = scoresQuery.eq('country', country);
+  }
+
+  const { data: scoresData, error: scoresError } = await scoresQuery;
+
+  // If table doesn't exist yet, use empty array
+  const scores = scoresError ? [] : (scoresData ?? []);
+
+  // 4. Create scores map: element_id -> level -> score
+  const scoresMap = new Map<string, Map<MaturityLevel, LevelScore>>();
+  for (const score of scores) {
+    if (!scoresMap.has(score.element_id)) {
+      scoresMap.set(score.element_id, new Map());
+    }
+    scoresMap.get(score.element_id)!.set(score.level as MaturityLevel, {
+      id: score.id,
+      element_id: score.element_id,
+      country,
+      level: score.level as MaturityLevel,
+      score: score.score ?? 0,
+      notes: score.notes,
+      updated_at: score.updated_at,
+    });
+  }
+
+  // 5. Build result
+  const pillars = (pillarsData ?? []).map((pillar: any) => {
+    const pillarElements = (elementsData ?? [])
+      .filter((el: any) => el.pillar_id === pillar.id)
+      .map((el: any): ElementWithLevelScores => {
+        const elementScores = scoresMap.get(el.id) ?? new Map();
+
+        // Build levels object
+        const levels: Record<MaturityLevel, LevelScore | null> = {
+          FOUNDATION: elementScores.get('FOUNDATION') ?? null,
+          BRONZE: elementScores.get('BRONZE') ?? null,
+          SILVER: elementScores.get('SILVER') ?? null,
+          GOLD: elementScores.get('GOLD') ?? null,
+          PLATINUM: elementScores.get('PLATINUM') ?? null,
+        };
+
+        return {
+          id: el.id,
+          code: el.code,
+          name: el.name_local ?? el.name_en ?? '',
+          pillar_id: el.pillar_id,
+          levels,
+          criteria: el.criteria,
+        };
+      });
+
+    return {
+      id: pillar.id,
+      code: pillar.code ?? '',
+      name: pillar.name_local ?? pillar.name_en ?? '',
+      is_active: pillar.is_active ?? false,
+      elements: pillarElements,
+    };
+  });
+
+  return { pillars };
+}
+
+/**
+ * Update a level score for an element in a country
+ */
+export async function updateLevelScore(input: {
+  elementId: string;
+  country: string;
+  level: MaturityLevel;
+  score: number;
+  notes?: string | null;
+}): Promise<void> {
+  const { error } = await supabase
+    .from('country_level_scores')
+    .upsert({
+      element_id: input.elementId,
+      country: input.country,
+      level: input.level,
+      score: input.score,
+      notes: input.notes ?? null,
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'element_id,country,level'
+    });
+
+  if (error) throw error;
+}
+
+/**
+ * Get maturity summary stats for a country
+ */
+export async function fetchMaturityStats(country: string): Promise<{
+  levelStats: { level: MaturityLevel; avgScore: number; completed: number; total: number }[];
+  overallProgress: number;
+}> {
+  // Fetch all level scores
+  let query = supabase
+    .from('country_level_scores')
+    .select('level, score, element_id');
+
+  if (country !== 'Global') {
+    query = query.eq('country', country);
+  }
+
+  const { data, error } = await query;
+
+  if (error || !data) {
+    return {
+      levelStats: MATURITY_LEVELS.map(level => ({
+        level,
+        avgScore: 0,
+        completed: 0,
+        total: 0,
+      })),
+      overallProgress: 0,
+    };
+  }
+
+  // Filter out scores from inactive pillars
+  // We need to fetch active elements first
+  const { data: activeElements } = await supabase
+    .from('elements_master')
+    .select('id, pillars_master!inner(is_active)')
+    .eq('pillars_master.is_active', true);
+
+  const activeElementIds = new Set((activeElements ?? []).map(e => e.id));
+
+  // Calculate stats per level
+  const levelData: Record<MaturityLevel, number[]> = {
+    FOUNDATION: [],
+    BRONZE: [],
+    SILVER: [],
+    GOLD: [],
+    PLATINUM: [],
+  };
+
+  for (const row of data) {
+    // Only include if element is active
+    if (!row.element_id || !activeElementIds.has(row.element_id)) {
+      continue;
+    }
+
+    const level = row.level as MaturityLevel;
+    if (levelData[level]) {
+      levelData[level].push(row.score ?? 0);
+    }
+  }
+
+  const levelStats = MATURITY_LEVELS.map(level => {
+    const scores = levelData[level];
+    const total = scores.length;
+    const completed = scores.filter(s => s === 100).length;
+    const avgScore = total > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / total) : 0;
+
+    return { level, avgScore, completed, total };
+  });
+
+  // Overall progress: weighted average of all levels
+  // Re-calculate using filtered data
+  let totalScoreSum = 0;
+  let totalScoreCount = 0;
+
+  Object.values(levelData).forEach(scores => {
+    totalScoreSum += scores.reduce((a, b) => a + b, 0);
+    totalScoreCount += scores.length;
+  });
+
+  const overallProgress = totalScoreCount > 0
+    ? Math.round(totalScoreSum / totalScoreCount)
+    : 0;
+
+  return { levelStats, overallProgress };
 }

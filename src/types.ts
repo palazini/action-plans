@@ -5,6 +5,7 @@ export type Pillar = {
   code: string;
   name: string;
   description?: string | null;
+  is_active?: boolean;
 };
 
 export type ActionPlanStatus =
@@ -12,6 +13,36 @@ export type ActionPlanStatus =
   | 'IN_PROGRESS'
   | 'DONE'
   | 'CANCELLED';
+
+// Maturity levels in order of progression
+export type MaturityLevel = 'FOUNDATION' | 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM';
+
+export const MATURITY_LEVELS: MaturityLevel[] = ['FOUNDATION', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM'];
+
+// Score for a specific level
+export type LevelScore = {
+  id?: string;
+  element_id: string;
+  country: string;
+  level: MaturityLevel;
+  score: number;
+  notes?: string | null;
+  updated_at?: string;
+};
+
+// Element with all level scores
+export type ElementWithLevelScores = {
+  id: string;
+  code: string | null;
+  name: string;
+  pillar_id: string;
+  pillar?: Pillar | null;
+  levels: Record<MaturityLevel, LevelScore | null>;
+  criteria?: {
+    behaviour?: string;
+    maturity_levels?: Record<string, string>;
+  } | null;
+};
 
 export type ActionPlan = {
   id: string;
@@ -21,6 +52,7 @@ export type ActionPlan = {
   owner_name: string;
   due_date: string | null;
   status: ActionPlanStatus;
+  maturity_level: MaturityLevel; // New: Which level this plan targets
   created_at: string;
   updated_at: string;
 };
@@ -32,6 +64,7 @@ export type ElementWithRelations = {
   foundation_score: number;
   notes?: string | null;
   pillar: Pillar | null;
+  is_active?: boolean;
   action_plans: {
     id: string;
     status: ActionPlanStatus;
@@ -48,6 +81,7 @@ export type DashboardStats = {
   totalElements: number;
   gapElements: number;
   elementsWithoutPlan: number;
+  maturityCounts: Record<MaturityLevel, number>;
 };
 
 export type PillarStats = {

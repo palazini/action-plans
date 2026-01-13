@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import {
   Alert,
   ActionIcon,
+  Box,
   Card,
   Center,
   Group,
@@ -72,18 +73,21 @@ export function StructurePage() {
   };
 
   return (
-    <Stack gap="lg">
-      <Group justify="space-between" align="center">
-        <div>
-          <Title order={2} c="dark.8">{t('pages.structure.title')}</Title>
-          <Text c="dimmed" size="sm">
+    <Stack gap="xl">
+      {/* Header */}
+      <Group justify="space-between" align="flex-start">
+        <Box>
+          <Title order={2} c="dark.8" fw={800}>
+            {t('pages.structure.title')}
+          </Title>
+          <Text c="dimmed" size="sm" mt={4}>
             {t('pages.structure.description')}
           </Text>
-        </div>
+        </Box>
 
-        {/* Indicador de pilares/elementos fixos */}
+        {/* Global Standard Badge */}
         <Tooltip
-          label={t('pages.structure.lockedTooltip', 'Os pilares e elementos são padronizados globalmente. Você pode editar apenas o score do seu país.')}
+          label={t('pages.structure.lockedTooltip', 'Pillars and elements are globally standardized. You can only edit the score for your country.')}
           multiline
           w={280}
         >
@@ -93,7 +97,7 @@ export function StructurePage() {
             color="gray"
             size="lg"
           >
-            {t('pages.structure.globalStandard', 'Padrão Global')}
+            {t('pages.structure.globalStandard', 'Global Standard')}
           </Badge>
         </Tooltip>
       </Group>
@@ -115,11 +119,18 @@ export function StructurePage() {
         </Center>
       ) : (
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
-          {/* Coluna de Pilares */}
-          <Card withBorder radius="md" shadow="sm" p="lg">
+          {/* Pillars Column */}
+          <Card
+            radius="lg"
+            shadow="sm"
+            p="xl"
+            style={{
+              border: '1px solid var(--mantine-color-gray-2)',
+            }}
+          >
             <Group justify="space-between" mb="lg">
-              <Group gap="xs">
-                <ThemeIcon variant="light" color="violet" size="md">
+              <Group gap="sm">
+                <ThemeIcon variant="gradient" gradient={{ from: 'violet', to: 'grape' }} size="lg" radius="md">
                   <IconLayoutKanban style={{ width: rem(18), height: rem(18) }} />
                 </ThemeIcon>
                 <div>
@@ -151,6 +162,8 @@ export function StructurePage() {
                 <Table.Tbody>
                   {pillars.map((pillar) => {
                     const isSelected = pillar.id === selectedPillarId;
+                    const isActive = (pillar as any).is_active !== false;
+
                     return (
                       <Table.Tr
                         key={pillar.id}
@@ -159,20 +172,28 @@ export function StructurePage() {
                           backgroundColor: isSelected
                             ? 'var(--mantine-color-blue-0)'
                             : undefined,
+                          opacity: isActive ? 1 : 0.6,
                           transition: 'background-color 0.2s',
                         }}
                         onClick={() => setSelectedPillarId(pillar.id)}
                       >
                         <Table.Td>
-                          <Badge variant="outline" color="gray" size="sm">
-                            {pillar.code ?? '-'}
-                          </Badge>
+                          <Group gap="xs">
+                            <Badge variant="outline" color={isActive ? "gray" : "dashed"} size="sm">
+                              {pillar.code ?? '-'}
+                            </Badge>
+                            {!isActive && (
+                              <Badge size="xs" color="gray" variant="light">Inactive</Badge>
+                            )}
+                          </Group>
                         </Table.Td>
                         <Table.Td>
-                          <Text size="sm" fw={500}>{pillar.name_local || pillar.name}</Text>
+                          <Text size="sm" fw={500} c={isActive ? undefined : 'dimmed'}>
+                            {pillar.name_local || pillar.name}
+                          </Text>
                         </Table.Td>
                         <Table.Td style={{ textAlign: 'center' }}>
-                          <Badge size="sm" circle variant={isSelected ? 'filled' : 'light'}>
+                          <Badge size="sm" circle variant={isSelected ? 'filled' : 'light'} color={isActive ? "blue" : "gray"}>
                             {pillar.elements.length}
                           </Badge>
                         </Table.Td>
@@ -187,11 +208,18 @@ export function StructurePage() {
             )}
           </Card>
 
-          {/* Coluna de Elementos */}
-          <Card withBorder radius="md" shadow="sm" p="lg">
+          {/* Elements Column */}
+          <Card
+            radius="lg"
+            shadow="sm"
+            p="xl"
+            style={{
+              border: '1px solid var(--mantine-color-gray-2)',
+            }}
+          >
             <Group justify="space-between" mb="lg">
-              <Group gap="xs">
-                <ThemeIcon variant="light" color="cyan" size="md">
+              <Group gap="sm">
+                <ThemeIcon variant="gradient" gradient={{ from: 'cyan', to: 'blue' }} size="lg" radius="md">
                   <IconComponents style={{ width: rem(18), height: rem(18) }} />
                 </ThemeIcon>
                 <div>

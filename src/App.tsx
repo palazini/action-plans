@@ -7,13 +7,13 @@ import { AuthGuard } from './components/AuthGuard';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Lazy load pages para melhor performance
-const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
 const LoginPage = lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })));
 const RegisterPage = lazy(() => import('./pages/RegisterPage').then(m => ({ default: m.RegisterPage })));
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const BacklogPage = lazy(() => import('./pages/BacklogPage').then(m => ({ default: m.BacklogPage })));
 const ActionPlansPage = lazy(() => import('./pages/ActionPlansPage').then(m => ({ default: m.ActionPlansPage })));
 const StructurePage = lazy(() => import('./pages/StructurePage').then(m => ({ default: m.StructurePage })));
+const MaturityPage = lazy(() => import('./pages/MaturityPage').then(m => ({ default: m.MaturityPage })));
 
 // Loading fallback component
 function PageLoader() {
@@ -29,9 +29,9 @@ export default function App() {
     <ErrorBoundary>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          {/* Public Routes - Login é a página principal */}
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<Navigate to="/" replace />} />
           <Route path="/register" element={<RegisterPage />} />
 
           {/* Protected Routes */}
@@ -44,6 +44,7 @@ export default function App() {
             }
           >
             <Route index element={<DashboardPage />} />
+            <Route path="maturity" element={<MaturityPage />} />
             <Route path="backlog" element={<BacklogPage />} />
             <Route path="plans" element={<ActionPlansPage />} />
             <Route path="structure" element={<StructurePage />} />

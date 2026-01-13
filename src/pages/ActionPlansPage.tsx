@@ -31,7 +31,6 @@ import {
   IconSearch,
   IconClipboardList,
   IconDownload,
-  IconFileSpreadsheet,
 } from '@tabler/icons-react';
 
 import { useTranslation } from 'react-i18next';
@@ -39,6 +38,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useActionPlans, useUpdateActionPlanStatus } from '../hooks/useQueries';
 import type { ActionPlanStatus, ActionPlanWithElement } from '../types';
 import { EditActionPlanForm } from '../components/action-plans/EditActionPlanForm';
+import { IconTrophy } from '@tabler/icons-react';
 
 function statusColor(status: ActionPlanStatus): string {
   switch (status) {
@@ -68,6 +68,7 @@ export function ActionPlansPage() {
 
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [pillarFilter, setPillarFilter] = useState<string>('ALL');
+  const [levelFilter, setLevelFilter] = useState<string>('ALL');
   const [ownerFilter, setOwnerFilter] = useState<string>('');
 
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -173,6 +174,10 @@ export function ActionPlansPage() {
     if (statusFilter !== 'ALL' && plan.status !== statusFilter) return false;
 
     if (pillarFilter !== 'ALL' && plan.element?.pillar?.id !== pillarFilter) {
+      return false;
+    }
+
+    if (levelFilter !== 'ALL' && (plan as any).maturity_level !== levelFilter) {
       return false;
     }
 
@@ -419,23 +424,24 @@ export function ActionPlansPage() {
   })();
 
   return (
-    <Stack gap="lg">
-      <Group justify="space-between" mb="xs">
-        <div>
-          <Title order={2} c="dark.8">
+    <Stack gap="xl">
+      {/* Header */}
+      <Group justify="space-between" align="flex-start">
+        <Box>
+          <Title order={2} c="dark.8" fw={800}>
             {t('pages.actionPlans.title')}
           </Title>
-          <Text c="dimmed" size="sm">
+          <Text c="dimmed" size="sm" mt={4}>
             {isGlobalView
               ? t(
                 'pages.actionPlans.descriptionGlobal',
-                'Lista global de planos de ação (todas as unidades que você pode ver).',
+                'Global list of action plans (all units you can view).',
               )
               : t('pages.actionPlans.description')}
           </Text>
-        </div>
+        </Box>
 
-        {/* BOTÃO EXPORTAR EXCEL */}
+        {/* EXPORT BUTTON */}
         <Tooltip
           withArrow
           label={
@@ -445,14 +451,13 @@ export function ActionPlansPage() {
           }
         >
           <Button
-            variant="default"
+            variant="light"
+            color="green"
             onClick={!isGlobalView ? handleExportExcel : undefined}
             disabled={isGlobalView || filteredPlans.length === 0}
+            leftSection={<IconDownload size={16} />}
           >
-            <Group gap={6}>
-              <IconDownload size={18} />
-              <IconFileSpreadsheet size={18} color="green" />
-            </Group>
+            {t('pages.actionPlans.export', 'Export')}
           </Button>
         </Tooltip>
       </Group>
@@ -469,13 +474,22 @@ export function ActionPlansPage() {
         </Alert>
       )}
 
-      {/* Filtros */}
-      <Card withBorder radius="md" shadow="sm" p="lg">
-        <Group justify="space-between" align="flex-end">
-          <Group gap="xl">
+      {/* Filters Card */}
+      <Card
+        radius="lg"
+        shadow="sm"
+        p="lg"
+        style={{
+          border: '1px solid var(--mantine-color-gray-2)',
+        }}
+      >
+        <Group justify="space-between" align="flex-end" wrap="wrap" gap="md">
+          <Group gap="xl" wrap="wrap">
             <div>
               <Group gap="xs" mb={6}>
-                <IconFilter size={14} style={{ opacity: 0.6 }} />
+                <ThemeIcon size="xs" variant="light" color="blue">
+                  <IconFilter size={12} />
+                </ThemeIcon>
                 <Text size="xs" fw={700} c="dimmed" tt="uppercase">
                   {t('filters.status')}
                 </Text>
@@ -497,7 +511,9 @@ export function ActionPlansPage() {
             {pillarOptions.length > 0 && (
               <div>
                 <Group gap="xs" mb={6}>
-                  <IconDatabase size={14} style={{ opacity: 0.6 }} />
+                  <ThemeIcon size="xs" variant="light" color="grape">
+                    <IconDatabase size={12} />
+                  </ThemeIcon>
                   <Text size="xs" fw={700} c="dimmed" tt="uppercase">
                     {t('filters.pillar')}
                   </Text>
@@ -513,17 +529,41 @@ export function ActionPlansPage() {
                 />
               </div>
             )}
+
+            {/* Maturity Level Filter */}
+            <div>
+              <Group gap="xs" mb={6}>
+                <ThemeIcon size="xs" variant="light" color="orange">
+                  <IconTrophy size={12} />
+                </ThemeIcon>
+                <Text size="xs" fw={700} c="dimmed" tt="uppercase">
+                  {t('filters.level', 'Level')}
+                </Text>
+              </Group>
+              <SegmentedControl
+                size="xs"
+                value={levelFilter}
+                onChange={setLevelFilter}
+                data={[
+                  { label: t('filters.status_all'), value: 'ALL' },
+                  { label: 'F', value: 'FOUNDATION' },
+                  { label: 'B', value: 'BRONZE' },
+                  { label: 'S', value: 'SILVER' },
+                  { label: 'G', value: 'GOLD' },
+                  { label: 'P', value: 'PLATINUM' },
+                ]}
+              />
+            </div>
           </Group>
 
-          <div style={{ minWidth: 250 }}>
-            <TextInput
-              size="sm"
-              leftSection={<IconSearch size={16} />}
-              placeholder={`${t('filters.owner')}...`}
-              value={ownerFilter}
-              onChange={(e) => setOwnerFilter(e.currentTarget.value)}
-            />
-          </div>
+          <TextInput
+            size="sm"
+            leftSection={<IconSearch size={16} />}
+            placeholder={`${t('filters.owner')}...`}
+            value={ownerFilter}
+            onChange={(e) => setOwnerFilter(e.currentTarget.value)}
+            style={{ minWidth: 220 }}
+          />
         </Group>
       </Card>
 

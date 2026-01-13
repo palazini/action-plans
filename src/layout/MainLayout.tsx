@@ -30,6 +30,7 @@ import {
   IconBuildingFactory,
   IconDownload,
   IconFileSpreadsheet,
+  IconTrophy,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
@@ -57,6 +58,7 @@ const AVAILABLE_COUNTRIES = [
 
 const NAV_ITEMS = [
   { labelKey: 'nav.dashboard', path: '/app', icon: IconDashboard, end: true },
+  { labelKey: 'nav.maturity', path: '/app/maturity', icon: IconTrophy },
   { labelKey: 'nav.actionPlans', path: '/app/plans', icon: IconListCheck },
   { labelKey: 'nav.backlog', path: '/app/backlog', icon: IconChecklist },
   { labelKey: 'nav.structure', path: '/app/structure', icon: IconHierarchy2 },

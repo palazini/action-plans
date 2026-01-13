@@ -5,6 +5,7 @@
   },
   "nav": {
     "dashboard": "Overview",
+    "maturity": "Maturity",
     "actionPlans": "Action Plans",
     "backlog": "Backlog",
     "structure": "Structure",
@@ -118,6 +119,10 @@
       "noElementsInPillar": "This pillar has no elements",
       "lockedTooltip": "Pillars and elements are globally standardized. You can only edit your country's score.",
       "globalStandard": "Global Standard"
+    },
+    "maturity": {
+      "title": "Maturity Framework",
+      "description": "Track and improve your operational maturity across all levels"
     }
   },
   "table": {

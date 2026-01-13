@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
   type ReactNode,
 } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
@@ -14,7 +15,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   selectedCountry: string | null;
-  userRole: string | null; // Novo campo para saber se é supervisor
+  userRole: string | null;
   setSelectedCountry: (country: string | null) => void;
   signOut: () => Promise<void>;
 };
@@ -24,9 +25,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null); // Estado para a role
+  const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  
+  const [profileLoaded, setProfileLoaded] = useState(false);
+
   const [selectedCountry, setSelectedCountry] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('selectedCountry');
@@ -35,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   // Função auxiliar para buscar o perfil e a role
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = useCallback(async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -45,29 +47,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data && !error) {
         setUserRole(data.role || 'user');
-        
-        // LÓGICA IMPORTANTE:
-        // Só forçamos o país do perfil se o usuário NÃO tiver selecionado nada ainda (localStorage vazio)
-        // Isso permite que um usuário Brasileiro clique em "Global" na Landing Page e navegue como Global
-        const storedCountry = localStorage.getItem('selectedCountry');
-        
-        if (!storedCountry && data.country) {
-            setSelectedCountry(data.country);
+        if (data.country) {
+          setSelectedCountry(data.country);
         }
+      } else {
+        setUserRole('user');
       }
     } catch (err) {
       console.error('Erro ao buscar perfil:', err);
+      setUserRole('user');
+    } finally {
+      setProfileLoaded(true);
     }
-  };
+  }, []);
 
   useEffect(() => {
+    let mounted = true;
+
     // Check inicial da sessão
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
+
       setSession(session);
       setUser(session?.user ?? null);
+
       if (session?.user) {
         fetchProfile(session.user.id);
       } else {
+        setProfileLoaded(true);
         setLoading(false);
       }
     });
@@ -76,26 +83,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return;
+
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
+        setProfileLoaded(false);
         fetchProfile(session.user.id);
       } else {
         setUserRole(null);
-        setLoading(false); // Garante que loading pare ao deslogar
+        setProfileLoaded(true);
+        setLoading(false);
       }
     });
 
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [fetchProfile]);
 
-  // Quando o profile/role carregar, liberamos o app
+  // Quando o profile carregar, liberamos o app
   useEffect(() => {
-    if (user && userRole !== null) {
-        setLoading(false);
+    if (profileLoaded) {
+      setLoading(false);
     }
-  }, [user, userRole]);
+  }, [profileLoaded]);
 
   useEffect(() => {
     if (selectedCountry) {
@@ -106,9 +120,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [selectedCountry]);
 
   const signOut = async () => {
+    setLoading(true);
     await supabase.auth.signOut();
     setSelectedCountry(null);
     setUserRole(null);
+    setLoading(false);
   };
 
   return (
@@ -118,7 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         loading,
         selectedCountry,
-        userRole, // Expondo a role para o resto do app
+        userRole,
         setSelectedCountry,
         signOut,
       }}

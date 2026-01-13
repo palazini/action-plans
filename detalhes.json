@@ -1,0 +1,732 @@
+[
+  {
+    "name": "COLLABORATION & ENGAGEMENT",
+    "description": "Collaboration and Engagement\nBy involving all colleagues at each of our manufacturing sites, they will be able to participate and get involved, while understanding how their contributions can impact the business. This will create transparency and openness.\nThis is “How we make our difference”, which is embedded by our colleagues through Self-Directed Teams. We aim to create a framework in which we keep people:\nInterested    Involved    Informed    Inspired",
+    "elements": [
+      {
+        "name": "Self-Directed Teams (SDT)",
+        "behaviour": "Colleagues consistently communicate daily goals and issues to all affected team members, ensuring clarity and alignment, while the organization actively incorporates feedback and suggestions into its processes.",
+        "maturity_levels": {
+          "FOUNDATION": "Self directed teams has been kicked off for the site, level 1, 2 and 3 teams have started and are showing progress.",
+          "BRONZE": "Teams have become autonomous and do not need external training.  Eg Level 1 teams at 28 points or above, level 2 at 25, level 3 at 20.",
+          "SILVER": "Metrics for the SDT are showing month on month improvement across the board. All teams are a way of life and fully integrated into the business.",
+          "GOLD": "Teams are starting to evolve by themselves and involving new measures as required.",
+          "PLATINUM": "Teams are fully responsible for their area and need almost no management. They can, and do, respond to abnormalities automatically and in a defined way."
+        }
+      },
+      {
+        "name": "Production Meeting",
+        "behaviour": "Colleagues are provided with the tools, resources, and support necessary to make informed decisions relevant to their roles, and they are actively encouraged to do so.",
+        "maturity_levels": {
+          "FOUNDATION": "Production planning meeting is in place but is reactionary and based on the urgent deliveries for the day. Plan is communicated throughout the site.",
+          "BRONZE": "Production meeting is in place and is ordered and adhered to. Production scheduled out at least next 2-3 days with accuracy and aligned to S&OP.",
+          "SILVER": "Production meeting is moving to visual scheduling on the shopfloor, for example, Kamishibai boards. Visual triggers are used to plan production.",
+          "GOLD": "Visual triggers and shopfloor systems (FIFO, Kanban) are scheduling all production. Meetings are only needed in rare cases when anomalies exist.",
+          "PLATINUM": "All production is scheduled through shopfloor systems, including when anomalies arise (with given rules in place)."
+        }
+      },
+      {
+        "name": "Management Meeting",
+        "behaviour": "Colleagues regularly discuss, document, and prioritize goals that are explicitly linked to the organization’s strategic objectives, and they align their work efforts to achieve these goals",
+        "maturity_levels": {
+          "FOUNDATION": "A weekly site management meeting is held to discuss and review the urgent issues for the site. Some long-term planning is also evident.",
+          "BRONZE": "Weekly management team meeting, focusing on action plans to hit key objectives is in place.",
+          "SILVER": "Management team increasingly focuses on long-term strategic items, as day to day running of the site and action plans are now responsibility of SDT.",
+          "GOLD": "Management 3-5 year view is well developed and resourced. Action plans for day to day running of the site are completely held at the level 1 and 2. Escalation, if required, is effective.",
+          "PLATINUM": "Management 3-5 year view is ingrained throughout the organisation. Tier 1 and 2 effectively run the site and there is almost no escalation needed. All action plans are completed on time."
+        }
+      },
+      {
+        "name": "Operations Reviews",
+        "behaviour": "Executives actively participate in operational reviews by soliciting input from employees on performance metrics, processes, and improvement opportunities. They use structured forums, such as team meetings or Gemba walks, to gather feedback and ensure employee insights are incorporated into decisions and action plans aimed at achieving organizational goals",
+        "maturity_levels": {
+          "FOUNDATION": "Site has implemented the standard KPI presentation, and this data is accurate and shared on time.",
+          "BRONZE": "Site has a monthly internal operations review covering KPIs and actions plans, looking for ways to improve.",
+          "SILVER": "Site schedules monthly operations review with supply leadership and covers KPIs and actions plans for each in a comprehensive way.",
+          "GOLD": "Site operations reviews are comprehensive and all KPIs are on track with actions plans developed and presented by tier 1 and 2.",
+          "PLATINUM": "No additional requirements"
+        }
+      },
+      {
+        "name": "Vision",
+        "behaviour": "Colleagues maintain a clear organizational purpose amidst changes in the business environment.",
+        "maturity_levels": {
+          "FOUNDATION": "The management team have created a plan to meet the goals of the business plan for the current year eg through a SWOT analysis.",
+          "BRONZE": "Management team has created a vision, (reviewed annually), based on their aspirations over a 3-5 year period.",
+          "SILVER": "Contributors (including key suppliers and sales and marketing customers) have been consulted in the creation of the vision.",
+          "GOLD": "Annual management SWOT workshop also reviews the Mission Statement (present based - convey a sense of why the company exists), Vision (future based - inspire and give direction to all colleagues).",
+          "PLATINUM": "Vision and mission process starts from business objectives.\n Minimum quarterly workshops/meetings are held to review/adjust the plan."
+        }
+      },
+      {
+        "name": "Policy Deployment",
+        "behaviour": "Policy Deployment targets are set, linked directly to the business plan.\nColleagues are informed of the team's and  site’s goals and progress in meeting their goals.",
+        "maturity_levels": {
+          "FOUNDATION": "Policy Deployment targets are set, linked directly to the business plan.\nColleagues are informed of the team's and  site’s goals and progress in meeting their goals.",
+          "BRONZE": "Each team develop aligned targets.\nTargets are reviewed through the daily tiered meetings.",
+          "SILVER": "Use of alignment matrix  for annual setting of KPIs.\nEach production and functional team involved in setting and monitoring their own goals.",
+          "GOLD": "SMART objective setting of 5-8 individual activities linked to alignment matrix.",
+          "PLATINUM": "Full use of alignment matrix to transfer business goals to individual goals. Use of RASIC chart. All goals in Cornerstone. Full alignment."
+        }
+      },
+      {
+        "name": "Communications & Listening",
+        "behaviour": "The organization communicates its vision, strategy, and goals clearly and regularly, ensuring colleagues understand the direction and purpose while providing consistent feedback on individual and team progress toward short- and long-term objective",
+        "maturity_levels": {
+          "FOUNDATION": "An annual communications plan, including tools (internet, newsletter, town halls, electronic media etc.) and ownership has been created.",
+          "BRONZE": "Monthly all colleague town halls are in place, and weekly “Speaking Points” communication is started.",
+          "SILVER": "Communication is included in the Roles and Responsibilities definition and linked directly into leadership standard work.",
+          "GOLD": "Consistent communication, both bottom up and top down, is defined and clearly visible at all levels and across all functions at the site.",
+          "PLATINUM": "Positive Colleague Relations Plan developed. Original Communication Plan (see foundation) has been updated, and best-practice communication tools have been standardised into the revised plan."
+        }
+      },
+      {
+        "name": "Metrics",
+        "behaviour": "The organization identifies and tracks key performance indicators (KPIs) that align with customer priorities and expectations, ensuring continuous focus on delivering value",
+        "maturity_levels": {
+          "FOUNDATION": "KPIs are  tracked and reviewed as part of SDT including: Safety, Quality, Delivery, Cost and Teamwork",
+          "BRONZE": "Team KPIs & KBI's established and reviewed shiftly/daily/weekly/monthly against target.",
+          "SILVER": "Team tracks some costs related to their span of control. \nKPI & KBI gaps are addressed as they are identified and reviewed bs expected outcomes",
+          "GOLD": "Performance levels maintained.\nValue Stream (segmented) Profit and Loss statement made available to each VS Manager each month.",
+          "PLATINUM": "All relative metrics reach or exceed the plan target (OPE, scrap vs COGS, margin%, Inventory%)"
+        }
+      },
+      {
+        "name": "Customer Voice",
+        "behaviour": "The organization identifies and tracks key performance indicators (KPIs) that align with customer priorities and expectations, ensuring continuous focus on delivering value",
+        "maturity_levels": {
+          "FOUNDATION": "Top 5 customer (sales) and supply collaboration meetings quarterly ahead of LE input",
+          "BRONZE": "Site is considering customer feedback through customer scorecards and/or annual custoner surveys",
+          "SILVER": "Site is regularly soliciting customer feedack ie monthly. This is both through sales and directly. Customer visits are scheduled regularly",
+          "GOLD": "Customer visits are now proactive (vs reactive). Customer's values are known throughout the site",
+          "PLATINUM": "Very responsive and aligned to customer needs. Seen as the best choice by customers."
+        }
+      }
+    ]
+  },
+  {
+    "name": "SAFETY",
+    "description": "Safety\nNothing we do is worth getting hurt for.\nWe are committed to operating our business in a manner that protects the health and safety of our employees, contractors, visitors and the communities in which we operate.",
+    "elements": [
+      {
+        "name": "Risk Assessments",
+        "behaviour": "Colleagues are trained to identify and assess risks associated with their tasks, and they actively participate in developing and implementing mitigation strategies to prevent accidents and injuries.",
+        "maturity_levels": {
+          "FOUNDATION": "All operations have a current risk assessment. Site has a risk register in place and the top risks are being addressed.",
+          "BRONZE": "Risk assessment process is active and live, with 20% of RAs reviewed each year (rolling).",
+          "SILVER": "Safety opportunities (near misses / unsafe acts / unsafe conditions) are linked to risk assessment reviews and updates.",
+          "GOLD": "Feedback from accidents and incidents in other Group sites are used to review and update risk assessments.",
+          "PLATINUM": "Risk assessments are completely integrated into Standard Work. Dynamic risk assessment is part of the culture."
+        }
+      }
+    ]
+  },
+  {
+    "name": "LEARNING CULTURE",
+    "description": "Learning Culture\nDeveloping the capability of our people is a priority. We are committed to providing our colleagues with the training and development they need to be successful in their roles.\nWe aim to create a learning organization where our colleagues are encouraged to learn and grow.",
+    "elements": [
+      {
+        "name": "Onboarding",
+        "behaviour": "New colleagues are welcomed and integrated into the organization through a structured onboarding program that provides them with the knowledge, skills, and support they need to be successful in their roles.",
+        "maturity_levels": {
+          "FOUNDATION": "Standard induction process is in place for all new starters covering HR, EHS, Quality, and Operations.",
+          "BRONZE": "Job specific induction plans are in place for all roles, including standard work training and sign off.",
+          "SILVER": "Buddy system in place for all new starters. 30/60/90 day reviews are standard.",
+          "GOLD": "Feedback from new starters is used to improve the onboarding process. First year retention > 90%.",
+          "PLATINUM": "World class onboarding experience. New starters are productive in minimum time."
+        }
+      },
+      {
+        "name": "Training & Development",
+        "behaviour": "Colleagues have a personal development plan that identifies their training and development needs, and they are supported in achieving their goals.",
+        "maturity_levels": {
+          "FOUNDATION": "Skills matrix is in place for all production areas. Compliance training is up to date.",
+          "BRONZE": "Gap analysis from skills matrix drives training plan. Cross training is evident.",
+          "SILVER": "Training is linked to problem solving and continuous improvement. TWI (Training Within Industry) or similar methodology used.",
+          "GOLD": "Colleagues are teaching others. Multi-skilling is high (e.g. >3 tasks per person).",
+          "PLATINUM": "Self-learning culture. Colleagues proactively seek development. High internal promotion rate."
+        }
+      },
+      {
+        "name": "Leadership Development",
+        "behaviour": "Leaders are developed to support the lean transformation and to lead by example, coaching and mentoring their teams to achieve their potential.",
+        "maturity_levels": {
+          "FOUNDATION": "Front line leaders have attended basic leadership training.",
+          "BRONZE": "Leadership standard work (LSW) is in place for all production leaders.",
+          "SILVER": "Leaders are actively coaching their teams. LSW is audited and improved.",
+          "GOLD": "Talent succession plan in place for all key leadership roles.",
+          "PLATINUM": "Leaders are recognized as industry best in class. Strong pipeline of future leaders."
+        }
+      },
+      {
+        "name": "Performance Management",
+        "behaviour": "Performance is managed fairly and transparently, with regular feedback and coaching to support improvement.",
+        "maturity_levels": {
+          "FOUNDATION": "Annual appraisals are completed for all colleagues.",
+          "BRONZE": "Regular 1:1s are in place. Objectives are clear and aligned.",
+          "SILVER": "Performance issues are addressed promptly and supportively.",
+          "GOLD": "High performers are recognized and developed. Poor performance is rare.",
+          "PLATINUM": "Continuous performance management. Feedback is real-time and multi-directional."
+        }
+      },
+      {
+        "name": "Knowledge Sharing",
+        "behaviour": "Knowledge and best practices are shared across the organization to drive continuous improvement.",
+        "maturity_levels": {
+          "FOUNDATION": "Best practice sharing is ad-hoc.",
+          "BRONZE": "System in place to capture and share lessons learned (e.g. A3s database).",
+          "SILVER": "Regular benchmarking with other sites (internal/external).",
+          "GOLD": "Active participation in communities of practice.",
+          "PLATINUM": "Site is a reference for best practices globally."
+        }
+      },
+      {
+        "name": "Problem Solving Capabilities",
+        "behaviour": "Colleagues are trained in problem solving methodologies and are empowered to solve problems at the root cause.",
+        "maturity_levels": {
+          "FOUNDATION": "Some colleagues trained in basic problem solving (e.g. 5 Whys).",
+          "BRONZE": "Standard problem solving process (e.g. A3, 8D) defined and used for major issues.",
+          "SILVER": "Problem solving is part of daily routine. Most colleagues capable of basic problem solving.",
+          "GOLD": "Advanced problem solving capability (e.g. Six Sigma Green/Black Belts) available and used.",
+          "PLATINUM": "Problem solving is the way we work. Everyone is a problem solver."
+        }
+      }
+    ]
+  },
+  {
+    "name": "SALES & OPERATIONS PLANNING",
+    "description": "Sales & Operations Planning\nWe aim to balance supply and demand to ensure we meet customer requirements while optimizing our inventory and resources.",
+    "elements": [
+      {
+        "name": "Demand Planning",
+        "behaviour": "The organization has a robust process for forecasting customer demand and incorporating it into production plans.",
+        "maturity_levels": {
+          "FOUNDATION": "Forecast received from sales/marketing but accuracy is low/not measured.",
+          "BRONZE": "Statistical forecast generated. Sales input gathered monthly.",
+          "SILVER": "Forecast accuracy measured and reviewed. Consensus forecast used for planning.",
+          "GOLD": "Collaborative forecasting with key customers. Scenario planning used.",
+          "PLATINUM": "Demand sensing and shaping. Real-time demand signals drive supply."
+        }
+      },
+      {
+        "name": "Supply Planning",
+        "behaviour": "Production plans are generated to meet demand while optimizing capacity and inventory.",
+        "maturity_levels": {
+          "FOUNDATION": "Rough cut capacity planning (RCCP) is ad-hoc.",
+          "BRONZE": "RCCP completed monthly for key resources. MPS (Master Production Schedule) in place.",
+          "SILVER": "Capacity constraints identified and managed proactively. MPS stable.",
+          "GOLD": "Optimization tools used for supply planning. Constraints managed dynamically.",
+          "PLATINUM": "End-to-end supply chain visibility and optimization."
+        }
+      },
+      {
+        "name": "S&OP Process",
+        "behaviour": "A structured S&OP process is in place to align sales, operations, and finance.",
+        "maturity_levels": {
+          "FOUNDATION": "Ad-hoc meetings between sales and ops.",
+          "BRONZE": "Monthly S&OP cycle defined (Demand, Supply, Pre-S&OP, Exec S&OP).",
+          "SILVER": "S&OP process disciplined and attended by right stakeholders. Decisions documented.",
+          "GOLD": "Integrated Business Planning (IBP) evolving. Financial integration strong.",
+          "PLATINUM": "S&OP drives business strategy execution. One set of numbers."
+        }
+      },
+      {
+        "name": "Inventory Management",
+        "behaviour": "Inventory is managed to balance service levels and working capital.",
+        "maturity_levels": {
+          "FOUNDATION": "Inventory accuracy is suspect. Stock takes are annual.",
+          "BRONZE": "Cycle counting in place. ABC analysis used.",
+          "SILVER": "Inventory targets set and monitored. Safety stocks calculated dynamically.",
+          "GOLD": "Inventory optimization tools used. VMI (Vendor Managed Inventory) with suppliers/customers.",
+          "PLATINUM": "Inventory turns best in class. Stock is flow, not storage."
+        }
+      },
+      {
+        "name": "Logistics",
+        "behaviour": "Logistics operations are efficient and reliable.",
+        "maturity_levels": {
+          "FOUNDATION": "Basic warehousing and shipping processes.",
+          "BRONZE": "Standard work for logistics. warehouse layout organized.",
+          "SILVER": "Logistics costs tracked. Carrier performance monitored.",
+          "GOLD": "Warehouse Management System (WMS) fully utilized. Transport optimization.",
+          "PLATINUM": "Smart logistics. Real-time tracking. Automated warehousing."
+        }
+      },
+      {
+        "name": "Data Integrity",
+        "behaviour": "Master data is accurate and maintained.",
+        "maturity_levels": {
+          "FOUNDATION": "Data quality issues frequent. No clear ownership.",
+          "BRONZE": "Key master data identified and owners assigned.",
+          "SILVER": "Regular data audits. Data accuracy KPIs in place.",
+          "GOLD": "Data governance process robust. Automated data validation.",
+          "PLATINUM": "Single source of truth. Data is a strategic asset."
+        }
+      },
+      {
+        "name": "Production Scheduling",
+        "behaviour": "Production is scheduled to meet customer dates and optimize efficiency.",
+        "maturity_levels": {
+          "FOUNDATION": "Manual scheduling / Excel based. High intervention.",
+          "BRONZE": "Scheduling rules defined. Schedule adherence measured.",
+          "SILVER": "Finite scheduling used for bottleneck resources.",
+          "GOLD": "Advanced Planning and Scheduling (APS) system used.",
+          "PLATINUM": "Automated, optimized scheduling based on real-time status."
+        }
+      },
+      {
+        "name": "Supplier Management",
+        "behaviour": "Suppliers are managed to ensure quality, delivery, and cost targets are met.",
+        "maturity_levels": {
+          "FOUNDATION": "Transactional relationship. Firefighting supply issues.",
+          "BRONZE": "Key suppliers identified. Supplier performance measured.",
+          "SILVER": "Regular supplier reviews. Supplier development started.",
+          "GOLD": "Strategic partnerships with key suppliers. Integrated supply chains.",
+          "PLATINUM": "Supplier ecosystem innovation. Co-development."
+        }
+      },
+      {
+        "name": "ERP Usage",
+        "behaviour": "ERP system is used effectively to manage the business.",
+        "maturity_levels": {
+          "FOUNDATION": "ERP used as system of record only. Many workarounds.",
+          "BRONZE": "Core modules used correctly. Standard processes defined.",
+          "SILVER": "System driving processes. User competence high.",
+          "GOLD": "Advanced functionality utilized. Integrated with other systems.",
+          "PLATINUM": "ERP is seamless enabler of business process."
+        }
+      },
+      {
+        "name": "Product Lifecycle Management",
+        "behaviour": "Product portfolio is managed effectively from launch to end of life.",
+        "maturity_levels": {
+          "FOUNDATION": "NPI (New Product Introduction) process exists but is often delayed.",
+          "BRONZE": "Stage-gate process for NPI. EOL (End of Life) process defined.",
+          "SILVER": "NPI and EOL integrated into S&OP.",
+          "GOLD": "Portfolio complexity managed. Time to market competitive.",
+          "PLATINUM": "Innovation pipeline robust. Portfolio optimized for value."
+        }
+      },
+      {
+        "name": "Customer Service",
+        "behaviour": "Customer inquiries and orders are handled efficiently and professionally.",
+        "maturity_levels": {
+          "FOUNDATION": "Response times variable. Manual order entry.",
+          "BRONZE": "Service standards defined. Order entry accuracy measured.",
+          "SILVER": "Customer portal/EDI used for major customers.",
+          "GOLD": "Proactive customer communication. CRM fully utilized.",
+          "PLATINUM": "Customer experience is a differentiator. Frictionless ordering."
+        }
+      },
+      {
+        "name": "Cost Management",
+        "behaviour": "Operations costs are understood and managed.",
+        "maturity_levels": {
+          "FOUNDATION": "Basic cost reporting (monthly).",
+          "BRONZE": "Variance analysis in place. Cost drivers understood.",
+          "SILVER": "Standard costing accurate. Cost reduction projects tracked.",
+          "GOLD": "Activity Based Costing (or similar) provides granularity.",
+          "PLATINUM": "Real-time cost visibility. Cost leadership in industry."
+        }
+      }
+    ]
+  },
+  {
+    "name": "SUSTAINABILITY",
+    "description": "Sustainability\nInitiatives that create a lasting and meaningful impact for us and the wider world - including how we source materials; develop, manufacture and sell our products;  manage our environmental impacts; and support our local communities.",
+    "elements": [
+      {
+        "name": "Sustainability Fundamentals",
+        "behaviour": "Team designs and implements processes that actively identify and drive continuous improvement in sustainability in alignment with the One Planet strategy.",
+        "maturity_levels": {
+          "FOUNDATION": "One Planet sustainability strategy & policies communicated to site and visually evident.\nSite has appointed a Sustainability and Community Engagement champion(s).\nSite Environment Management System defined and made available to all colleagues.",
+          "BRONZE": "Sustainability is a standing item on Site Leadership Team agendas to review performance against objectives.\nAccountability and responsibilities are understood and accepted (e.g. RACI matrix). \nChampions' responsibilities are detailed in their Job Description and annual objectives.\nISO 14001 certification is in place.",
+          "SILVER": "Sustainability policy, performance and priorities are reviewed annually by the Site Leadership Team.\nForward Plan 1-3 years is well developed.\nRegular communications regarding sustainability matters carried out at Site level.\nA site competency matrix drafted for Supervisor/Line Managers to ensure training or experience to drive sustainability.",
+          "GOLD": "Sustainability embedded into business decision making & financial planning cycles.\nForward plan 3-5 years is well developed.\nSustainability champion collaborates beyond the OpCo and draws on best practice from across the Group.\nBest practice sustainability initiatives  shared across the Group (e.g. One Place).\nSustainability is considered in all Management of Change processes.",
+          "PLATINUM": "Sustainability impacts are quantified and included in business decisions/processes.\nForward plan 3-5 years is embedded.\nChanges to Sustainability policy, performance and priorities are explained to all colleagues as part of regular briefings and ongoing training  is delivered (at an appropriate level for their role)."
+        }
+      },
+      {
+        "name": "Net Zero & Energy Management",
+        "behaviour": "Colleagues demonstrate awareness of the sources of greenhouse gases and actively participate in initiatives and practices aimed at eliminating emissions on-site",
+        "maturity_levels": {
+          "FOUNDATION": "Energy and carbon data (Scope 1 & 2) are routinely and accurately reported in alignment with Group Sustainability policy and reporting guidance.\nThe site's top 3 energy consumers have been identified.",
+          "BRONZE": "Main incoming meters are connected to Strata and monitored.\nEnergy baseload reduction opportunities have been identified and undertaken.\nOptions for green/renewable electricity have been explored. \nNet Zero roadmap (2030) has been established to support the transition to low carbon solutions. \nScope 3 emissions are quantified and reported as per Group directions.",
+          "SILVER": "OpCo has Group approved green/renewable electricity contract (e.g., PPA, IREC) in place, where possible.\nStrata capability includes sub-metering at building, area, and production line levels, where feasible. \nDecarbonisation feasibility studies have been conducted in alignment with the Net Zero roadmap.\nElectric/low carbon vehicle transition plan is in place.\nAsset register for significant energy users  has been established.",
+          "GOLD": "OpCo has explored onsite renewable generation where a renewable electricity contract is not feasible.\nStrata submetering has been implemented at the machine level.\nConsumption of energy is normalised \nNet-zero CAPEX projects progressing against plan.\nElectric/low carbon vehicle transition plan being executed.\n Scope 3 emissions reduction plan developed.",
+          "PLATINUM": "Site has achieved Net Zero (Scope 1 & 2) (mandatory >95% plus minimal offsets if required)\nMonthly Strata data governance calls are held with process owners.\nEnergy conservation culture is embedded across the site. \nElectric/low carbon vehicle transition completed.\nScope 3 emissions reduction plan in progress.\nAchieved ISO 50001 certification."
+        }
+      },
+      {
+        "name": "Biodiversity & Community Engagement",
+        "behaviour": "Colleagues recognise the importance of biodiversity and actively contribute to initiatives that enhance and positively impact biodiversity on-site. Colleagues actively participate in initiatives that engage with the wider community, contributing to the improvement and well-being of the surrounding area.",
+        "maturity_levels": {
+          "FOUNDATION": "At least one company organised community engagement event is completed per year.\nTarget to implement at least one biodiversity initiative on site or in the community by 2025 is in place and discussed at leadership meetings.\nColleagues have an awareness of volunteering hours, charitable donation and biodiversity initiative reporting in the Community Engagement and Biodiversity portal.",
+          "BRONZE": "More than one company organised community engagement event is completed per year.\nColleague entitlement to 3 days of paid volunteering leave is actively promoted on site.\nAt least one biodiversity initiative has been completed by 2025.",
+          "SILVER": "Shares best practice on community engagement and biodiversity initiatives across the Group.\nIf applicable, maintain existing on-site biodiversity initiatives.",
+          "GOLD": "Volunteering community of practice established.\nCompany has strong reputation in the local area for community engagement and biodiversity.\nThe site has applied for funding through the Group Education Fund",
+          "PLATINUM": "Year-on-year improvement in volunteering hours and charitable donations.\nAnnual investment in on or off-site biodiversity enhancement projects.\nPesticide free grounds and gardens (by exception e.g. to remove invasive species)"
+        }
+      },
+      {
+        "name": "Environment Improvements",
+        "behaviour": "Colleagues actively participate in initiatives and practices aimed at reducing water consumption and minimizing waste generation on-site.",
+        "maturity_levels": {
+          "FOUNDATION": "Segregated waste management facilities are available.\nOnly reputable waste vendors are used. \nWaste and water data are regularly reported in line with Group requirements.\nTop 3 water consumers and waste generators have been identified.",
+          "BRONZE": "Main water meters are connected to Strata.\nPlans have been developed to improve water and waste management and improve efficiency, with some actions identified and undertaken to reduce  baseload water use.",
+          "SILVER": "Strata water submetering is implemented (e.g. area/building).\nWater and waste management projects are underway, utilising best practice toolkit, with a focus on reducing waste to landfill.\nWaste disposal follows the waste hierarchy.",
+          "GOLD": "Water and waste management projects are progressing actively against plan.\nEnhanced Strata water submetering is implemented (e.g. line/equipment).\nZero waste to landfill achieved.\nWater and waste intensity monitored against production.",
+          "PLATINUM": "Zero waste to landfill is achieved without incineration, where possible.\nQuarterly water Strata governance call in place.\nUnexpected variations managed through a documented escalation process.\nCircular economy principles are considered in operations."
+        }
+      },
+      {
+        "name": "Sustainable Products",
+        "behaviour": "Colleagues and supply chain partners actively collaborate to enhance product sustainability by reducing material usage and optimising eco-friendly practices.",
+        "maturity_levels": {
+          "FOUNDATION": "The relevant department has a list of packaging materials used for customer shipments (including single-use plastics and non-recyclables).\nThe site has prioritised packaging materials for transition.",
+          "BRONZE": "Strategic plans to eliminate single-use plastics and non-recyclable materials from product packaging are developed (including reuse of recyclable and SUP-free packaging from suppliers, where possible).\nProjects are progressing against plan.\nCommenced development of a plan to start gathering weight data on purchased products.",
+          "SILVER": "A significant portion (>80%) of single-use plastics, non-recyclables have been eliminated (excluding specific packaging types specified by customer requirements).\n Support is provided for Business and Group led Life Cycle Analysis (LCA) initiatives.\nWeight data collection on purchased products has commenced.",
+          "GOLD": "Elimination of all single use plastic packaging and non-recyclable packaging sent to customers (excluding specific packaging types specified by customer requirements).\nHigh volume single-use plastic and non-recyclable packaging from suppliers identified, and suppliers requested to find an alternative. \nEvidence of knowledge of Life Cycle Assessment (LCA) & Product Carbon Footprint (PCF)",
+          "PLATINUM": "Projects underway, and delivering results, to eliminate receiving single-use plastic and non-recyclables from suppliers.\nLCA for key manufactured product families completed. \nAbility to issue PCFs to customers upon request."
+        }
+      },
+      {
+        "name": "Sustainable Supply Chains",
+        "behaviour": "Our efforts extend beyond our operations, actively influencing and collaborating with the wider supply chain to drive sustainable practices and reduce environmental impacts.",
+        "maturity_levels": {
+          "FOUNDATION": "Sustainability criteria embedded in all new supplier qualification and purchase contracts (above agreed thresholds), with suppliers required to sign the Supplier Sustainability Code.\nApplicable suppliers identified and maintained in the Assent Sustainability Supplier Portal.\nProcurement teams are actively engaged with the Assent University.",
+          "BRONZE": "Site has achieved 50% supplier engagement in the Assent portal and the  site has identified suppliers that don't meet our minimum standards. In conjunction with Group Sustainability, the site has started issuing corrective actions to key suppliers. \n>95% of suppliers (above agreed thresholds) have signed the Supplier Sustainability Code.\nProcurement professionals can demonstrate an understanding of key ESG/Conflict Mineral topics (as relevant to their roles).",
+          "SILVER": "Supplier engagement levels in the Assent Portal have increased to 65-75%.\nA plan has been developed to manage key (e.g. top 10) suppliers that will not engage with the Portal (up to or including supplier exit).\nCorrective actions are in regular use to improve supplier standards. \nESG audits have been performed on key underperforming suppliers.",
+          "GOLD": "Supplier engagement levels in the Assent Portal are >75%. \nEvidence that the use of corrective actions is raising standards in the supply chain, with >80% of suppliers (who engage with the Portal) meeting our minimum standards. \nExit plans in place (or MD approval for continued use) for non-engaging suppliers.\nESG audits embedded in supplier management (on a risk-basis).",
+          "PLATINUM": "Supplier engagement levels in the Assent Portal are >90%, with 100% of suppliers (who engage with the Portal) meeting our minimum standards. \nSupplier sustainability performance is embedded in a balanced scorecard and is actively fed into risk assessments, purchasing decisions and supply chain design."
+        }
+      }
+    ]
+  },
+  {
+    "name": "QUALITY",
+    "description": "Quality\nAdherence to Built in Quality (BiQ) concepts, so that it is only possible to make good product (Right first time), and any scrap is detected immediately at source. Extensive use of error proofing systems and concepts based on Failure Mode (FMEA) analysis, to eliminate the possibility of poor quality production.",
+    "elements": [
+      {
+        "name": "Change Management",
+        "behaviour": "Colleagues investigate the impact of improvements before we make changes. My team begins its troubleshooting processes by verifying there is standard work (e.g. SOP) in place and it was followed.",
+        "maturity_levels": {
+          "FOUNDATION": "Site Management actively use change management methodology including impact assessment. They have identified the business case for change for their site.  \nBasic QMS in place to manage change",
+          "BRONZE": "Metrics are redefined and monitoring methodology implemented (e.g. % successful change completions versus target)",
+          "SILVER": "Output of metric analysis is actively managed and reviewed by management, at least annually.\nChange Management aligned with business strategy",
+          "GOLD": "Lessons learned and best practice shared across wider organisation.  Outputs feed into continous improvement activities. Change process consistently applied across the organisation",
+          "PLATINUM": "Organisational change management practices harmonised across Spirax\nChange management process is robust and data demonstrates that failures do not occur as a result of  inadequate management of change\neQMS implemented to ensure robust management of change and related quality processes"
+        }
+      },
+      {
+        "name": "FMEA (Failure Modes Effect Analysis)",
+        "behaviour": "Colleagues look for problems even when there does not appear to be any. My team is willing to challenge each other if we notice a problem with quality or performance",
+        "maturity_levels": {
+          "FOUNDATION": "FMEA concept understood by key technical, engineering and quality personnel.  \nVocational training complete by completing at least 1 FMEA on selected  processes with high scrap and/or customer defects",
+          "BRONZE": "FMEA scoring methodology defined and documented.\nClearly defined roles and responsibilities for FMEA activities and FMEA process training completed.  \nFMEAs completed on key processes with highest scrap and/or defect causing processes \nFMEAs linked to QMS processes, such as change management, non-conformance/CAPA, to ensure they are revisited on regular basis",
+          "SILVER": "PFMEA initiated on core manufacturing processes.  There is a clear cascade between PFMEAs, Control Plans, Manufacturing Process Flows and SOPs.\nPFMEA for new products linked to design FMEA.",
+          "GOLD": "Completed PFMEAs demonstrate that all processes with unacceptable RPNs are covered by error proofing mitigations.\nMitigations are cascaded to Control Plans and SOPs and fully implemented",
+          "PLATINUM": "FMEAs are kept as live documents and are reviewed routinely as part of process or design change, with quality issues being fed back into FMEA, as required.\nFMEAs routinely utilised within internal audits"
+        }
+      },
+      {
+        "name": "Manufacturing Processes Controls",
+        "behaviour": "Colleagues eliminate any actions in their work that causes customer dissatisfaction. When colleagues have a problem, they use a structured research and testing process to address it",
+        "maturity_levels": {
+          "FOUNDATION": "Clearly defined receiving (quality) inspection requirements for critical incoming materials prevent non conforming material being used in the process.\nBasic system in place for recording and managing customer complaints and returns.\nScrap and rework processes defined with appropriate channels for recording and storing product.",
+          "BRONZE": "A defined system is used to record, assess and communicate internal, external and supplier quality issues within site.  \nMaterial Review Boards (MRB) in place to manage quarantine and/or scrap product/material.\nProcess control metrics are defined, implemented and routinely assessed at scheduled forums, such as Operations meetings and or scheduled Quality/Manufacturing reviews",
+          "SILVER": "Metrics are driving key manufacturing process improvement projects.  Improvement project progress is routinely reported through approporiate meeting forums.\nMethodology and/or systems are defined for capturing real time manufacturing process data",
+          "GOLD": "MES system, or alternative implemented and utilised to control manufacturing process data\nReal time manufacturing process data utilised to drive decision making in terms of process control.",
+          "PLATINUM": "All core manufacturing processes controlled via MES system, or alternative.  Changes or deviations are monitored, controlled and recorded in real time\nBusiness pro-actively reacts to live performance data"
+        }
+      },
+      {
+        "name": "Zero Defects",
+        "behaviour": "Colleagues regularly inspect products and processes to identify opportunities for improvement, ensuring consistent quality and defect prevention",
+        "maturity_levels": {
+          "FOUNDATION": "Staff and production teams understand the \"0 defect principle\", Jidoka (separate Man from Machine) and Process stability.",
+          "BRONZE": "Quality responsibility cascaded to shopfloor personnel with appropriate training.  Quality behaviour is a conscious and demonstrated behaviour for all employees.\nAll processes assessed to determine potential risk of defect generation and areas that have opportunity to allow defect escapes",
+          "SILVER": "Error proofing methodology applied to core manufacturing processes, and plan in place to complete for all processes\nEquipment and/or process controls implemented to mitigate or identify defects and prevent escapes.\nSOPs easily available, maintained and align with Process Control Plans.",
+          "GOLD": "Automatic controls, or alternative solutions, installed on appropriate machines to stop process when out of tolerance conditions detected\nProduction line design support 'flow away' for defects to ensure clear segregation.",
+          "PLATINUM": "No rejects (defects) escape.\nError proofing methodology applied to all manufacturing processes.\nNew production lines are designed and implemented with a zero defect approach"
+        }
+      },
+      {
+        "name": "Capability",
+        "behaviour": "My team designs processes with built-in safeguards and error-proofing measures to prevent mistakes and ensure consistent outcomes",
+        "maturity_levels": {
+          "FOUNDATION": "Training in statistical techniques identified for key manufacturing, engineering and quality personnel.\nPlan in place to utilise statistical techniques",
+          "BRONZE": "Statistical techniques can be applied to a level required by trained personnel in manufacturing, engineering and quality. Engineers are competent in setting up and utilising statistical concepts to support business improvement",
+          "SILVER": "Relevant characteristics are defined.\nStatistical Process Control (SPC) are implemented to control such characteristics where appropriate.\nPerformance trends are monitored and understood and Cp/Cpk, ppm index, are evaluated and reaction plans in place to understand trends and indices to improve process\nIn instances where SPC run charts are not appropriate, other statistical methods are applied",
+          "GOLD": "Statistical concepts are a core tool of the organisation.  Statistical data can be interpreted by select Managers and controlled by select Engineers who are able to react to data by making appropriate process changes and improvements.",
+          "PLATINUM": "All appropriate managers and engineers can interpret statistical data. Production Associates are trained in the management and application of statistical techniques and are able to react to trends by conducting peer group meetings, interpreting statistical data and making necessary process adjustments, as defined by process. All adjustments are logged and supported by PDCA thinking to drive continuous improvement."
+        }
+      },
+      {
+        "name": "Six Sigma",
+        "behaviour": "Team members use data-driven methodologies to identify and analyze process variations, implement targeted improvements, and consistently monitor outcomes to ensure quality standards are met and sustained",
+        "maturity_levels": {
+          "FOUNDATION": "Six sigma skills and training plan developed for six sigma training.\nThe plan defines relevant training levels (White through Black belt), and defines which grades and roles require each level of training",
+          "BRONZE": "Trigger points for six sigma activities are defined.\nTraining plan is being executed",
+          "SILVER": "Trained personnel are able to define, plan and execute appropriate projects.\nSix Sigma projects have been defined and are progressing using DMAIC approach",
+          "GOLD": "Selected personnel are black belt trained, as per plan, and are supporting six sigma evolvement.\nOrganisation leads scheduled reviews of six sigma projects in progress and project benefits/outcomes are recorded",
+          "PLATINUM": "A network of Quality/Engineering/Manufacturing Engineering personnel at various grades are trained at levels between yellow and black belt. Master black belt trained personnel would be an advantage.\nThere is a defined rationale for the numbers of people & grades selected. There is a register of projects identified, live projects running and an active forum to manage progress, providing defined metrics which demonstrate effective completion of projects on a perpetual basis"
+        }
+      },
+      {
+        "name": "Layered Audit",
+        "behaviour": "Collegaues and Management actively look for abnormailites and breakdowns in the system before they cause larger issues",
+        "maturity_levels": {
+          "FOUNDATION": "A layered process audit (LPA) system has been defined and a daily schedule is in place.",
+          "BRONZE": "All supervisors participate in LPA on a defined routine basis and use the information gained to maintain current standard.",
+          "SILVER": "The site has a standard process for collecting LPA findings and is using feedback to improve performance.  All appropriate site personnel involved in LPA.",
+          "GOLD": "Corrective actions from LPA including behaviours are tracked and reviewed routinely by site management. EHS, 5S and quality elements included.",
+          "PLATINUM": "LPA data demonstrates significant improvement in process and behaviour improvements, with declining trend on quantity of LPA actions identified.  LPA data visible and monitored routinely."
+        }
+      },
+      {
+        "name": "Root Cause",
+        "behaviour": "When mistakes happen, my team stops to address the real cause of the problem. My team solves performance problems first by examining the process rather than accusing the employee(s).",
+        "maturity_levels": {
+          "FOUNDATION": "Basic problem solving training has been provided to management team members and functional Manufacturing, Quality, Engineering staff and concepts are understood.",
+          "BRONZE": "Root cause tools (e.g. 8D, 5 Why, Ishikawa, PDCA) defined and applied to all non-conformance and CAPA issues, based on risk.\nAll Quality personnel trained on root cause investigation and have compentency to support execution within wider teams.",
+          "SILVER": "Root cause investigations are conducted routinely.\nSelect peronnel within manufacturing and engineering functions are trained on root cause investigation and RCA tools and are capable of applying RCA methodology\nMetrics for monitoring RCA success are defined and routinely monitored",
+          "GOLD": "All manufacturing and engineering functional support staff have knowledge and capability to apply RCA tools to complete robust root cause investigation\nRCA teams are formed as needs arise using a cross functional approach.\nMore than 50% of production supervisors/leaders are competent in use of RCA tools.",
+          "PLATINUM": "100%  production supervisors/leaders are competent in use of RCA tools.\nRCA metric data is routinely utilsed to implement continuous improvement within sites and across functions.\nRoot cause investigations are consistently documented and metrics demonstrate success through minimal repeat events"
+        }
+      }
+    ]
+  },
+  {
+    "name": "CONTINUOUS IMPROVEMENT",
+    "description": "Continuous Improvement\nThe CI pillar will support the elimination of waste across the orgnaistaion by implementing lean tools within the framework of the Spirax Values. Improvement is supported by data driven decisions",
+    "elements": [
+      {
+        "name": "5S",
+        "behaviour": "Colleagues organize their work area by keeping only what is needed, and maintaining its cleanliness. Colleagues also create standard locations for all items so anyone can find what they need.",
+        "maturity_levels": {
+          "FOUNDATION": "5S Training has been provided to all staff. Red tagging process is in place.",
+          "BRONZE": "5S zones are defined and ownership assigned. Daily/Weekly audits are in place.",
+          "SILVER": "Standards are visual and easy to understand. 5S scores are > 80%.",
+          "GOLD": "5S is a way of life. Workplace is always tour ready. Scores > 95%.",
+          "PLATINUM": "World class workplace organization. 5S supports safety and efficiency."
+        }
+      },
+      {
+        "name": "Visual Management",
+        "behaviour": "Colleagues post charts and graphs of performance data in their work area. Colleagues are able to explain the trends on the charts in their area and what they mean",
+        "maturity_levels": {
+          "FOUNDATION": "Key metrics are displayed in work areas (Safety, Quality, Delivery).",
+          "BRONZE": "Visual boards are used for daily meetings. Performance vs target is clear.",
+          "SILVER": "Visual management drives action. Abnormalities are immediately visible.",
+          "GOLD": "Real-time visual management systems (digital) where appropriate.",
+          "PLATINUM": "Visual factory. Status of the plant is visible at a glance."
+        }
+      },
+      {
+        "name": "Standard Work",
+        "behaviour": "Colleagues follow posted work instructions for their job tasks. When they find a better way to do a task, they work with the team to update the work instructions.",
+        "maturity_levels": {
+          "FOUNDATION": "SOPs exist for critical processes.",
+          "BRONZE": "Standard work is defined for all production tasks. Operators trained.",
+          "SILVER": "Standard work includes cycle times and sequence. Audits ensure adherence.",
+          "GOLD": "Leader Standard Work (LSW) in place. Standard work for non-routine tasks.",
+          "PLATINUM": "Standard work is the baseline for improvement. Continually updated."
+        }
+      },
+      {
+        "name": "TPM (Total Productive Maintenance)",
+        "behaviour": "Colleagues regularly inspect and maintain equipment to ensure optimal performance and prevent breakdowns, actively participating in early detection and resolution of potential issues.",
+        "maturity_levels": {
+          "FOUNDATION": "Critical machines identified. Basic maintenance schedule in place.",
+          "BRONZE": "Autonomous Maintenance (AM) steps 1-3 (Clean, Inspect, Lubricate) started.",
+          "SILVER": "OEE measured on constraints. Planned Maintenance (PM) system robust.",
+          "GOLD": "AM fully implemented. Predictive maintenance technologies used.",
+          "PLATINUM": "Zero breakdowns. Equipment reliability is a competitive advantage."
+        }
+      },
+      {
+        "name": "SMED (Single Minute Exchange of Die)",
+        "behaviour": "Colleagues work to reduce setup times to increase flexibility and capacity.",
+        "maturity_levels": {
+          "FOUNDATION": "Changeover times measured. Awareness of internal vs external activities.",
+          "BRONZE": "SMED events conducted on bottleneck machines. External activities separated.",
+          "SILVER": "Standard changeover procedures defined. Changeover carts/kits used.",
+          "GOLD": "Changeover times reduced by > 50%. Pit-stop mentality.",
+          "PLATINUM": "One-touch changeovers. Changeovers < 10 minutes (or < 1 min)."
+        }
+      },
+      {
+        "name": "Value Stream Mapping",
+        "behaviour": "Colleagues map the flow of value to identify and eliminate waste.",
+        "maturity_levels": {
+          "FOUNDATION": "Value streams identified. Current state map created for one product family.",
+          "BRONZE": "Future state maps created. Improvement plan defined.",
+          "SILVER": "VSM used to drive annual improvement plans. Lead time reduction tracked.",
+          "GOLD": "Extended VSM (including suppliers/customers). Information flow mapped.",
+          "PLATINUM": "Real-time value stream visibility. Dynamic optimization."
+        }
+      },
+      {
+        "name": "Pull Systems / Kanban",
+        "behaviour": "Production is driven by customer demand (pull) rather than forecast (push).",
+        "maturity_levels": {
+          "FOUNDATION": "Concept of pull understood. Some supermarkets defined.",
+          "BRONZE": "Kanban loops established for key components/products.",
+          "SILVER": "Production scheduling via Heijunka (levelling). WIP reduced.",
+          "GOLD": "Pull extended to suppliers. Electronic Kanban (e-Kanban).",
+          "PLATINUM": "Full pull system across the value chain. Make to order capability."
+        }
+      },
+      {
+        "name": "Kaizen / CI Events",
+        "behaviour": "Structured improvement events are used to solve problems and improve processes.",
+        "maturity_levels": {
+          "FOUNDATION": "Kaizen events conducted ad-hoc.",
+          "BRONZE": "Schedule of Kaizen events linked to VSM. Standard process for events.",
+          "SILVER": "High participation in Kaizen events. Results sustained.",
+          "GOLD": "Kaizen culture. Small improvements implemented daily (Quick and Easy Kaizen).",
+          "PLATINUM": "Innovation through Kaizen. Breakthrough improvements."
+        }
+      },
+      {
+        "name": "Gemba Walks",
+        "behaviour": "Leaders go to the place where work is done to observe and support.",
+        "maturity_levels": {
+          "FOUNDATION": "Leaders visit shop floor but often to expedite.",
+          "BRONZE": "Structured Gemba walks introduced. Focus on process, not people.",
+          "SILVER": "Gemba walks linked to LSW. Coaching during walks.",
+          "GOLD": "Gemba walks are the primary way management understands the business.",
+          "PLATINUM": "Gemba is the place for learning and teaching."
+        }
+      },
+      {
+        "name": "Suggestion Scheme",
+        "behaviour": "Colleagues are encouraged to submit ideas for improvement.",
+        "maturity_levels": {
+          "FOUNDATION": "Suggestion box in place.",
+          "BRONZE": "Process for reviewing and implementing suggestions. Feedback provided.",
+          "SILVER": "High engagement rate (> 1 suggestion per person per year).",
+          "GOLD": "Teams implement their own suggestions. Recognition system in place.",
+          "PLATINUM": "Global idea sharing. Innovation pipeline fed by suggestions."
+        }
+      },
+      {
+        "name": "Cost of Poor Quality (COPQ)",
+        "behaviour": "The cost of defects and waste is understood and reduced.",
+        "maturity_levels": {
+          "FOUNDATION": "Scrap costs tracked.",
+          "BRONZE": "Rework costs and warranty claims tracked. COPQ calculated.",
+          "SILVER": "Projects in place to reduce COPQ. Savings validated.",
+          "GOLD": "COPQ broken down by product/process. Proactive reduction.",
+          "PLATINUM": "COPQ < 0.1% of sales. Quality is free."
+        }
+      },
+      {
+        "name": "Lean Layout / Flow",
+        "behaviour": "Facility layout supports flow and minimizes waste.",
+        "maturity_levels": {
+          "FOUNDATION": "Functional layout (process village).",
+          "BRONZE": "Cells created for some product families. Flow improved.",
+          "SILVER": "Continuous flow in cells. Material handling minimized.",
+          "GOLD": "Plant layout optimized for value stream flow.",
+          "PLATINUM": "Modular layout allows flexibility. Reconfigurable factory."
+        }
+      }
+    ]
+  },
+  {
+    "name": "DIGITAL",
+    "description": "Digital\nDigital will be an enabler to our business strategy, helping us to be more efficient, effective and agile. We will use digital technologies to create new value for our customers and colleagues.",
+    "elements": [
+      {
+        "name": "Cyber Security",
+        "behaviour": "Colleagues actively follow security protocols to protect data and systems, staying vigilant against threats and reporting suspicious activity to safeguard organizational assets.",
+        "maturity_levels": {
+          "FOUNDATION": "Basic firewall and antivirus in place. Password policies defined.",
+          "BRONZE": "Cyber security training for all staff. Regular patching.",
+          "SILVER": "Network segmentation (IT/OT). Intrusion detection.",
+          "GOLD": "Advanced threat protection. Regular penetration testing.",
+          "PLATINUM": "Zero trust architecture. AI-driven security operations."
+        }
+      },
+      {
+        "name": "Infrastructure & Connectivity",
+        "behaviour": "The organization maintains a robust and secure digital infrastructure.",
+        "maturity_levels": {
+          "FOUNDATION": "Basic network connectivity (office). Wi-Fi in meeting rooms.",
+          "BRONZE": "Wi-Fi on shop floor. Reliable internet connection.",
+          "SILVER": "High-speed redundant connectivity. Machine connectivity (IIoT) started.",
+          "GOLD": "Full plant coverage (5G/Wi-Fi 6). Edge computing capabilities.",
+          "PLATINUM": "Seamless connectivity. Cloud-native infrastructure."
+        }
+      },
+      {
+        "name": "Paperless Factory",
+        "behaviour": "Processes are digitized to eliminate paper and improve data accessibility.",
+        "maturity_levels": {
+          "FOUNDATION": "Paper-based processes dominate.",
+          "BRONZE": "Digital SOPs and drawings available. Some digital forms.",
+          "SILVER": "MES used for production tracking. Paper travellers eliminated.",
+          "GOLD": "Digital visual management. Tablets/wearables for operators.",
+          "PLATINUM": "Fully paperless operations. Digital workflow automation."
+        }
+      },
+      {
+        "name": "Data Analytics",
+        "behaviour": "Data is used to drive insights and decision making.",
+        "maturity_levels": {
+          "FOUNDATION": "Spreadsheets used for analysis. Data silos.",
+          "BRONZE": "BI tools (e.g. PowerBI, Tableau) used for reporting.",
+          "SILVER": "Real-time dashboards. Descriptive analytics.",
+          "GOLD": "Predictive analytics (e.g. maintenance, quality).",
+          "PLATINUM": "Prescriptive analytics. AI/ML driven decision making."
+        }
+      },
+      {
+        "name": "Automation & Robotics",
+        "behaviour": "Automation is used to improve safety, quality, and productivity.",
+        "maturity_levels": {
+          "FOUNDATION": "Islands of automation. Manual handling common.",
+          "BRONZE": "Simple pick and place automation. Conveyors.",
+          "SILVER": "Collaborative robots (Cobots) used. Automated inspection.",
+          "GOLD": "AGVs/AMRs for material handling. Fully automated cells.",
+          "PLATINUM": "Dark factory capabilities. Autonomous operations."
+        }
+      },
+      {
+        "name": "Digital Skills",
+        "behaviour": "Colleagues have the digital skills required to succeed.",
+        "maturity_levels": {
+          "FOUNDATION": "Basic digital literacy (Office apps).",
+          "BRONZE": "Training on specific digital tools (MES, ERP).",
+          "SILVER": "Digital champions identified. Data literacy training.",
+          "GOLD": "Citizen developers (low-code/no-code).",
+          "PLATINUM": "Digital native culture. Continuous digital upskilling."
+        }
+      },
+      {
+        "name": "Smart Maintenance",
+        "behaviour": "Digital tools support maintenance activities.",
+        "maturity_levels": {
+          "FOUNDATION": "Paper based maintenance logs.",
+          "BRONZE": "CMMS (Computerized Maintenance Management System) in place.",
+          "SILVER": "Mobile maintenance apps. QR codes on assets.",
+          "GOLD": "Condition based monitoring connected to CMMS.",
+          "PLATINUM": "Augmented Reality (AR) for remote support/maintenance."
+        }
+      },
+      {
+        "name": "Digital Twin",
+        "behaviour": "Virtual replicas of physical assets/processes are used for simulation and optimization.",
+        "maturity_levels": {
+          "FOUNDATION": "3D CAD models available.",
+          "BRONZE": "Process simulation for layout/flow.",
+          "SILVER": "Digital twin of key machines (status monitoring).",
+          "GOLD": "Factory digital twin for capacity planning.",
+          "PLATINUM": "Full value chain digital twin. Real-time synchronization."
+        }
+      }
+    ]
+  }
+]

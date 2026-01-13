@@ -237,22 +237,21 @@ export function BacklogPage() {
   })();
 
   return (
-    <Stack gap="lg">
-      <Group justify="space-between" align="center">
-        <div>
-          <Title order={2} c="dark.8">
-            {t('pages.backlog.title')}
-          </Title>
-          <Text c="dimmed" size="sm">
-            {isGlobalView
-              ? t(
-                'pages.backlog.descriptionGlobal',
-                'Backlog global de elementos com fundação < 100% em todas as unidades.',
-              )
-              : t('pages.backlog.description')}
-          </Text>
-        </div>
-      </Group>
+    <Stack gap="xl">
+      {/* Header com título melhorado */}
+      <Box>
+        <Title order={2} c="dark.8" fw={800}>
+          {t('pages.backlog.title')}
+        </Title>
+        <Text c="dimmed" size="sm" mt={4}>
+          {isGlobalView
+            ? t(
+              'pages.backlog.descriptionGlobal',
+              'Global backlog of elements with foundation < 100% across all units.',
+            )
+            : t('pages.backlog.description')}
+        </Text>
+      </Box>
 
       {error && (
         <Alert
@@ -270,20 +269,32 @@ export function BacklogPage() {
           <Loader size="lg" type="dots" />
         </Center>
       ) : (
-        <Card withBorder radius="md" shadow="sm" p="lg">
+        <Card
+          radius="lg"
+          shadow="sm"
+          p="xl"
+          style={{
+            border: '1px solid var(--mantine-color-gray-2)',
+          }}
+        >
           <Group justify="space-between" mb="lg" align="center">
-            <Group gap="xs">
-              <ThemeIcon variant="light" color="grape" size="md">
+            <Group gap="sm">
+              <ThemeIcon variant="gradient" gradient={{ from: 'grape', to: 'violet' }} size="lg" radius="md">
                 <IconDatabase style={{ width: rem(18), height: rem(18) }} />
               </ThemeIcon>
-              <Text fw={600} size="sm">
-                {isGlobalView
-                  ? t(
-                    'pages.backlog.filterByPillarGlobal',
-                    'Filtrar por pilar (todas as unidades)',
-                  )
-                  : t('pages.backlog.filterByPillar')}
-              </Text>
+              <div>
+                <Text fw={600} size="sm">
+                  {isGlobalView
+                    ? t(
+                      'pages.backlog.filterByPillarGlobal',
+                      'Filter by pillar (all units)',
+                    )
+                    : t('pages.backlog.filterByPillar')}
+                </Text>
+                <Text size="xs" c="dimmed">
+                  {t('pages.backlog.filterDescription', 'Select a pillar to filter elements')}
+                </Text>
+              </div>
             </Group>
 
             {pillarOptions.length > 0 && (
