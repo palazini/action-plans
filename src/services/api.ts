@@ -926,3 +926,36 @@ export async function fetchMaturityStats(country: string): Promise<{
 
   return { levelStats, overallProgress };
 }
+
+// ============================================
+// ADMIN API FUNCTIONS
+// ============================================
+
+export type UserProfile = {
+  id: string;
+  name: string;
+  role: string | null;
+  country: string | null;
+  created_at: string | null;
+};
+
+/**
+ * Fetch all user profiles (Admin only)
+ */
+export async function fetchAllUsers(): Promise<UserProfile[]> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, full_name, role, country, created_at')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  return (data ?? []).map(p => ({
+    id: p.id,
+    name: p.full_name || 'Unknown',
+    role: p.role,
+    country: p.country,
+    created_at: p.created_at,
+  }));
+}
+

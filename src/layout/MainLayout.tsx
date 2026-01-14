@@ -30,6 +30,7 @@ import {
   IconDownload,
   IconFileSpreadsheet,
   IconTrophy,
+  IconShieldLock,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
@@ -277,6 +278,23 @@ export function MainLayout() {
               />
             );
           })}
+
+          {/* Admin-only nav item */}
+          {user?.email?.includes('gabriel.palazini') && (
+            <NavLink
+              label={<Text fw={600} size="sm">Admin</Text>}
+              leftSection={<IconShieldLock size={20} stroke={1.5} />}
+              active={location.pathname === '/app/admin'}
+              variant="light"
+              color="red"
+              onClick={() => {
+                navigate('/app/admin');
+                setOpened(false);
+              }}
+              rightSection={location.pathname === '/app/admin' && <IconChevronRight size={14} stroke={1.5} />}
+              style={{ borderRadius: theme.radius.sm, marginBottom: 4 }}
+            />
+          )}
         </Box>
 
         <Box mt="auto" pt="md" style={{ borderTop: `1px solid ${rem('#e9ecef')}` }}>
