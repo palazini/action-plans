@@ -3,8 +3,23 @@
     "title": "Planos de Ação",
     "subtitle": "Portal Corporativo"
   },
+  "countries": {
+    "GL": "Global",
+    "AR": "Argentina",
+    "BR": "Brasil",
+    "BR_Hiter": "Brasil (Hiter)",
+    "CN": "China",
+    "DE": "Alemanha",
+    "DE_Gestra": "Alemanha (Gestra)",
+    "FR": "França",
+    "IN": "Índia",
+    "IT": "Itália",
+    "GB": "Reino Unido",
+    "US": "EUA"
+  },
   "nav": {
     "dashboard": "Visão Geral",
+    "maturity": "Maturidade",
     "actionPlans": "Planos de Ação",
     "backlog": "Backlog",
     "structure": "Estrutura",
@@ -50,7 +65,15 @@
     "usernameTooShort": "O nome de usuário deve ter pelo menos 3 caracteres",
     "invalidCredentials": "Usuário ou senha incorretos. Verifique suas credenciais.",
     "usernamePlaceholder": "seunome.sobrenome",
-    "passwordPlaceholder": "Sua senha segura"
+    "passwordPlaceholder": "Sua senha segura",
+    "selectLanguage": "Selecione o Idioma",
+    "languageTipMessage": "Escolha seu idioma preferido",
+    "or": "ou",
+    "selectPlant": "Selecionar Planta",
+    "joinYourPlant": "Entre em sua planta",
+    "selectYourPlant": "Selecione sua planta",
+    "choosePlant": "Escolher Planta",
+    "backToLogin": "Voltar para Login"
   },
   "dashboard": {
     "subtitle": "Monitoramento de ações para {{country}}",
@@ -80,8 +103,12 @@
       "pendingShort": "Pend.",
       "plansShort": "Planos",
       "gapsShort": "Gaps",
-      "view": "Visualizar"
-    }
+      "view": "Visualizar",
+      "withPlan": "Com Plano"
+    },
+    "needsActionPlan": "Necessita Plano de Ação",
+    "pillarBreakdown": "Detalhamento por Pilar",
+    "progress": "Progresso"
   },
   "pages": {
     "dashboard": {
@@ -98,14 +125,16 @@
       "modalTitle": "Gerenciar Plano",
       "existingActionsTitle": "Ações Existentes",
       "allClear": "Tudo em dia!",
-      "unknownPillar": "Sem pilar"
+      "unknownPillar": "Sem pilar",
+      "filterDescription": "Filtrar itens"
     },
     "actionPlans": {
       "title": "Planos de Ação",
       "description": "Gerencie todos os planos registrados e seus status.",
       "descriptionGlobal": "Lista global de planos de ação (todas as unidades que você pode ver).",
       "exportToExcel": "Exportar para Excel",
-      "useHeaderExport": "Use o botão \"Exportar Global\" no topo da página."
+      "useHeaderExport": "Use o botão \"Exportar Global\" no topo da página.",
+      "export": "Exportar"
     },
     "structure": {
       "title": "Estrutura Organizacional",
@@ -118,6 +147,10 @@
       "noElementsInPillar": "Este pilar não possui elementos",
       "lockedTooltip": "Os pilares e elementos são padronizados globalmente. Você pode editar apenas o score do seu país.",
       "globalStandard": "Padrão Global"
+    },
+    "maturity": {
+      "title": "Framework de Maturidade",
+      "description": "Acompanhe e melhore sua maturidade operacional em todos os níveis"
     }
   },
   "table": {
@@ -206,5 +239,47 @@
   },
   "notifications": {
     "success": "Sucesso"
+  },
+  "maturity": {
+    "title": "Maturidade",
+    "progressSubtitle": "Visão Geral do Progresso",
+    "behaviour": "Comportamento",
+    "whatIsExpected": "O que é esperado",
+    "noCriteria": "Critérios não definidos",
+    "score": "Pontuação",
+    "notes": "Notas",
+    "notesPlaceholder": "Adicione notas aqui...",
+    "currentScore": "Pontuação Atual",
+    "loadError": "Erro ao carregar dados de maturidade",
+    "comingSoon": "Em breve",
+    "levels": {
+      "FOUNDATION": "Fundação",
+      "BRONZE": "Bronze",
+      "SILVER": "Prata",
+      "GOLD": "Ouro",
+      "PLATINUM": "Platina"
+    },
+    "locked": "Conclua o nível anterior",
+    "complete": "{{completed}}/{{total}} completo",
+    "unlockTooltip": "Conclua o nível anterior para desbloquear",
+    "overallProgress": "Progresso Geral",
+    "starting": "Iniciando",
+    "elementsCount": "{{count}} elementos"
+  },
+  "components": {
+    "levelBanner": {
+      "level": "Nível",
+      "actionPlans": "{{count}} Planos de Ação",
+      "progress": "Progresso",
+      "complete": "{{percent}}% Concluído",
+      "next": "Próximo: {{level}}",
+      "subtitle": {
+        "FOUNDATION": "Estabelecendo a base para a excelência operacional",
+        "BRONZE": "Construindo práticas consistentes em toda a organização",
+        "SILVER": "Avançando em direção à maturidade operacional",
+        "GOLD": "Alcançando padrões de alto desempenho",
+        "PLATINUM": "Excelência operacional de classe mundial"
+      }
+    }
   }
 }

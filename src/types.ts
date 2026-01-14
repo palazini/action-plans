@@ -122,6 +122,9 @@ export type ActionPlanWithElement = {
   created_at: string;
   updated_at: string;
 
+  // Maturity level this plan targets
+  maturity_level?: MaturityLevel;
+
   // agora referenciando o tipo já existente
   element: ElementWithRelations | null;
 };

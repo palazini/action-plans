@@ -3,6 +3,20 @@
         "title": "Aktionspläne",
         "subtitle": "Portal für kontinuierliche Verbesserung"
     },
+    "countries": {
+        "GL": "Global",
+        "AR": "Argentinien",
+        "BR": "Brasilien",
+        "BR_Hiter": "Brasilien (Hiter)",
+        "CN": "China",
+        "DE": "Deutschland",
+        "DE_Gestra": "Deutschland (Gestra)",
+        "FR": "Frankreich",
+        "IN": "Indien",
+        "IT": "Italien",
+        "GB": "Vereinigtes Königreich",
+        "US": "USA"
+    },
     "nav": {
         "dashboard": "Übersicht",
         "actionPlans": "Aktionspläne",
@@ -13,11 +27,16 @@
         "settings": "Einstellungen",
         "logout": "Abmelden",
         "version": "Version",
-        "viewDataFrom": "Daten anzeigen von:"
+        "viewDataFrom": "Daten anzeigen von:",
+        "exportGlobal": "Alle Pläne exportieren (EN)",
+        "exportGlobalShort": "Global Export",
+        "switchUnit": "Ansicht wechseln",
+        "select": "Auswählen",
+        "maturity": "Reifegrad"
     },
     "landing": {
         "selectRegion": "Region auswählen",
-        "chooseCountry": "Greifen Sie auf die Umgebung Ihrer lokalen Niederlassung zu, um Aktionspläne und Backlogs zu verwalten.",
+        "chooseCountry": "Wählen Sie Ihr Land, um auf die Plattform für Ihre Niederlassung zuzugreifen.",
         "viewConsolidatedPlans": "Konsolidierte Aktionspläne aller Einheiten anzeigen.",
         "selectSpecificUnit": "Oder wählen Sie eine bestimmte Einheit aus:"
     },
@@ -46,10 +65,22 @@
         "usernameTooShort": "Der Benutzername muss mindestens 3 Zeichen lang sein",
         "invalidCredentials": "Falscher Benutzername oder Passwort. Bitte überprüfen Sie Ihre Anmeldedaten.",
         "usernamePlaceholder": "benutzername.nachname",
-        "passwordPlaceholder": "Ihr sicheres Passwort"
+        "passwordPlaceholder": "Ihr sicheres Passwort",
+        "selectLanguage": "Sprache auswählen",
+        "languageTipMessage": "Wählen Sie Ihre bevorzugte Sprache",
+        "or": "oder",
+        "selectPlant": "Werk auswählen",
+        "joinYourPlant": "Ihrem Werk beitreten",
+        "selectYourPlant": "Wählen Sie Ihr Werk",
+        "choosePlant": "Werk wählen",
+        "backToLogin": "Zurück zur Anmeldung"
     },
     "dashboard": {
-        "subtitle": "Überwachung der Maßnahmen für {{country}}",
+        "subtitle": "Aktionsüberwachung für {{country}}",
+        "subtitleGlobal": "Globale Aktionsüberwachung (alle Werke)",
+        "noCountrySelected": "Kein Land ausgewählt.",
+        "selectRegion": "Region auswählen",
+        "coverage": "Abdeckung (Pläne/Lücken)",
         "loadError": "Dashboard-Statistiken konnten nicht geladen werden.",
         "totalElements": "Elemente insgesamt",
         "gapElements": "Elemente mit GAP",
@@ -61,7 +92,23 @@
         "withoutPlanColumn": "Ohne Plan",
         "monitoredItems": "Im Backlog überwachte Elemente",
         "immediateAttention": "Benötigen sofortige Aufmerksamkeit",
-        "percentWithoutPlan": "{{percent}}% des Gesamtbestands ohne Plan"
+        "percentWithoutPlan": "{{percent}}% des Gesamtbestands ohne Plan",
+        "global": {
+            "title": "Globale Ansicht nach Land",
+            "country": "Land",
+            "totalElements": "Gesamtelemente",
+            "gaps": "Lücken (Punktzahl < 100)",
+            "definedPlans": "Elemente m/ Plan",
+            "withoutPlan": "Lücken o/ Plan",
+            "pendingShort": "Offen",
+            "plansShort": "Pläne",
+            "gapsShort": "Lücken",
+            "view": "Ansicht",
+            "withPlan": "Mit Plan"
+        },
+        "needsActionPlan": "Benötigt Aktionsplan",
+        "pillarBreakdown": "Aufschlüsselung nach Säule",
+        "progress": "Fortschritt"
     },
     "pages": {
         "dashboard": {
@@ -69,20 +116,25 @@
         },
         "backlog": {
             "title": "Plan-Backlog",
-            "description": "Verwalten Sie Elemente mit Grundlagenbewertungen unterhalb des Zielwerts.",
+            "description": "Verwaltung von Elementen mit einem Grundlage-Wert unter dem Ziel.",
+            "descriptionGlobal": "Globaler Rückstand von Elementen mit Foundation < 100% in allen Einheiten.",
             "filterByPillar": "Nach Säule filtern",
+            "filterByPillarGlobal": "Nach Säule filtern (alle Einheiten)",
             "noElements": "Keine Elemente im Backlog.",
             "noElementsForFilter": "Für diesen Filter wurden keine Elemente gefunden.",
             "modalTitle": "Plan verwalten",
             "existingActionsTitle": "Bestehende Maßnahmen",
             "allClear": "Alles in Ordnung!",
-            "unknownPillar": "Keine Säule"
+            "unknownPillar": "Keine Säule",
+            "filterDescription": "Elemente filtern"
         },
         "actionPlans": {
             "title": "Aktionspläne",
             "description": "Alle erfassten Pläne und deren Status verwalten.",
-            "descriptionGlobal": "Globale Liste der Aktionspläne (alle Einheiten, die Sie einsehen können).",
-            "useHeaderExport": "Verwenden Sie die Schaltfläche „Global exportieren“ oben auf der Seite."
+            "descriptionGlobal": "Globale Liste der Aktionspläne (alle Einheiten, die Sie sehen können).",
+            "exportToExcel": "Nach Excel exportieren",
+            "useHeaderExport": "Verwenden Sie die Schaltfläche „Global exportieren“ oben auf der Seite.",
+            "export": "Exportieren"
         },
         "structure": {
             "title": "Organisationsstruktur",
@@ -95,6 +147,10 @@
             "noElementsInPillar": "Diese Säule enthält keine Elemente",
             "lockedTooltip": "Säulen und Elemente sind global standardisiert. Sie können nur die Bewertung Ihres Landes bearbeiten.",
             "globalStandard": "Globaler Standard"
+        },
+        "maturity": {
+            "title": "Reifegradmodell",
+            "description": "Verfolgen und verbessern Sie Ihren operativen Reifegrad auf allen Ebenen"
         }
     },
     "table": {
@@ -108,7 +164,8 @@
         "actions": "Aktionen",
         "noPlans": "Keine Einträge gefunden.",
         "noPlansForFilter": "Ihre Suche ergab keine Treffer.",
-        "foundation": "Punktzahl",
+        "foundation": "Note",
+        "country": "Land",
         "plans": "Pläne"
     },
     "filters": {
@@ -135,6 +192,7 @@
         "editPillar": "Bearbeiten",
         "newElement": "Neues Element",
         "editElement": "Bearbeiten",
+        "editScore": "Punktzahl bearbeiten",
         "code": "Code",
         "namePt": "Name (lokal)",
         "nameEn": "Name (Englisch)",
@@ -181,5 +239,47 @@
     },
     "notifications": {
         "success": "Erfolg"
+    },
+    "maturity": {
+        "title": "Reifegrad",
+        "progressSubtitle": "Fortschrittsübersicht",
+        "behaviour": "Verhalten",
+        "whatIsExpected": "Was erwartet wird",
+        "noCriteria": "Keine Kriterien definiert",
+        "score": "Punktzahl",
+        "notes": "Notizen",
+        "notesPlaceholder": "Notizen hier hinzufügen...",
+        "currentScore": "Aktuelle Punktzahl",
+        "loadError": "Fehler beim Laden der Reifegrad-Daten",
+        "comingSoon": "Demnächst",
+        "levels": {
+            "FOUNDATION": "Grundlage",
+            "BRONZE": "Bronze",
+            "SILVER": "Silber",
+            "GOLD": "Gold",
+            "PLATINUM": "Platin"
+        },
+        "locked": "Vorheriges Level abschließen",
+        "complete": "{{completed}}/{{total}} abgeschlossen",
+        "unlockTooltip": "Schließen Sie das vorherige Level ab, um es freizuschalten",
+        "overallProgress": "Gesamtfortschritt",
+        "starting": "Start",
+        "elementsCount": "{{count}} Elemente"
+    },
+    "components": {
+        "levelBanner": {
+            "level": "Level",
+            "actionPlans": "{{count}} Aktionspläne",
+            "progress": "Fortschritt",
+            "complete": "{{percent}}% Abgeschlossen",
+            "next": "Nächster: {{level}}",
+            "subtitle": {
+                "FOUNDATION": "Grundstein für operative Exzellenz legen",
+                "BRONZE": "Aufbau konsistenter Praktiken in der gesamten Organisation",
+                "SILVER": "Fortschritte in Richtung operativer Reife",
+                "GOLD": "Erreichen von Hochleistungsstandards",
+                "PLATINUM": "Weltklasse operative Exzellenz"
+            }
+        }
     }
 }

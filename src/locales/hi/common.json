@@ -1,7 +1,21 @@
 {
   "app": {
     "title": "कार्य योजनाएं",
-    "subtitle": "उद्यम पोर्टल"
+    "subtitle": "निरंतर सुधार पोर्टल"
+  },
+  "countries": {
+    "GL": "वैश्विक",
+    "AR": "अर्जेंटीना",
+    "BR": "ब्राजील",
+    "BR_Hiter": "ब्राजील (Hiter)",
+    "CN": "चीन",
+    "DE": "जर्मनी",
+    "DE_Gestra": "जर्मनी (Gestra)",
+    "FR": "फ्रांस",
+    "IN": "भारत",
+    "IT": "इटली",
+    "GB": "यूके",
+    "US": "यूएसए"
   },
   "nav": {
     "dashboard": "डैशबोर्ड",
@@ -12,11 +26,19 @@
     "account": "खाता",
     "settings": "सेटिंग्स",
     "logout": "लॉग आउट",
-    "version": "संस्करण"
+    "version": "संस्करण",
+    "viewDataFrom": "डेटा देखें:",
+    "exportGlobal": "सभी योजनाएं निर्यात करें (EN)",
+    "exportGlobalShort": "वैश्विक निर्यात",
+    "switchUnit": "इकाई दृश्य बदलें",
+    "select": "चुनें",
+    "maturity": "परिपक्वता"
   },
   "landing": {
     "selectRegion": "अपना क्षेत्र चुनें",
-    "chooseCountry": "अपनी शाखा के वातावरण तक पहुँचने के लिए अपना देश चुनें।"
+    "chooseCountry": "अपनी शाखा के लिए समर्पित मंच तक पहुँचने के लिए अपना देश चुनें।",
+    "viewConsolidatedPlans": "सभी इकाइयों से समेकित कार्य योजनाएं देखें।",
+    "selectSpecificUnit": "या एक विशिष्ट इकाई चुनें:"
   },
   "auth": {
     "welcomeBack": "वापसी पर स्वागत है!",
@@ -43,10 +65,22 @@
     "usernameTooShort": "उपयोगकर्ता नाम में कम से कम 3 अक्षर होने चाहिए",
     "invalidCredentials": "गलत उपयोगकर्ता नाम या पासवर्ड। कृपया अपने क्रेडेंशियल्स की जाँच करें।",
     "usernamePlaceholder": "नाम.उपनाम",
-    "passwordPlaceholder": "आपका सुरक्षित पासवर्ड"
+    "passwordPlaceholder": "आपका सुरक्षित पासवर्ड",
+    "selectLanguage": "भाषा चुनें",
+    "languageTipMessage": "अपनी पसंदीदा भाषा चुनें",
+    "or": "या",
+    "selectPlant": "संयंत्र चुनें",
+    "joinYourPlant": "अपने संयंत्र में शामिल हों",
+    "selectYourPlant": "अपना संयंत्र चुनें",
+    "choosePlant": "संयंत्र चुनें",
+    "backToLogin": "लॉगिन पर वापस जाएं"
   },
   "dashboard": {
-    "subtitle": "{{country}} के लिए कार्यों की निगरानी",
+    "subtitle": "{{country}} के लिए कार्य निगरानी",
+    "subtitleGlobal": "वैश्विक कार्य निगरानी (सभी संयंत्र)",
+    "noCountrySelected": "कोई देश नहीं चुना गया।",
+    "selectRegion": "क्षेत्र चुनें",
+    "coverage": "कवरेज (योजनाएं/अंतराल)",
     "loadError": "संकेतक लोड करने में असमर्थ।",
     "totalElements": "कुल तत्व",
     "gapElements": "गैप वाले तत्व",
@@ -58,7 +92,23 @@
     "withoutPlanColumn": "योजना के बिना",
     "monitoredItems": "बैकलॉग में निगरानी की गई वस्तुएं",
     "immediateAttention": "तत्काल ध्यान देने की आवश्यकता है",
-    "percentWithoutPlan": "कुल का {{percent}}% बिना योजना के"
+    "percentWithoutPlan": "कुल का {{percent}}% बिना योजना के",
+    "global": {
+      "title": "देश के अनुसार वैश्विक दृश्य",
+      "country": "देश",
+      "totalElements": "कुल तत्व",
+      "gaps": "अंतराल (स्कोर < 100)",
+      "definedPlans": "योजना वाले तत्व",
+      "withoutPlan": "योजना के बिना अंतराल",
+      "pendingShort": "लंबित",
+      "plansShort": "योजनाएं",
+      "gapsShort": "अंतराल",
+      "view": "देखें",
+      "withPlan": "योजना के साथ"
+    },
+    "needsActionPlan": "कार्य योजना की आवश्यकता है",
+    "pillarBreakdown": "स्तंभ विवरण",
+    "progress": "प्रगति"
   },
   "pages": {
     "dashboard": {
@@ -66,20 +116,25 @@
     },
     "backlog": {
       "title": "योजना बैकलॉग",
-      "description": "लक्ष्य से कम फाउंडेशन स्कोर वाले तत्वों का प्रबंधन।",
+      "description": "लक्ष्य से कम आधार स्कोर वाले तत्वों का प्रबंधन।",
+      "descriptionGlobal": "सभी इकाइयों में आधार < 100% वाले तत्वों का वैश्विक बैकलॉग।",
       "filterByPillar": "स्तंभ द्वारा फ़िल्टर करें",
-      "noElements": "बैकलॉग में कोई तत्व दर्ज नहीं है।",
+      "filterByPillarGlobal": "स्तंभ द्वारा फ़िल्टर करें (सभी इकाइयाँ)",
+      "noElements": "बैकलॉग में कोई तत्व पंजीकृत नहीं है।",
       "noElementsForFilter": "इस फ़िल्टर के लिए कोई तत्व नहीं मिला।",
       "modalTitle": "योजना प्रबंधित करें",
       "existingActionsTitle": "मौजूदा क्रियाएं",
       "allClear": "सब ठीक है!",
-      "unknownPillar": "कोई स्तंभ नहीं"
+      "unknownPillar": "कोई स्तंभ नहीं",
+      "filterDescription": "तत्व फ़िल्टर करें"
     },
     "actionPlans": {
       "title": "कार्य योजनाएं",
       "description": "सभी पंजीकृत योजनाओं और उनकी स्थिति का प्रबंधन करें。",
-      "descriptionGlobal": "कार्रवाई योजनाओं की वैश्विक सूची (वे सभी इकाइयाँ जिन्हें आप देख सकते हैं)।",
-      "useHeaderExport": "पृष्ठ के शीर्ष पर «ग्लोबल निर्यात» बटन का उपयोग करें।"
+      "descriptionGlobal": "कार्य योजनाओं की वैश्विक सूची (सभी इकाइयाँ जो आप देख सकते हैं)।",
+      "exportToExcel": "एक्सेल में निर्यात करें",
+      "useHeaderExport": "पृष्ठ के शीर्ष पर \"वैश्विक निर्यात\" बटन का उपयोग करें।",
+      "export": "निर्यात"
     },
     "structure": {
       "title": "संगठनात्मक संरचना",
@@ -92,6 +147,10 @@
       "noElementsInPillar": "इस स्तंभ में कोई तत्व नहीं है",
       "lockedTooltip": "स्तंभ और तत्व वैश्विक रूप से मानकीकृत हैं। आप केवल अपने देश का स्कोर संपादित कर सकते हैं।",
       "globalStandard": "वैश्विक मानक"
+    },
+    "maturity": {
+      "title": "परिपक्वता ढांचा",
+      "description": "सभी स्तरों पर अपनी परिचालन परिपक्वता को ट्रैक और सुधारें"
     }
   },
   "table": {
@@ -106,6 +165,7 @@
     "noPlans": "कोई रिकॉर्ड नहीं मिला।",
     "noPlansForFilter": "आपकी खोज का कोई परिणाम नहीं मिला।",
     "foundation": "स्कोर",
+    "country": "देश",
     "plans": "योजनाएं"
   },
   "filters": {
@@ -132,6 +192,7 @@
     "editPillar": "संपादित करें",
     "newElement": "नया तत्व",
     "editElement": "संपादित करें",
+    "editScore": "स्कोर संपादित करें",
     "code": "कोड",
     "namePt": "नाम (स्थानीय)",
     "nameEn": "नाम (अंग्रेज़ी)",
@@ -178,5 +239,47 @@
   },
   "notifications": {
     "success": "सफलता"
+  },
+  "maturity": {
+    "title": "परिपक्वता",
+    "progressSubtitle": "प्रगति अवलोकन",
+    "behaviour": "व्यवहार",
+    "whatIsExpected": "क्या अपेक्षित है",
+    "noCriteria": "कोई मानदंड परिभाषित नहीं",
+    "score": "स्कोर",
+    "notes": "टिप्पणियाँ",
+    "notesPlaceholder": "यहाँ टिप्पणियाँ जोड़ें...",
+    "currentScore": "वर्तमान स्कोर",
+    "loadError": "परिपक्वता डेटा लोड करने में त्रुटि",
+    "comingSoon": "जल्द आ रहा है",
+    "levels": {
+      "FOUNDATION": "आधार",
+      "BRONZE": "कांस्य",
+      "SILVER": "रजत",
+      "GOLD": "स्वर्ण",
+      "PLATINUM": "प्लेटिनम"
+    },
+    "locked": "पिछला स्तर पूरा करें",
+    "complete": "{{completed}}/{{total}} पूर्ण",
+    "unlockTooltip": "अनलॉक करने के लिए पिछला स्तर पूरा करें",
+    "overallProgress": "कुल प्रगति",
+    "starting": "शुरू कर रहे हैं",
+    "elementsCount": "{{count}} तत्व"
+  },
+  "components": {
+    "levelBanner": {
+      "level": "स्तर",
+      "actionPlans": "{{count}} कार्य योजनाएं",
+      "progress": "प्रगति",
+      "complete": "{{percent}}% पूर्ण",
+      "next": "अगला: {{level}}",
+      "subtitle": {
+        "FOUNDATION": "परिचालन उत्कृष्टता के लिए आधार रेखा स्थापित करना",
+        "BRONZE": "पूरे संगठन में लगातार प्रथाओं का निर्माण",
+        "SILVER": "परिचालन परिपक्वता की ओर बढ़ना",
+        "GOLD": "उच प्रदर्शन मानकों को प्राप्त करना",
+        "PLATINUM": "विश्व स्तरीय परिचालन उत्कृष्टता"
+      }
+    }
   }
 }

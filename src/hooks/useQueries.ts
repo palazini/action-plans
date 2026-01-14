@@ -2,6 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
     fetchBacklogElements,
+    fetchBacklogByLevel,
     fetchDashboardStats,
     fetchActionPlans,
     fetchPillarStats,
@@ -20,11 +21,13 @@ import type {
     PillarStats,
     ActionPlanWithElement,
     ActionPlanStatus,
+    MaturityLevel,
 } from '../types';
 
 // === Query Keys ===
 export const queryKeys = {
     backlog: (country: string) => ['backlog', country] as const,
+    backlogByLevel: (country: string, level: MaturityLevel) => ['backlogByLevel', country, level] as const,
     dashboard: (country: string) => ['dashboard', country] as const,
     actionPlans: (country: string) => ['actionPlans', country] as const,
     pillarStats: (country: string) => ['pillarStats', country] as const,
@@ -38,6 +41,14 @@ export function useBacklogElements(country: string | null) {
     return useQuery<ElementWithRelations[]>({
         queryKey: queryKeys.backlog(country ?? ''),
         queryFn: () => fetchBacklogElements(country!),
+        enabled: !!country,
+    });
+}
+
+export function useBacklogByLevel(country: string | null, level: MaturityLevel) {
+    return useQuery<ElementWithRelations[]>({
+        queryKey: queryKeys.backlogByLevel(country ?? '', level),
+        queryFn: () => fetchBacklogByLevel(country!, level),
         enabled: !!country,
     });
 }

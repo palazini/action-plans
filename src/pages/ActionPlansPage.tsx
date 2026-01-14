@@ -1,5 +1,5 @@
 // src/pages/ActionPlansPage.tsx
-import { useState, type ReactNode } from 'react';
+import { useState, useMemo, type ReactNode } from 'react';
 import {
   Alert,
   Badge,
@@ -36,9 +36,11 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useActionPlans, useUpdateActionPlanStatus } from '../hooks/useQueries';
-import type { ActionPlanStatus, ActionPlanWithElement } from '../types';
+import type { ActionPlanStatus, ActionPlanWithElement, MaturityLevel } from '../types';
 import { EditActionPlanForm } from '../components/action-plans/EditActionPlanForm';
-import { IconTrophy } from '@tabler/icons-react';
+import { LevelSelector } from '../components/LevelSelector';
+import { LevelBanner } from '../components/LevelBanner';
+import { getCountryTranslationKey } from '../data/countries';
 
 function statusColor(status: ActionPlanStatus): string {
   switch (status) {
@@ -68,7 +70,7 @@ export function ActionPlansPage() {
 
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [pillarFilter, setPillarFilter] = useState<string>('ALL');
-  const [levelFilter, setLevelFilter] = useState<string>('ALL');
+  const [levelFilter, setLevelFilter] = useState<MaturityLevel>('FOUNDATION');
   const [ownerFilter, setOwnerFilter] = useState<string>('');
 
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -169,15 +171,39 @@ export function ActionPlansPage() {
     ).values(),
   );
 
-  // Filtros
+  // Count plans per level
+  const levelCounts = useMemo(() => {
+    const counts: Record<MaturityLevel, number> = {
+      FOUNDATION: 0,
+      BRONZE: 0,
+      SILVER: 0,
+      GOLD: 0,
+      PLATINUM: 0,
+    };
+    plans.forEach((plan) => {
+      const level = plan.maturity_level || 'FOUNDATION';
+      if (counts[level] !== undefined) {
+        counts[level]++;
+      }
+    });
+    return counts;
+  }, [plans]);
+
+  // Count completed plans for current level
+  const completedCount = useMemo(() => {
+    return plans.filter(
+      (p) => (p.maturity_level || 'FOUNDATION') === levelFilter && p.status === 'DONE'
+    ).length;
+  }, [plans, levelFilter]);
+
+  // Filtros - always filter by level (no 'ALL' option for level anymore)
   const filteredPlans = plans.filter((plan) => {
+    // Always filter by maturity level
+    if ((plan.maturity_level || 'FOUNDATION') !== levelFilter) return false;
+
     if (statusFilter !== 'ALL' && plan.status !== statusFilter) return false;
 
     if (pillarFilter !== 'ALL' && plan.element?.pillar?.id !== pillarFilter) {
-      return false;
-    }
-
-    if (levelFilter !== 'ALL' && (plan as any).maturity_level !== levelFilter) {
       return false;
     }
 
@@ -321,7 +347,12 @@ export function ActionPlansPage() {
                 <Badge size="xs" variant="filled" color="blue">
                   {t('table.country', { defaultValue: 'Country' })}
                 </Badge>
-                <Text fw={700}>{countryLabel}</Text>
+                <Text fw={700}>
+                  {(() => {
+                    const key = getCountryTranslationKey(countryLabel);
+                    return key ? t(key) : countryLabel;
+                  })()}
+                </Text>
               </Group>
             </Table.Td>
           </Table.Tr>,
@@ -462,6 +493,20 @@ export function ActionPlansPage() {
         </Tooltip>
       </Group>
 
+      {/* Level Selector - Cards */}
+      <LevelSelector
+        selectedLevel={levelFilter}
+        onLevelChange={setLevelFilter}
+        planCounts={levelCounts}
+      />
+
+      {/* Level Banner */}
+      <LevelBanner
+        level={levelFilter}
+        planCount={levelCounts[levelFilter]}
+        completedCount={completedCount}
+      />
+
       {error && (
         <Alert
           mb="md"
@@ -529,31 +574,6 @@ export function ActionPlansPage() {
                 />
               </div>
             )}
-
-            {/* Maturity Level Filter */}
-            <div>
-              <Group gap="xs" mb={6}>
-                <ThemeIcon size="xs" variant="light" color="orange">
-                  <IconTrophy size={12} />
-                </ThemeIcon>
-                <Text size="xs" fw={700} c="dimmed" tt="uppercase">
-                  {t('filters.level', 'Level')}
-                </Text>
-              </Group>
-              <SegmentedControl
-                size="xs"
-                value={levelFilter}
-                onChange={setLevelFilter}
-                data={[
-                  { label: t('filters.status_all'), value: 'ALL' },
-                  { label: 'F', value: 'FOUNDATION' },
-                  { label: 'B', value: 'BRONZE' },
-                  { label: 'S', value: 'SILVER' },
-                  { label: 'G', value: 'GOLD' },
-                  { label: 'P', value: 'PLATINUM' },
-                ]}
-              />
-            </div>
           </Group>
 
           <TextInput

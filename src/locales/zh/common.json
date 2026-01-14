@@ -1,7 +1,21 @@
 {
   "app": {
     "title": "OPEX 行動計畫",
-    "subtitle": "企業入口網站"
+    "subtitle": "持续改进门户"
+  },
+  "countries": {
+    "GL": "全球",
+    "AR": "阿根廷",
+    "BR": "巴西",
+    "BR_Hiter": "巴西 (Hiter)",
+    "CN": "中国",
+    "DE": "德国",
+    "DE_Gestra": "德国 (Gestra)",
+    "FR": "法国",
+    "IN": "印度",
+    "IT": "意大利",
+    "GB": "英国",
+    "US": "美国"
   },
   "nav": {
     "dashboard": "儀表板",
@@ -12,11 +26,19 @@
     "account": "帳戶",
     "settings": "設定",
     "logout": "登出",
-    "version": "版本"
+    "version": "版本",
+    "viewDataFrom": "查看数据来源：",
+    "exportGlobal": "导出所有计划 (EN)",
+    "exportGlobalShort": "全球导出",
+    "switchUnit": "切换单位视图",
+    "select": "选择",
+    "maturity": "成熟度"
   },
   "landing": {
-    "selectRegion": "選擇您的地區",
-    "chooseCountry": "選擇您的國家/地區以進入您分公司的專屬平台。"
+    "selectRegion": "选择您的区域",
+    "chooseCountry": "选择您的国家以进入专门的分支机构平台。",
+    "viewConsolidatedPlans": "查看所有单位的综合行动计划。",
+    "selectSpecificUnit": "或选择特定单位："
   },
   "auth": {
     "welcomeBack": "歡迎回來！",
@@ -43,10 +65,22 @@
     "usernameTooShort": "使用者名稱至少需要 3 個字元",
     "invalidCredentials": "使用者名稱或密碼錯誤。請確認您的登入資訊。",
     "usernamePlaceholder": "名字.姓氏",
-    "passwordPlaceholder": "您的安全密碼"
+    "passwordPlaceholder": "您的安全密碼",
+    "selectLanguage": "選擇語言",
+    "languageTipMessage": "選擇您的首選語言",
+    "or": "或",
+    "selectPlant": "選擇工廠",
+    "joinYourPlant": "加入您的工廠",
+    "selectYourPlant": "選擇您的工廠",
+    "choosePlant": "選擇工廠",
+    "backToLogin": "返回登入"
   },
   "dashboard": {
-    "subtitle": "{{country}} 的行動監控",
+    "subtitle": "{{country}} 的行动监控",
+    "subtitleGlobal": "全球行动监控（所有工厂）",
+    "noCountrySelected": "未选择国家。",
+    "selectRegion": "选择区域",
+    "coverage": "覆盖率（计划/差距）",
     "loadError": "無法載入指標。",
     "totalElements": "要素總數",
     "gapElements": "具有 GAP 的要素",
@@ -58,7 +92,23 @@
     "withoutPlanColumn": "無計畫",
     "monitoredItems": "積壓中監控的項目",
     "immediateAttention": "需要立即注意",
-    "percentWithoutPlan": "總數的 {{percent}}% 無計畫"
+    "percentWithoutPlan": "總數的 {{percent}}% 無計畫",
+    "global": {
+      "title": "按国家/地区查看全球概况",
+      "country": "国家",
+      "totalElements": "总要素",
+      "gaps": "差距（得分 < 100）",
+      "definedPlans": "有计划的要素",
+      "withoutPlan": "无计划的差距",
+      "pendingShort": "待处理",
+      "plansShort": "计划",
+      "gapsShort": "差距",
+      "view": "查看",
+      "withPlan": "有計畫"
+    },
+    "needsActionPlan": "需要行動計畫",
+    "pillarBreakdown": "支柱明細",
+    "progress": "進度"
   },
   "pages": {
     "dashboard": {
@@ -66,20 +116,25 @@
     },
     "backlog": {
       "title": "計畫待辦清單",
-      "description": "管理基礎分數低於目標的要素。",
-      "filterByPillar": "依支柱篩選",
-      "noElements": "待辦清單中無紀錄。",
+      "description": "管理基础得分低于预期的要素。",
+      "descriptionGlobal": "所有单位中基础分数 < 100% 的要素的全球积压。",
+      "filterByPillar": "按支柱筛选",
+      "filterByPillarGlobal": "按支柱筛选（所有单位）",
+      "noElements": "积压中没有记录要素。",
       "noElementsForFilter": "查無符合此篩選的要素。",
       "modalTitle": "管理計畫",
       "existingActionsTitle": "現有行動",
       "allClear": "一切正常！",
-      "unknownPillar": "無支柱"
+      "unknownPillar": "無支柱",
+      "filterDescription": "篩選項目"
     },
     "actionPlans": {
       "title": "行動計畫",
       "description": "管理所有註冊計畫及其狀態。",
-      "descriptionGlobal": "行動計畫的全球清單（您可檢視的所有單位）。",
-      "useHeaderExport": "請使用頁面頂部的「全球匯出」按鈕。"
+      "descriptionGlobal": "全球行动计划列表（您可以查看的所有单位）。",
+      "exportToExcel": "导出到 Excel",
+      "useHeaderExport": "使用页面顶部的“全球导出”按钮。",
+      "export": "匯出"
     },
     "structure": {
       "title": "組織結構",
@@ -92,6 +147,10 @@
       "noElementsInPillar": "此支柱尚無要素",
       "lockedTooltip": "支柱與元素已在全球層級標準化。您只能編輯您國家的分數。",
       "globalStandard": "全球標準"
+    },
+    "maturity": {
+      "title": "成熟度架構",
+      "description": "追蹤並改善各層級的營運成熟度"
     }
   },
   "table": {
@@ -105,8 +164,9 @@
     "actions": "選項",
     "noPlans": "查無紀錄。",
     "noPlansForFilter": "搜尋無結果。",
-    "foundation": "分數",
-    "plans": "計畫"
+    "foundation": "分数",
+    "country": "国家",
+    "plans": "计划"
   },
   "filters": {
     "status": "狀態",
@@ -131,8 +191,9 @@
     "newPillar": "新增支柱",
     "editPillar": "編輯",
     "newElement": "新增要素",
-    "editElement": "編輯",
-    "code": "代碼",
+    "editElement": "编辑",
+    "editScore": "编辑分数",
+    "code": "代码",
     "namePt": "名稱 (本地)",
     "nameEn": "名稱 (英語)",
     "descriptionPt": "描述 (本地)",
@@ -178,5 +239,47 @@
   },
   "notifications": {
     "success": "成功"
+  },
+  "maturity": {
+    "title": "成熟度",
+    "progressSubtitle": "進度概覽",
+    "behaviour": "行為",
+    "whatIsExpected": "預期內容",
+    "noCriteria": "未定義標準",
+    "score": "分數",
+    "notes": "備註",
+    "notesPlaceholder": "在此新增備註...",
+    "currentScore": "目前分數",
+    "loadError": "載入成熟度資料時發生錯誤",
+    "comingSoon": "即将推出",
+    "levels": {
+      "FOUNDATION": "基础",
+      "BRONZE": "铜",
+      "SILVER": "银",
+      "GOLD": "金",
+      "PLATINUM": "铂金"
+    },
+    "locked": "完成上一级",
+    "complete": "{{completed}}/{{total}} 完成",
+    "unlockTooltip": "完成上一级以解锁",
+    "overallProgress": "总体进度",
+    "starting": "开始",
+    "elementsCount": "{{count}} 个要素"
+  },
+  "components": {
+    "levelBanner": {
+      "level": "级别",
+      "actionPlans": "{{count}} 个行动计划",
+      "progress": "进度",
+      "complete": "{{percent}}% 完成",
+      "next": "下一个：{{level}}",
+      "subtitle": {
+        "FOUNDATION": "建立卓越运营的基准",
+        "BRONZE": "在整个组织中建立一致的实践",
+        "SILVER": "向运营成熟迈进",
+        "GOLD": "达到高性能标准",
+        "PLATINUM": "世界级卓越运营"
+      }
+    }
   }
 }

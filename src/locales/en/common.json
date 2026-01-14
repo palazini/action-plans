@@ -3,6 +3,20 @@
     "title": "Action Plans",
     "subtitle": "Continuous Improvement Portal"
   },
+  "countries": {
+    "GL": "Global",
+    "AR": "Argentina",
+    "BR": "Brazil",
+    "BR_Hiter": "Brazil (Hiter)",
+    "CN": "China",
+    "DE": "Germany",
+    "DE_Gestra": "Germany (Gestra)",
+    "FR": "France",
+    "IN": "India",
+    "IT": "Italy",
+    "GB": "UK",
+    "US": "USA"
+  },
   "nav": {
     "dashboard": "Overview",
     "maturity": "Maturity",
@@ -51,7 +65,15 @@
     "usernameTooShort": "Username must be at least 3 characters",
     "invalidCredentials": "Invalid username or password. Please check your credentials.",
     "usernamePlaceholder": "yourname.lastname",
-    "passwordPlaceholder": "Your secure password"
+    "passwordPlaceholder": "Your secure password",
+    "selectLanguage": "Select Language",
+    "languageTipMessage": "Select your preferred language",
+    "or": "or",
+    "selectPlant": "Select Plant",
+    "joinYourPlant": "Join your plant",
+    "selectYourPlant": "Select your plant",
+    "choosePlant": "Choose Plant",
+    "backToLogin": "Back to Login"
   },
   "dashboard": {
     "subtitle": "Monitoring actions for {{country}}",
@@ -81,8 +103,12 @@
       "pendingShort": "Pend.",
       "plansShort": "Plans",
       "gapsShort": "Gaps",
-      "view": "View"
-    }
+      "view": "View",
+      "withPlan": "With Plan"
+    },
+    "needsActionPlan": "Needs Action Plan",
+    "pillarBreakdown": "Pillar Breakdown",
+    "progress": "Progress"
   },
   "pages": {
     "dashboard": {
@@ -99,14 +125,16 @@
       "modalTitle": "Manage Plan",
       "existingActionsTitle": "Existing Actions",
       "allClear": "All clear!",
-      "unknownPillar": "No pillar"
+      "unknownPillar": "No pillar",
+      "filterDescription": "Filter items"
     },
     "actionPlans": {
       "title": "Action Plans",
       "description": "Manage all registered plans and their status.",
       "descriptionGlobal": "Global list of action plans (all units you can view).",
       "exportToExcel": "Export to Excel",
-      "useHeaderExport": "Use the \"Export Global\" button at the top of the page."
+      "useHeaderExport": "Use the \"Export Global\" button at the top of the page.",
+      "export": "Export"
     },
     "structure": {
       "title": "Org Structure",
@@ -211,5 +239,47 @@
   },
   "notifications": {
     "success": "Success"
+  },
+  "maturity": {
+    "title": "Maturity",
+    "progressSubtitle": "Progress Overview",
+    "behaviour": "Behaviour",
+    "whatIsExpected": "What is expected",
+    "noCriteria": "No criteria defined",
+    "score": "Score",
+    "notes": "Notes",
+    "notesPlaceholder": "Add notes here...",
+    "currentScore": "Current Score",
+    "loadError": "Error loading maturity data",
+    "comingSoon": "Coming Soon",
+    "levels": {
+      "FOUNDATION": "Foundation",
+      "BRONZE": "Bronze",
+      "SILVER": "Silver",
+      "GOLD": "Gold",
+      "PLATINUM": "Platinum"
+    },
+    "locked": "Complete previous level",
+    "complete": "{{completed}}/{{total}} complete",
+    "unlockTooltip": "Complete previous level to unlock",
+    "overallProgress": "Overall Progress",
+    "starting": "Starting",
+    "elementsCount": "{{count}} elements"
+  },
+  "components": {
+    "levelBanner": {
+      "level": "Level",
+      "actionPlans": "{{count}} Action Plans",
+      "progress": "Progress",
+      "complete": "{{percent}}% Complete",
+      "next": "Next: {{level}}",
+      "subtitle": {
+        "FOUNDATION": "Establishing the baseline for operational excellence",
+        "BRONZE": "Building consistent practices across the organization",
+        "SILVER": "Advancing towards operational maturity",
+        "GOLD": "Achieving high-performance standards",
+        "PLATINUM": "World-class operational excellence"
+      }
+    }
   }
 }

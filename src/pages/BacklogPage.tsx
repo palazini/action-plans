@@ -1,5 +1,5 @@
 // src/pages/BacklogPage.tsx
-import { useState, type ReactNode } from 'react';
+import { useState, useMemo, type ReactNode } from 'react';
 import {
   Card,
   Title,
@@ -29,9 +29,12 @@ import {
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { useBacklogElements } from '../hooks/useQueries';
-import type { ElementWithRelations } from '../types';
+import { useBacklogByLevel } from '../hooks/useQueries';
+import type { ElementWithRelations, MaturityLevel } from '../types';
 import { ActionPlanForm } from '../components/action-plans/ActionPlanForm';
+import { LevelSelector } from '../components/LevelSelector';
+import { LevelBanner } from '../components/LevelBanner';
+import { getCountryTranslationKey } from '../data/countries';
 
 export function BacklogPage() {
   const { t } = useTranslation();
@@ -39,16 +42,36 @@ export function BacklogPage() {
 
   const [selected, setSelected] = useState<ElementWithRelations | null>(null);
   const [pillarFilter, setPillarFilter] = useState<string>('ALL');
+  const [levelFilter, setLevelFilter] = useState<MaturityLevel>('FOUNDATION');
 
   const isGlobalView = selectedCountry === 'Global';
 
-  // React Query hook - cache automático e refetch inteligente
+  // React Query hook - busca por nível de maturidade
   const {
     data: elements = [],
     isLoading: loading,
     error: queryError,
     refetch
-  } = useBacklogElements(selectedCountry);
+  } = useBacklogByLevel(selectedCountry, levelFilter);
+
+  // Contagem de elementos por nível (estimativa baseada no nível atual)
+  const levelCounts = useMemo(() => {
+    // Por enquanto mostramos apenas a contagem do nível atual
+    const counts: Record<MaturityLevel, number> = {
+      FOUNDATION: 0,
+      BRONZE: 0,
+      SILVER: 0,
+      GOLD: 0,
+      PLATINUM: 0,
+    };
+    counts[levelFilter] = elements.length;
+    return counts;
+  }, [elements, levelFilter]);
+
+  // Contagem de elementos com planos
+  const elementsWithPlanCount = useMemo(() => {
+    return elements.filter(el => el.action_plans && el.action_plans.length > 0).length;
+  }, [elements]);
 
   const error = queryError ? t('backlog.loadError') : null;
 
@@ -175,7 +198,12 @@ export function BacklogPage() {
                 <Badge size="xs" variant="filled" color="blue">
                   {t('table.country', { defaultValue: 'Country' })}
                 </Badge>
-                <Text fw={700}>{countryLabel}</Text>
+                <Text fw={700}>
+                  {(() => {
+                    const key = getCountryTranslationKey(countryLabel);
+                    return key ? t(key) : countryLabel;
+                  })()}
+                </Text>
               </Group>
             </Table.Td>
           </Table.Tr>,
@@ -247,11 +275,25 @@ export function BacklogPage() {
           {isGlobalView
             ? t(
               'pages.backlog.descriptionGlobal',
-              'Global backlog of elements with foundation < 100% across all units.',
+              'Global backlog of elements with score < 100% across all units.',
             )
             : t('pages.backlog.description')}
         </Text>
       </Box>
+
+      {/* Level Selector - Cards */}
+      <LevelSelector
+        selectedLevel={levelFilter}
+        onLevelChange={setLevelFilter}
+        planCounts={levelCounts}
+      />
+
+      {/* Level Banner */}
+      <LevelBanner
+        level={levelFilter}
+        planCount={elements.length}
+        completedCount={elementsWithPlanCount}
+      />
 
       {error && (
         <Alert

@@ -39,22 +39,8 @@ import logoGroup from '../assets/group-logo-16x9.png';
 
 // Import da API para exportação global
 import { fetchActionPlans } from '../services/api';
+import { AVAILABLE_COUNTRIES } from '../data/countries';
 
-// Lista completa disponível para troca de contexto
-// ORGANIZADO EM ORDEM ALFABÉTICA
-const AVAILABLE_COUNTRIES = [
-  { name: 'Global', code: 'GL', displayName: 'Global' },
-  { name: 'Argentina', code: 'AR' },
-  { name: 'Brazil', code: 'BR' },
-  { name: 'Brazil (Hiter)', code: 'BR' },
-  { name: 'China', code: 'CN' },
-  { name: 'Germany (Gestra)', code: 'DE' },
-  { name: 'France', code: 'FR' },
-  { name: 'India', code: 'IN' },
-  { name: 'Italy', code: 'IT' },
-  { name: 'UK', code: 'GB' },
-  { name: 'USA', code: 'US' },
-];
 
 const NAV_ITEMS = [
   { labelKey: 'nav.dashboard', path: '/app', icon: IconDashboard, end: true },
@@ -89,10 +75,16 @@ export function MainLayout() {
 
   // Helper para ícone do menu
   const getCountryIcon = (code: string) => {
+    // Handle special cases where code might be e.g. BR_Hiter inside MainLayout logic if strictly needed,
+    // but the array has `code: 'BR'` or `BR_Hiter`. 
+    // Flagcdn only supports standard 2-letter codes.
+    // We can strip underscore suffix.
+    const standardCode = code.split('_')[0];
+
     if (code === 'GL') return <IconWorld size={14} />; // ícone do globo para Global
     return (
       <Image
-        src={`https://flagcdn.com/w20/${code.toLowerCase()}.png`}
+        src={`https://flagcdn.com/w20/${standardCode.toLowerCase()}.png`}
         w={14}
       />
     );
@@ -206,7 +198,7 @@ export function MainLayout() {
                     color={selectedCountry === c.name ? 'black' : undefined}
                     style={{ fontWeight: selectedCountry === c.name ? 600 : 400 }}
                   >
-                    {c.displayName ?? c.name}
+                    {t(c.i18nKey)}
                   </Menu.Item>
                 ))}
               </Menu.Dropdown>

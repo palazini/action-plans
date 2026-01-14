@@ -137,6 +137,133 @@ export async function fetchBacklogElements(country: string): Promise<ElementWith
 
   return result;
 }
+
+/**
+ * Busca elementos com score < 100 para um nível específico de maturidade
+ * Usa a tabela country_level_scores
+ */
+export async function fetchBacklogByLevel(
+  country: string,
+  level: MaturityLevel
+): Promise<ElementWithRelations[]> {
+  // 1. Buscar scores do país para o nível específico com score < 100
+  let scoresQuery = supabase
+    .from('country_level_scores')
+    .select('element_id, country, score, notes, level')
+    .eq('level', level)
+    .lt('score', 100);
+
+  if (country !== 'Global') {
+    scoresQuery = scoresQuery.eq('country', country);
+  }
+
+  const { data: scoresData, error: scoresError } = await scoresQuery;
+  if (scoresError) throw scoresError;
+
+  const scores = (scoresData ?? []) as any[];
+  if (scores.length === 0) return [];
+
+  // 2. Buscar elementos globais correspondentes
+  const elementIds = scores.map(s => s.element_id);
+
+  const { data: elementsData, error: elementsError } = await supabase
+    .from('elements_master')
+    .select(`
+      id,
+      code,
+      name_local,
+      name_en,
+      pillar_id,
+      is_active,
+      pillar:pillars_master (
+        id,
+        code,
+        name_local,
+        name_en,
+        description_local,
+        is_active
+      )
+    `)
+    .in('id', elementIds);
+
+  if (elementsError) throw elementsError;
+
+  // 3. Buscar action_plans relacionados (filtrar pelo nível)
+  const { data: plansData, error: plansError } = await supabase
+    .from('action_plans')
+    .select(`
+      id,
+      element_master_id,
+      status,
+      problem,
+      solution,
+      owner_name,
+      due_date,
+      created_at,
+      country,
+      maturity_level
+    `)
+    .in('element_master_id', elementIds)
+    .eq('maturity_level', level);
+
+  if (plansError) throw plansError;
+
+  // 4. Criar mapa de scores
+  const scoresMap = new Map<string, { score: number; notes: string | null; country: string }>();
+  for (const s of scores) {
+    const key = `${s.element_id}_${s.country}`;
+    scoresMap.set(key, { score: s.score, notes: s.notes, country: s.country });
+  }
+
+  // 5. Criar mapa de planos por element_master_id
+  const plansMap = new Map<string, any[]>();
+  for (const plan of (plansData ?? [])) {
+    const key = plan.element_master_id;
+    if (!plansMap.has(key)) {
+      plansMap.set(key, []);
+    }
+    plansMap.get(key)!.push(plan);
+  }
+
+  // 6. Montar resultado
+  const elements = (elementsData ?? []) as any[];
+  const result: ElementWithRelations[] = [];
+
+  for (const el of elements) {
+    const matchingScores = scores.filter(s => s.element_id === el.id);
+
+    for (const scoreEntry of matchingScores) {
+      const pillarRaw = el.pillar;
+      const pillar = Array.isArray(pillarRaw) ? pillarRaw[0] : pillarRaw;
+
+      // Skip if pillar is inactive
+      if (pillar && pillar.is_active === false) continue;
+
+      // Skip if element itself is inactive
+      if (el.is_active === false) continue;
+
+      result.push({
+        id: el.id,
+        code: el.code,
+        name: el.name_local ?? el.name_en ?? '',
+        foundation_score: scoreEntry.score, // Using 'score' from level_scores
+        notes: scoreEntry.notes,
+        country: scoreEntry.country,
+        pillar: pillar ? {
+          id: pillar.id,
+          code: pillar.code,
+          name: pillar.name_local ?? pillar.name_en ?? '',
+          description: pillar.description_local
+        } : null,
+        action_plans: (plansMap.get(el.id) ?? []).filter(p =>
+          p.country === scoreEntry.country
+        ),
+      });
+    }
+  }
+
+  return result;
+}
 /**
  * Estatísticas gerais do dashboard
  * Usa as novas tabelas globais
@@ -195,13 +322,28 @@ export async function fetchDashboardStats(country: string): Promise<DashboardSta
   };
 }
 
+export type PillarSummary = {
+  pillarId: string;
+  pillarCode: string;
+  pillarName: string;
+  gapCount: number;
+  avgScore: number;
+};
+
 export type GlobalCountryStats = {
   country: string;
   totalElements: number;
   gapElements: number;
   elementsWithPlan: number;
-  completedActionPlans: number;
   elementsWithoutPlan: number;
+  // Action Plans
+  totalActionPlans: number;
+  completedActionPlans: number;
+  // Foundation Maturity
+  foundationAvgScore: number;
+  foundationCompleteCount: number;
+  // Per-pillar summary
+  pillarSummary: PillarSummary[];
 };
 
 /**
@@ -209,16 +351,30 @@ export type GlobalCountryStats = {
  * Usa as novas tabelas globais
  */
 export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
-  // 1. Fetch active elements IDs
+  // 1. Fetch active elements with pillar info
   const { data: activeElements, error: activeError } = await supabase
     .from('elements_master')
-    .select('id, pillars_master!inner(is_active)')
+    .select('id, pillar_id, pillars_master!inner(id, code, name_local, name_en, is_active)')
     .eq('pillars_master.is_active', true)
-    .eq('is_active', true); // Added strict check
+    .eq('is_active', true);
 
   if (activeError) throw activeError;
+
   const activeElementIds = new Set((activeElements ?? []).map(e => e.id));
   const totalElements = activeElementIds.size;
+
+  // Create element -> pillar map
+  const elementPillarMap = new Map<string, { pillarId: string; code: string; name: string }>();
+  for (const el of (activeElements ?? [])) {
+    const pillar = (el as any).pillars_master;
+    if (pillar) {
+      elementPillarMap.set(el.id, {
+        pillarId: pillar.id,
+        code: pillar.code || '',
+        name: pillar.name_local || pillar.name_en || '',
+      });
+    }
+  }
 
   // 2. Buscar todos os scores de todos os países
   const { data: scoresData, error: scoresError } = await supabase
@@ -227,7 +383,7 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
 
   if (scoresError) throw scoresError;
 
-  // 3. Buscar todos os action_plans
+  // 3. Buscar TODOS os action_plans (não só os de gaps)
   const { data: plansData, error: plansError } = await supabase
     .from('action_plans')
     .select('element_master_id, country, status');
@@ -236,10 +392,11 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
 
   // 4. Criar mapa de planos por element_master_id + country
   const plansMap = new Map<string, { total: number; completed: number }>();
+  // Also track total plans per country
+  const countryPlansMap = new Map<string, { total: number; completed: number }>();
+
   for (const plan of (plansData ?? [])) {
-    // START FILTER
     if (!activeElementIds.has(plan.element_master_id)) continue;
-    // END FILTER
 
     const key = `${plan.element_master_id}_${plan.country}`;
     if (!plansMap.has(key)) {
@@ -248,15 +405,30 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
     const entry = plansMap.get(key)!;
     entry.total += 1;
     if (plan.status === 'DONE') entry.completed += 1;
+
+    // Country-level totals
+    if (!countryPlansMap.has(plan.country)) {
+      countryPlansMap.set(plan.country, { total: 0, completed: 0 });
+    }
+    const countryEntry = countryPlansMap.get(plan.country)!;
+    countryEntry.total += 1;
+    if (plan.status === 'DONE') countryEntry.completed += 1;
   }
 
-  // 5. Agrupar por país
-  const map = new Map<string, GlobalCountryStats>();
+  // 5. Agrupar por país com métricas expandidas
+  type CountryData = GlobalCountryStats & {
+    foundationScoreSum: number;
+    foundationScoreCount: number;
+    pillarData: Map<string, { gapCount: number; scoreSum: number; scoreCount: number; code: string; name: string }>;
+  };
+
+  const map = new Map<string, CountryData>();
   const scores = (scoresData ?? []) as any[];
 
   for (const score of scores) {
     const country = score.country;
     if (!country) continue;
+    if (!activeElementIds.has(score.element_id)) continue;
 
     if (!map.has(country)) {
       map.set(country, {
@@ -264,18 +436,53 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
         totalElements: totalElements ?? 0,
         gapElements: 0,
         elementsWithPlan: 0,
-        completedActionPlans: 0,
         elementsWithoutPlan: 0,
+        totalActionPlans: 0,
+        completedActionPlans: 0,
+        foundationAvgScore: 0,
+        foundationCompleteCount: 0,
+        foundationScoreSum: 0,
+        foundationScoreCount: 0,
+        pillarSummary: [],
+        pillarData: new Map(),
       });
     }
 
     const stats = map.get(country)!;
+    const foundationScore = score.foundation_score ?? 0;
+
+    // Accumulate for average
+    stats.foundationScoreSum += foundationScore;
+    stats.foundationScoreCount += 1;
+
+    if (foundationScore === 100) {
+      stats.foundationCompleteCount += 1;
+    }
+
+    // Pillar tracking
+    const pillarInfo = elementPillarMap.get(score.element_id);
+    if (pillarInfo) {
+      if (!stats.pillarData.has(pillarInfo.pillarId)) {
+        stats.pillarData.set(pillarInfo.pillarId, {
+          gapCount: 0,
+          scoreSum: 0,
+          scoreCount: 0,
+          code: pillarInfo.code,
+          name: pillarInfo.name,
+        });
+      }
+      const pd = stats.pillarData.get(pillarInfo.pillarId)!;
+      pd.scoreSum += foundationScore;
+      pd.scoreCount += 1;
+      if (foundationScore < 100) {
+        pd.gapCount += 1;
+      }
+    }
 
     // GAP: foundation_score < 100
-    if ((score.foundation_score ?? 100) < 100) {
+    if (foundationScore < 100) {
       stats.gapElements += 1;
 
-      // score.element_id é o ID do elements_master, mesmo que plansMap usa element_master_id
       const planKey = `${score.element_id}_${country}`;
       const planInfo = plansMap.get(planKey);
 
@@ -288,7 +495,35 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
     }
   }
 
-  return Array.from(map.values()).sort((a, b) => a.country.localeCompare(b.country));
+  // 6. Finalize stats
+  const result: GlobalCountryStats[] = [];
+
+  for (const [country, stats] of map) {
+    // Calculate foundation average
+    stats.foundationAvgScore = stats.foundationScoreCount > 0
+      ? Math.round(stats.foundationScoreSum / stats.foundationScoreCount)
+      : 0;
+
+    // Get total action plans for this country
+    const countryPlans = countryPlansMap.get(country);
+    stats.totalActionPlans = countryPlans?.total ?? 0;
+    stats.completedActionPlans = countryPlans?.completed ?? 0;
+
+    // Build pillar summary
+    stats.pillarSummary = Array.from(stats.pillarData.entries()).map(([pillarId, pd]) => ({
+      pillarId,
+      pillarCode: pd.code,
+      pillarName: pd.name,
+      gapCount: pd.gapCount,
+      avgScore: pd.scoreCount > 0 ? Math.round(pd.scoreSum / pd.scoreCount) : 0,
+    })).sort((a, b) => a.pillarCode.localeCompare(b.pillarCode));
+
+    // Remove internal tracking fields
+    const { foundationScoreSum, foundationScoreCount, pillarData, ...cleanStats } = stats;
+    result.push(cleanStats as GlobalCountryStats);
+  }
+
+  return result.sort((a, b) => a.country.localeCompare(b.country));
 }
 
 /**
@@ -351,7 +586,8 @@ export async function fetchActionPlans(country: string): Promise<ActionPlanWithE
       country,
       created_at,
       updated_at,
-      element_master_id
+      element_master_id,
+      maturity_level
     `)
     .order('created_at', { ascending: true });
 
@@ -467,6 +703,7 @@ export async function fetchActionPlans(country: string): Promise<ActionPlanWithE
       updated_at: row.updated_at,
       element,
       country: row.country,
+      maturity_level: row.maturity_level || 'FOUNDATION',
     };
   });
 

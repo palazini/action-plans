@@ -47,7 +47,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data && !error) {
         setUserRole(data.role || 'user');
-        if (data.country) {
+        // Only set country from profile if there's no country already selected
+        // This respects the user's current selection (including "Global")
+        const savedCountry = localStorage.getItem('selectedCountry');
+        if (!savedCountry && data.country) {
           setSelectedCountry(data.country);
         }
       } else {

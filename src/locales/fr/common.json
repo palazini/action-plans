@@ -1,7 +1,21 @@
 {
   "app": {
     "title": "Action Plans",
-    "subtitle": "Portail d'entreprise"
+    "subtitle": "Portail d'Amélioration Continue"
+  },
+  "countries": {
+    "GL": "Global",
+    "AR": "Argentine",
+    "BR": "Brésil",
+    "BR_Hiter": "Brésil (Hiter)",
+    "CN": "Chine",
+    "DE": "Allemagne",
+    "DE_Gestra": "Allemagne (Gestra)",
+    "FR": "France",
+    "IN": "Inde",
+    "IT": "Italie",
+    "GB": "Royaume-Uni",
+    "US": "États-Unis"
   },
   "nav": {
     "dashboard": "Tableau de bord",
@@ -12,11 +26,19 @@
     "account": "Compte",
     "settings": "Paramètres",
     "logout": "Se déconnecter",
-    "version": "Version"
+    "version": "Version",
+    "viewDataFrom": "Voir les données de :",
+    "exportGlobal": "Exporter tous les plans (EN)",
+    "exportGlobalShort": "Export Global",
+    "switchUnit": "Changer de vue d'unité",
+    "select": "Sélectionner",
+    "maturity": "Maturité"
   },
   "landing": {
     "selectRegion": "Sélectionnez votre région",
-    "chooseCountry": "Choisissez votre pays pour accéder à la plateforme dédiée à votre succursale."
+    "chooseCountry": "Choisissez votre pays pour accéder à la plateforme dédiée à votre succursale.",
+    "viewConsolidatedPlans": "Voir les plans d'action consolidés de toutes les unités.",
+    "selectSpecificUnit": "Ou sélectionnez une unité spécifique :"
   },
   "auth": {
     "welcomeBack": "Bon retour !",
@@ -43,10 +65,22 @@
     "usernameTooShort": "Le nom d'utilisateur doit comporter au moins 3 caractères",
     "invalidCredentials": "Nom d'utilisateur ou mot de passe incorrect. Veuillez vérifier vos identifiants.",
     "usernamePlaceholder": "prenom.nom",
-    "passwordPlaceholder": "Votre mot de passe sécurisé"
+    "passwordPlaceholder": "Votre mot de passe sécurisé",
+    "selectLanguage": "Choisir la Langue",
+    "languageTipMessage": "Sélectionnez votre langue préférée",
+    "or": "ou",
+    "selectPlant": "Sélectionner l'Usine",
+    "joinYourPlant": "Rejoignez votre usine",
+    "selectYourPlant": "Sélectionnez votre usine",
+    "choosePlant": "Choisir l'Usine",
+    "backToLogin": "Retour à la Connexion"
   },
   "dashboard": {
     "subtitle": "Suivi des actions pour {{country}}",
+    "subtitleGlobal": "Suivi global des actions (toutes les usines)",
+    "noCountrySelected": "Aucun pays sélectionné.",
+    "selectRegion": "Sélectionner la région",
+    "coverage": "Couverture (Plans/Écarts)",
     "loadError": "Impossible de charger les indicateurs.",
     "totalElements": "Total des éléments",
     "gapElements": "Éléments avec GAP",
@@ -58,7 +92,23 @@
     "withoutPlanColumn": "Sans plan",
     "monitoredItems": "Éléments surveillés dans le backlog",
     "immediateAttention": "Nécessitent une attention immédiate",
-    "percentWithoutPlan": "{{percent}}% du total sans plan"
+    "percentWithoutPlan": "{{percent}}% du total sans plan",
+    "global": {
+      "title": "Vue Globale par Pays",
+      "country": "Pays",
+      "totalElements": "Total Éléments",
+      "gaps": "Écarts (Score < 100)",
+      "definedPlans": "Éléments avec Plan",
+      "withoutPlan": "Écarts sans Plan",
+      "pendingShort": "En attente",
+      "plansShort": "Plans",
+      "gapsShort": "Écarts",
+      "view": "Voir",
+      "withPlan": "Avec Plan"
+    },
+    "needsActionPlan": "Nécessite un Plan d'Action",
+    "pillarBreakdown": "Répartition par Pilier",
+    "progress": "Progrès"
   },
   "pages": {
     "dashboard": {
@@ -67,19 +117,24 @@
     "backlog": {
       "title": "Backlog des plans",
       "description": "Gestion des éléments avec un score de fondation inférieur à l'objectif.",
+      "descriptionGlobal": "Backlog global des éléments avec fondation < 100% dans toutes les unités.",
       "filterByPillar": "Filtrer par pilier",
+      "filterByPillarGlobal": "Filtrer par pilier (toutes les unités)",
       "noElements": "Aucun élément enregistré dans le backlog.",
       "noElementsForFilter": "Aucun élément trouvé pour ce filtre.",
       "modalTitle": "Gérer le plan",
       "existingActionsTitle": "Actions existantes",
       "allClear": "Tout est à jour !",
-      "unknownPillar": "Aucun pilier"
+      "unknownPillar": "Aucun pilier",
+      "filterDescription": "Filtrer les éléments"
     },
     "actionPlans": {
       "title": "Plans d'action",
       "description": "Gérez tous les plans enregistrés et leur statut.",
       "descriptionGlobal": "Liste globale des plans d’action (toutes les unités que vous pouvez consulter).",
-      "useHeaderExport": "Utilisez le bouton « Exportation globale » en haut de la page."
+      "exportToExcel": "Exporter vers Excel",
+      "useHeaderExport": "Utilisez le bouton « Exportation globale » en haut de la page.",
+      "export": "Exporter"
     },
     "structure": {
       "title": "Structure Organisationnelle",
@@ -92,6 +147,10 @@
       "noElementsInPillar": "Ce pilier n'a aucun élément",
       "lockedTooltip": "Les piliers et les éléments sont standardisés au niveau mondial. Vous ne pouvez modifier que le score de votre pays.",
       "globalStandard": "Norme globale"
+    },
+    "maturity": {
+      "title": "Cadre de Maturité",
+      "description": "Suivez et améliorez votre maturité opérationnelle à tous les niveaux"
     }
   },
   "table": {
@@ -106,6 +165,7 @@
     "noPlans": "Aucun enregistrement trouvé.",
     "noPlansForFilter": "Votre recherche n'a donné aucun résultat.",
     "foundation": "Note",
+    "country": "Pays",
     "plans": "Plans"
   },
   "filters": {
@@ -132,6 +192,7 @@
     "editPillar": "Modifier",
     "newElement": "Nouvel élément",
     "editElement": "Modifier",
+    "editScore": "Modifier le Score",
     "code": "Code",
     "namePt": "Nom (Local)",
     "nameEn": "Nom (Anglais)",
@@ -178,5 +239,47 @@
   },
   "notifications": {
     "success": "Succès"
+  },
+  "maturity": {
+    "title": "Maturité",
+    "progressSubtitle": "Aperçu des Progrès",
+    "behaviour": "Comportement",
+    "whatIsExpected": "Ce qui est attendu",
+    "noCriteria": "Aucun critère défini",
+    "score": "Score",
+    "notes": "Notes",
+    "notesPlaceholder": "Ajouter des notes ici...",
+    "currentScore": "Score Actuel",
+    "loadError": "Erreur lors du chargement des données de maturité",
+    "comingSoon": "Bientôt disponible",
+    "levels": {
+      "FOUNDATION": "Fondation",
+      "BRONZE": "Bronze",
+      "SILVER": "Argent",
+      "GOLD": "Or",
+      "PLATINUM": "Platine"
+    },
+    "locked": "Terminer le niveau précédent",
+    "complete": "{{completed}}/{{total}} terminé",
+    "unlockTooltip": "Terminez le niveau précédent pour débloquer",
+    "overallProgress": "Progrès Global",
+    "starting": "Démarrage",
+    "elementsCount": "{{count}} éléments"
+  },
+  "components": {
+    "levelBanner": {
+      "level": "Niveau",
+      "actionPlans": "{{count}} Plans d'action",
+      "progress": "Progrès",
+      "complete": "{{percent}}% Terminé",
+      "next": "Suivant : {{level}}",
+      "subtitle": {
+        "FOUNDATION": "Établir la base de l'excellence opérationnelle",
+        "BRONZE": "Construire des pratiques cohérentes dans toute l'organisation",
+        "SILVER": "Avancer vers la maturité opérationnelle",
+        "GOLD": "Atteindre des normes de haute performance",
+        "PLATINUM": "Excellence opérationnelle de classe mondiale"
+      }
+    }
   }
 }

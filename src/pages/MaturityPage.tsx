@@ -49,39 +49,62 @@ const LEVEL_CONFIG: Record<MaturityLevel, {
     icon: any;
     color: string;
     gradient: { from: string; to: string };
-    label: string;
+    labelKey: string;
 }> = {
     FOUNDATION: {
         icon: IconTrophy,
         color: 'gray',
         gradient: { from: 'gray.4', to: 'gray.6' },
-        label: 'Foundation',
+        labelKey: 'maturity.levels.FOUNDATION',
     },
     BRONZE: {
         icon: IconMedal,
         color: 'orange',
         gradient: { from: 'orange.4', to: 'orange.7' },
-        label: 'Bronze',
+        labelKey: 'maturity.levels.BRONZE',
     },
     SILVER: {
         icon: IconAward,
         color: 'gray',
         gradient: { from: 'gray.3', to: 'gray.5' },
-        label: 'Silver',
+        labelKey: 'maturity.levels.SILVER',
     },
     GOLD: {
         icon: IconCrown,
         color: 'yellow',
         gradient: { from: 'yellow.4', to: 'yellow.6' },
-        label: 'Gold',
+        labelKey: 'maturity.levels.GOLD',
     },
     PLATINUM: {
         icon: IconDiamond,
         color: 'violet',
         gradient: { from: 'violet.4', to: 'violet.7' },
-        label: 'Platinum',
+        labelKey: 'maturity.levels.PLATINUM',
     },
 };
+
+// Helper function to get criteria for a level (handles both DB structures)
+function getCriteriaForLevel(criteria: any, level: MaturityLevel): string | null {
+    if (!criteria) return null;
+
+    // Structure 1: { maturity_levels: { FOUNDATION: "..." } }
+    if (criteria.maturity_levels && criteria.maturity_levels[level]) {
+        return criteria.maturity_levels[level];
+    }
+
+    // Structure 2: { FOUNDATION: "...", BRONZE: "..." } (direct)
+    if (criteria[level] && typeof criteria[level] === 'string') {
+        return criteria[level];
+    }
+
+    return null;
+}
+
+// Helper function to get behaviour from criteria
+function getBehaviour(criteria: any): string | null {
+    if (!criteria) return null;
+    return criteria.behaviour || null;
+}
 
 // Level Card Component
 function LevelCard({
@@ -112,6 +135,9 @@ function LevelCard({
             default: return 'var(--mantine-color-gray-1)';
         }
     };
+
+    // Using t() inside component since config is static
+    const { t } = useTranslation();
 
     return (
         <Paper
@@ -163,7 +189,7 @@ function LevelCard({
                     c={isLocked ? 'gray.6' : 'white'}
                     tt="uppercase"
                 >
-                    {config.label}
+                    {t(config.labelKey)}
                 </Text>
 
                 <Text
@@ -185,7 +211,7 @@ function LevelCard({
                 )}
 
                 <Text size="xs" c={isLocked ? 'gray.5' : 'rgba(255,255,255,0.8)'}>
-                    {isLocked ? 'Complete previous level' : `${completed}/${total} complete`}
+                    {isLocked ? t('maturity.locked', 'Complete previous level') : t('maturity.complete', { completed, total })}
                 </Text>
             </Stack>
         </Paper>
@@ -244,6 +270,7 @@ function ElementRow({
                 const isCurrent = idx === currentLevelIndex + 1 || (idx === 0 && currentLevelIndex === -1);
 
                 // Better colors for visibility
+                const { t } = useTranslation();
                 const getBadgeColor = () => {
                     if (!isCurrent) return 'gray';
                     switch (level) {
@@ -259,7 +286,7 @@ function ElementRow({
                 return (
                     <Table.Td key={level} style={{ textAlign: 'center', width: 80 }}>
                         {isLocked ? (
-                            <Tooltip label="Complete previous level to unlock">
+                            <Tooltip label={t('maturity.unlockTooltip', 'Complete previous level to unlock')}>
                                 <ThemeIcon size="sm" variant="light" color="gray">
                                     <IconLock size={12} />
                                 </ThemeIcon>
@@ -373,9 +400,9 @@ function MaturityDetailDrawer({
                 {/* Progress Overview */}
                 <Paper p="md" radius="md" bg="gray.0">
                     <Group justify="space-between" mb="xs">
-                        <Text size="sm" c="dimmed">Overall Progress</Text>
+                        <Text size="sm" c="dimmed">{t('maturity.overallProgress', 'Overall Progress')}</Text>
                         <Badge color={LEVEL_CONFIG[MATURITY_LEVELS[Math.max(0, currentLevelIndex)]]?.color}>
-                            {LEVEL_CONFIG[MATURITY_LEVELS[Math.max(0, currentLevelIndex)]]?.label || 'Starting'}
+                            {t(LEVEL_CONFIG[MATURITY_LEVELS[Math.max(0, currentLevelIndex)]]?.labelKey) || t('maturity.starting')}
                         </Badge>
                     </Group>
                     <Progress.Root size="xl" radius="xl">
@@ -393,6 +420,23 @@ function MaturityDetailDrawer({
                         })}
                     </Progress.Root>
                 </Paper>
+
+                {/* Element Behaviour/Description */}
+                {getBehaviour(element.criteria) && (
+                    <Paper p="md" radius="md" bg="violet.0" style={{ border: '1px solid var(--mantine-color-violet-2)' }}>
+                        <Group gap="xs" mb="xs">
+                            <ThemeIcon size="sm" variant="light" color="violet" radius="xl">
+                                <IconInfoCircle size={14} />
+                            </ThemeIcon>
+                            <Text size="sm" fw={600} c="violet.7">
+                                {t('maturity.behaviour', 'Expected Behaviour')}
+                            </Text>
+                        </Group>
+                        <Text size="sm" c="dark.6" lh={1.6}>
+                            {getBehaviour(element.criteria)}
+                        </Text>
+                    </Paper>
+                )}
 
                 <Divider />
 
@@ -427,7 +471,7 @@ function MaturityDetailDrawer({
                                     disabled={isLocked}
                                 >
                                     <Group justify="space-between" style={{ flex: 1 }} pr="md">
-                                        <Text fw={600}>{config.label}</Text>
+                                        <Text fw={600}>{t(config.labelKey)}</Text>
                                         {!isLocked && (
                                             <Badge
                                                 variant={isCurrent ? 'filled' : 'light'}
@@ -443,13 +487,13 @@ function MaturityDetailDrawer({
                                     <Stack gap="md">
                                         {/* Criteria from DB */}
                                         {(() => {
-                                            const levelCriteria = element.criteria?.maturity_levels?.[level];
+                                            const levelCriteria = getCriteriaForLevel(element.criteria, level);
                                             return levelCriteria ? (
                                                 <Paper p="sm" radius="md" bg="blue.0" style={{ border: '1px solid var(--mantine-color-blue-2)' }}>
                                                     <Text size="xs" fw={600} c="blue.7" mb={4}>
                                                         {t('maturity.whatIsExpected', 'What is Expected')}
                                                     </Text>
-                                                    <Text size="sm" c="dark.6">
+                                                    <Text size="sm" c="dark.6" lh={1.5}>
                                                         {levelCriteria}
                                                     </Text>
                                                 </Paper>
@@ -642,7 +686,7 @@ export function MaturityPage() {
                             </ThemeIcon>
                             <div>
                                 <Text fw={700}>{selectedPillar.name}</Text>
-                                <Text size="xs" c="dimmed">{selectedPillar.elements.length} elements</Text>
+                                <Text size="xs" c="dimmed">{t('maturity.elementsCount', { count: selectedPillar.elements.length })}</Text>
                             </div>
                         </Group>
                     </Group>
@@ -653,7 +697,7 @@ export function MaturityPage() {
                                 <Table.Th>{t('table.element', 'Element')}</Table.Th>
                                 {MATURITY_LEVELS.map(level => (
                                     <Table.Th key={level} style={{ textAlign: 'center', width: 80 }}>
-                                        <Tooltip label={LEVEL_CONFIG[level].label}>
+                                        <Tooltip label={t(LEVEL_CONFIG[level].labelKey)}>
                                             <Badge size="xs" variant="light" color={LEVEL_CONFIG[level].color}>
                                                 {level.charAt(0)}
                                             </Badge>
