@@ -22,7 +22,6 @@ import {
   IconDashboard,
   IconChecklist,
   IconListCheck,
-  IconHierarchy2,
   IconLogout,
   IconChevronRight,
   IconSettings,
@@ -47,7 +46,6 @@ const NAV_ITEMS = [
   { labelKey: 'nav.maturity', path: '/app/maturity', icon: IconTrophy },
   { labelKey: 'nav.actionPlans', path: '/app/plans', icon: IconListCheck },
   { labelKey: 'nav.backlog', path: '/app/backlog', icon: IconChecklist },
-  { labelKey: 'nav.structure', path: '/app/structure', icon: IconHierarchy2 },
 ];
 
 export function MainLayout() {

@@ -633,13 +633,18 @@ export function MaturityPage() {
                     // Lock if previous level is not 100% complete (except Foundation which is never locked)
                     const isLocked = idx > 0 && (prevLevelStat?.avgScore ?? 0) < 100;
 
+                    // Calculate strict completion percentage to match user expectation (e.g. 17/27 = 63%)
+                    const total = levelStat?.total ?? 0;
+                    const completed = levelStat?.completed ?? 0;
+                    const completionPercentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
                     return (
                         <LevelCard
                             key={level}
                             level={level}
-                            avgScore={levelStat?.avgScore ?? 0}
-                            completed={levelStat?.completed ?? 0}
-                            total={levelStat?.total ?? 0}
+                            avgScore={completionPercentage}
+                            completed={completed}
+                            total={total}
                             isLocked={isLocked}
                         />
                     );

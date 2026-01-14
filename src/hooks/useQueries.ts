@@ -7,13 +7,10 @@ import {
     fetchActionPlans,
     fetchPillarStats,
     fetchGlobalCountryStats,
-    fetchPillarsWithElements,
     createActionPlan,
     updateActionPlan,
     updateActionPlanStatus,
-    updateElementScore,
     type GlobalCountryStats,
-    type AdminPillar,
 } from '../services/api';
 import type {
     DashboardStats,
@@ -84,14 +81,6 @@ export function useGlobalCountryStats() {
     });
 }
 
-export function usePillarsWithElements(country: string | null) {
-    return useQuery<AdminPillar[]>({
-        queryKey: queryKeys.pillars(country ?? ''),
-        queryFn: () => fetchPillarsWithElements(country!),
-        enabled: !!country,
-    });
-}
-
 // === Mutations ===
 
 export function useCreateActionPlan() {
@@ -136,18 +125,3 @@ export function useUpdateActionPlanStatus() {
         },
     });
 }
-
-export function useUpdateElementScore() {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: updateElementScore,
-        onSuccess: (_, variables) => {
-            // Invalida caches de pilares e backlog do país
-            queryClient.invalidateQueries({ queryKey: queryKeys.pillars(variables.country) });
-            queryClient.invalidateQueries({ queryKey: queryKeys.backlog(variables.country) });
-            queryClient.invalidateQueries({ queryKey: queryKeys.dashboard(variables.country) });
-        },
-    });
-}
-

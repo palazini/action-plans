@@ -12,7 +12,6 @@ const RegisterPage = lazy(() => import('./pages/RegisterPage').then(m => ({ defa
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const BacklogPage = lazy(() => import('./pages/BacklogPage').then(m => ({ default: m.BacklogPage })));
 const ActionPlansPage = lazy(() => import('./pages/ActionPlansPage').then(m => ({ default: m.ActionPlansPage })));
-const StructurePage = lazy(() => import('./pages/StructurePage').then(m => ({ default: m.StructurePage })));
 const MaturityPage = lazy(() => import('./pages/MaturityPage').then(m => ({ default: m.MaturityPage })));
 
 // Loading fallback component
@@ -47,7 +46,6 @@ export default function App() {
             <Route path="maturity" element={<MaturityPage />} />
             <Route path="backlog" element={<BacklogPage />} />
             <Route path="plans" element={<ActionPlansPage />} />
-            <Route path="structure" element={<StructurePage />} />
             <Route path="*" element={<Navigate to="/app" replace />} />
           </Route>
 
