@@ -38,18 +38,18 @@ const LANGUAGES = [
 ];
 
 export function LoginPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, selectedCountry } = useAuth();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [showLanguageTip, setShowLanguageTip] = useState(true);
 
-  // Se já está logado, redireciona
+  // Se já está logado e tem país selecionado, redireciona
   useEffect(() => {
-    if (!authLoading && user) {
+    if (!authLoading && user && selectedCountry) {
       navigate('/app');
     }
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, selectedCountry, navigate]);
 
   // Esconde o tip após 5 segundos
   useEffect(() => {
