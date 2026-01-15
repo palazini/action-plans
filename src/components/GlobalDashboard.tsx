@@ -191,7 +191,7 @@ export function GlobalDashboard() {
                                                     {item.country}
                                                 </Text>
                                                 <Text size="xs" c="dimmed">
-                                                    {item.totalElements} elements
+                                                    {item.totalElements} {t('maturity.elementsCount', 'elements').replace('{{count}} ', '')}
                                                 </Text>
                                             </div>
                                         </Group>
@@ -213,7 +213,7 @@ export function GlobalDashboard() {
                                                 <ThemeIcon size="xs" variant="light" color="blue">
                                                     <IconTrophy size={10} />
                                                 </ThemeIcon>
-                                                <Text size="xs" c="dimmed">Foundation</Text>
+                                                <Text size="xs" c="dimmed">{t('maturity.levels.FOUNDATION', 'Foundation')}</Text>
                                             </Group>
                                             <Text size="xs" fw={600}>
                                                 {item.foundationCompleteCount}/{item.totalElements}
@@ -232,7 +232,7 @@ export function GlobalDashboard() {
                                         <Tooltip label={t('dashboard.global.gaps', 'Gaps')}>
                                             <div style={{ textAlign: 'center' }}>
                                                 <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
-                                                    Gaps
+                                                    {t('dashboard.global.gapsShort', 'Gaps')}
                                                 </Text>
                                                 <Text fw={700} size="lg" c="red.6">
                                                     {item.gapElements}
@@ -243,7 +243,7 @@ export function GlobalDashboard() {
                                         <Tooltip label={t('dashboard.global.withPlan', 'Com Plano')}>
                                             <div style={{ textAlign: 'center' }}>
                                                 <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
-                                                    Planos
+                                                    {t('dashboard.global.plansShort', 'Plans')}
                                                 </Text>
                                                 <Text fw={700} size="lg" c="blue.6">
                                                     {item.elementsWithPlan}
@@ -254,7 +254,7 @@ export function GlobalDashboard() {
                                         <Tooltip label={t('dashboard.global.withoutPlan', 'Sem Plano')}>
                                             <div style={{ textAlign: 'center' }}>
                                                 <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
-                                                    Pend.
+                                                    {t('dashboard.global.pendingShort', 'Pend.')}
                                                 </Text>
                                                 <Text fw={700} size="lg" c="orange.6">
                                                     {item.elementsWithoutPlan}
@@ -270,7 +270,7 @@ export function GlobalDashboard() {
                                                 <ThemeIcon size="xs" variant="light" color="teal">
                                                     <IconClipboardCheck size={10} />
                                                 </ThemeIcon>
-                                                <Text size="xs" c="dimmed">Planos Concluídos</Text>
+                                                <Text size="xs" c="dimmed">{t('dashboard.global.completedPlans', 'Completed Plans')}</Text>
                                             </Group>
                                             <Text size="xs" fw={600}>
                                                 {item.completedActionPlans}/{item.totalActionPlans}
@@ -290,7 +290,7 @@ export function GlobalDashboard() {
                                             <ThemeIcon size="xs" variant="light" color={coverageColor}>
                                                 <IconListCheck size={10} />
                                             </ThemeIcon>
-                                            <Text size="xs" c="dimmed">Planos Definidos</Text>
+                                            <Text size="xs" c="dimmed">{t('dashboard.global.definedPlans', 'Defined Plans')}</Text>
                                         </Group>
                                         <RingProgress
                                             size={48}
@@ -313,7 +313,7 @@ export function GlobalDashboard() {
                                             <Divider />
                                             <div>
                                                 <Text size="xs" c="dimmed" mb={6} ta="center">
-                                                    Pilares
+                                                    {t('table.pillar', 'Pillars')}
                                                 </Text>
                                                 <PillarHeatmap pillars={item.pillarSummary} />
                                             </div>

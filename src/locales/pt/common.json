@@ -98,13 +98,14 @@
       "country": "País",
       "totalElements": "Total Elementos",
       "gaps": "Gaps (Score < 100)",
-      "definedPlans": "Elementos c/ Plano",
+      "definedPlans": "Planos Definidos",
       "withoutPlan": "Gaps sem Plano",
       "pendingShort": "Pend.",
       "plansShort": "Planos",
       "gapsShort": "Gaps",
       "view": "Visualizar",
-      "withPlan": "Com Plano"
+      "withPlan": "Com Plano",
+      "completedPlans": "Planos Concluídos"
     },
     "needsActionPlan": "Necessita Plano de Ação",
     "pillarBreakdown": "Detalhamento por Pilar",
