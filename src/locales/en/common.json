@@ -236,7 +236,8 @@
     "problemEn": "Problem (English)",
     "problemEn_placeholder": "Describe the current problem...",
     "actionEn": "Action (English)",
-    "actionEn_placeholder": "What will be done to solve the problem?"
+    "actionEn_placeholder": "What will be done to solve the problem?",
+    "targetLevel": "Maturity Target"
   },
   "notifications": {
     "success": "Success"
@@ -265,7 +266,9 @@
     "unlockTooltip": "Complete previous level to unlock",
     "overallProgress": "Overall Progress",
     "starting": "Starting",
-    "elementsCount": "{{count}} elements"
+    "elementsCount": "{{count}} elements",
+    "overdue": "Overdue: Global focus is ahead",
+    "missingPlan": "Action Plan Required"
   },
   "components": {
     "levelBanner": {

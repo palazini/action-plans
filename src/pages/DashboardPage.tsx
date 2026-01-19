@@ -31,6 +31,7 @@ import {
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppSettings } from '../contexts/AppSettingsContext';
 import { useDashboardStats, usePillarStats } from '../hooks/useQueries';
 import { GlobalDashboard } from '../components/GlobalDashboard';
 import { useState, useEffect } from 'react';
@@ -156,12 +157,13 @@ function StatCard({
 export function DashboardPage() {
   const { t } = useTranslation();
   const { selectedCountry } = useAuth();
+  const { activeLevel } = useAppSettings();
   const navigate = useNavigate();
 
   const isGlobalView = selectedCountry === 'Global';
 
-  // React Query hooks
-  const { data: stats, isLoading: loadingStats, error: statsError } = useDashboardStats(selectedCountry);
+  // React Query hooks - pass activeLevel to dashboard stats
+  const { data: stats, isLoading: loadingStats, error: statsError } = useDashboardStats(selectedCountry, activeLevel);
   const { data: pillarStats = [], isLoading: loadingPillar } = usePillarStats(selectedCountry);
 
   const loading = loadingStats || loadingPillar;

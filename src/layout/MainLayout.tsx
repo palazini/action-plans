@@ -46,7 +46,6 @@ const NAV_ITEMS = [
   { labelKey: 'nav.dashboard', path: '/app', icon: IconDashboard, end: true },
   { labelKey: 'nav.maturity', path: '/app/maturity', icon: IconTrophy },
   { labelKey: 'nav.actionPlans', path: '/app/plans', icon: IconListCheck },
-  { labelKey: 'nav.backlog', path: '/app/backlog', icon: IconChecklist },
 ];
 
 export function MainLayout() {

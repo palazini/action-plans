@@ -236,7 +236,8 @@
     "problemEn": "Problema (Inglês)",
     "problemEn_placeholder": "Descreva o problema atual...",
     "actionEn": "Ação (Inglês)",
-    "actionEn_placeholder": "O que será feito para resolver o problema?"
+    "actionEn_placeholder": "O que será feito para resolver o problema?",
+    "targetLevel": "Nível Alvo"
   },
   "notifications": {
     "success": "Sucesso"
@@ -265,7 +266,9 @@
     "unlockTooltip": "Conclua o nível anterior para desbloquear",
     "overallProgress": "Progresso Geral",
     "starting": "Iniciando",
-    "elementsCount": "{{count}} elementos"
+    "elementsCount": "{{count}} elementos",
+    "overdue": "Pendente: Foco global está à frente",
+    "missingPlan": "Plano de Ação Necessário"
   },
   "components": {
     "levelBanner": {

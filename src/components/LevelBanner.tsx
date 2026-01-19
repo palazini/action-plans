@@ -59,7 +59,9 @@ type LevelBannerProps = {
 
 export function LevelBanner({ level, planCount, completedCount }: LevelBannerProps) {
     const { t } = useTranslation();
-    const config = BANNER_CONFIGS[level];
+    // Fallback to FOUNDATION if level is undefined or invalid
+    const safeLevel = level && BANNER_CONFIGS[level] ? level : 'FOUNDATION';
+    const config = BANNER_CONFIGS[safeLevel];
     const Icon = config.icon;
     const progress = planCount > 0 ? Math.round((completedCount / planCount) * 100) : 0;
 

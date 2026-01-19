@@ -16,18 +16,31 @@ import {
     Switch,
     Modal,
     Button,
+    SegmentedControl,
+    Divider,
+    Paper,
 } from '@mantine/core';
 import {
     IconColumns,
     IconAlertCircle,
     IconAlertTriangle,
+    IconTrophy,
+    IconMedal,
+    IconAward,
+    IconCrown,
+    IconDiamond,
 } from '@tabler/icons-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchAllPillars, updatePillarStatus, type PillarAdmin } from '../services/api';
 import { notifications } from '@mantine/notifications';
+import { useAppSettings } from '../contexts/AppSettingsContext';
+import type { MaturityLevel } from '../types';
+import { MATURITY_LEVELS } from '../types';
 
 export function PillarManagementPage() {
     const queryClient = useQueryClient();
+    const { activeLevel, setActiveLevel, isLoading: settingsLoading } = useAppSettings();
+    const [levelChanging, setLevelChanging] = useState(false);
     const [confirmModal, setConfirmModal] = useState<{ open: boolean; pillar: PillarAdmin | null; newStatus: boolean }>({
         open: false,
         pillar: null,
@@ -216,6 +229,90 @@ export function PillarManagementPage() {
                         ))}
                     </Table.Tbody>
                 </Table>
+            </Card>
+
+            {/* Divider */}
+            <Divider my="lg" label="Configurações Globais" labelPosition="center" />
+
+            {/* Maturity Level Control */}
+            <Card
+                radius="lg"
+                shadow="sm"
+                p="xl"
+                style={{ border: '1px solid var(--mantine-color-gray-2)' }}
+            >
+                <Group justify="space-between" mb="lg">
+                    <Group gap="sm">
+                        <ThemeIcon variant="gradient" gradient={{ from: 'orange', to: 'yellow' }} size="lg" radius="md">
+                            <IconTrophy size={18} />
+                        </ThemeIcon>
+                        <div>
+                            <Text fw={700}>Nível de Maturidade Ativo</Text>
+                            <Text size="xs" c="dimmed">Define qual nível é usado no Dashboard, Backlog e Planos de Ação</Text>
+                        </div>
+                    </Group>
+                    <Badge size="lg" variant="filled" color="orange">
+                        {activeLevel}
+                    </Badge>
+                </Group>
+
+                <Alert
+                    icon={<IconAlertTriangle size={16} />}
+                    color="orange"
+                    variant="light"
+                    mb="lg"
+                >
+                    <Text size="sm">
+                        <strong>Atenção:</strong> Alterar o nível ativo mudará quais elementos são considerados como "gaps"
+                        e afetará as estatísticas do dashboard. Use apenas quando o nível anterior estiver 100% completo.
+                    </Text>
+                </Alert>
+
+                <Paper p="md" radius="md" bg="gray.0">
+                    <Text size="sm" fw={600} mb="sm">Selecione o nível ativo:</Text>
+                    <SegmentedControl
+                        value={activeLevel}
+                        onChange={async (value) => {
+                            setLevelChanging(true);
+                            try {
+                                await setActiveLevel(value as MaturityLevel);
+                                notifications.show({
+                                    title: 'Sucesso',
+                                    message: `Nível ativo alterado para ${value}`,
+                                    color: 'green',
+                                });
+                            } catch (err: any) {
+                                notifications.show({
+                                    title: 'Erro',
+                                    message: err.message || 'Falha ao alterar nível',
+                                    color: 'red',
+                                });
+                            } finally {
+                                setLevelChanging(false);
+                            }
+                        }}
+                        disabled={levelChanging || settingsLoading}
+                        fullWidth
+                        data={MATURITY_LEVELS.map(level => {
+                            const icons: Record<MaturityLevel, React.ReactNode> = {
+                                FOUNDATION: <IconTrophy size={14} />,
+                                BRONZE: <IconMedal size={14} />,
+                                SILVER: <IconAward size={14} />,
+                                GOLD: <IconCrown size={14} />,
+                                PLATINUM: <IconDiamond size={14} />,
+                            };
+                            return {
+                                value: level,
+                                label: (
+                                    <Center style={{ gap: 6 }}>
+                                        {icons[level]}
+                                        <span>{level}</span>
+                                    </Center>
+                                ),
+                            };
+                        })}
+                    />
+                </Paper>
             </Card>
 
             {/* Confirmation Modal */}

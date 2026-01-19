@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import './i18n';
 import { AuthProvider } from './contexts/AuthContext';
+import { AppSettingsProvider } from './contexts/AppSettingsContext';
 
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
@@ -30,9 +31,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <MantineProvider defaultColorScheme="light">
         <Notifications />
         <AuthProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <AppSettingsProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </AppSettingsProvider>
         </AuthProvider>
       </MantineProvider>
     </QueryClientProvider>

@@ -42,6 +42,7 @@ export type ElementWithLevelScores = {
     behaviour?: string;
     maturity_levels?: Record<string, string>;
   } | null;
+  hasActivePlan?: boolean;
 };
 
 export type ActionPlan = {

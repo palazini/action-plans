@@ -50,10 +50,10 @@ export function useBacklogByLevel(country: string | null, level: MaturityLevel) 
     });
 }
 
-export function useDashboardStats(country: string | null) {
+export function useDashboardStats(country: string | null, level: MaturityLevel = 'FOUNDATION') {
     return useQuery<DashboardStats>({
-        queryKey: queryKeys.dashboard(country ?? ''),
-        queryFn: () => fetchDashboardStats(country!),
+        queryKey: [...queryKeys.dashboard(country ?? ''), level],
+        queryFn: () => fetchDashboardStats(country!, level),
         enabled: !!country && country !== 'Global',
     });
 }

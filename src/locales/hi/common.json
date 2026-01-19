@@ -235,7 +235,8 @@
     "problemEn": "समस्या (अंग्रेज़ी)",
     "problemEn_placeholder": "वर्तमान समस्या का वर्णन करें…",
     "actionEn": "कार्रवाई (अंग्रेज़ी)",
-    "actionEn_placeholder": "समस्या को हल करने के लिए क्या किया जाएगा?"
+    "actionEn_placeholder": "समस्या को हल करने के लिए क्या किया जाएगा?",
+    "targetLevel": "लक्ष्य स्तर"
   },
   "notifications": {
     "success": "सफलता"
@@ -264,7 +265,9 @@
     "unlockTooltip": "अनलॉक करने के लिए पिछला स्तर पूरा करें",
     "overallProgress": "कुल प्रगति",
     "starting": "शुरू कर रहे हैं",
-    "elementsCount": "{{count}} तत्व"
+    "elementsCount": "{{count}} तत्व",
+    "overdue": "अतिदेय: वैश्विक फोकस आगे है",
+    "missingPlan": "कार्य योजना आवश्यक"
   },
   "components": {
     "levelBanner": {

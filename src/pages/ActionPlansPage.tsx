@@ -1,5 +1,5 @@
 // src/pages/ActionPlansPage.tsx
-import { useState, useMemo, type ReactNode } from 'react';
+import { useState, useMemo, useEffect, type ReactNode } from 'react';
 import {
   Alert,
   Badge,
@@ -35,6 +35,7 @@ import {
 
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppSettings } from '../contexts/AppSettingsContext';
 import { useActionPlans, useUpdateActionPlanStatus } from '../hooks/useQueries';
 import type { ActionPlanStatus, ActionPlanWithElement, MaturityLevel } from '../types';
 import { EditActionPlanForm } from '../components/action-plans/EditActionPlanForm';
@@ -67,16 +68,24 @@ const STATUS_VALUES: ActionPlanStatus[] = [
 export function ActionPlansPage() {
   const { t, i18n } = useTranslation();
   const { selectedCountry } = useAuth();
+  const { activeLevel } = useAppSettings();
 
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [pillarFilter, setPillarFilter] = useState<string>('ALL');
-  const [levelFilter, setLevelFilter] = useState<MaturityLevel>('FOUNDATION');
+  const [levelFilter, setLevelFilter] = useState<MaturityLevel>(activeLevel || 'FOUNDATION');
   const [ownerFilter, setOwnerFilter] = useState<string>('');
 
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [editingPlan, setEditingPlan] = useState<ActionPlanWithElement | null>(
     null,
   );
+
+  // Sync levelFilter when activeLevel loads/changes
+  useEffect(() => {
+    if (activeLevel) {
+      setLevelFilter(activeLevel);
+    }
+  }, [activeLevel]);
 
   const isGlobalView = selectedCountry === 'Global';
 

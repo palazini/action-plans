@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useTranslation } from 'react-i18next';
-import type { ElementWithRelations } from '../../types';
+import type { ElementWithRelations, MaturityLevel } from '../../types';
 import { createActionPlan } from '../../services/api';
 
 type Props = {
@@ -18,9 +18,10 @@ type Props = {
   onSuccess: () => void;
   onCancel: () => void;
   country: string;
+  targetLevel?: MaturityLevel;
 };
 
-export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props) {
+export function ActionPlanForm({ element, onSuccess, onCancel, country, targetLevel }: Props) {
   const { t } = useTranslation();
 
   // LOCAL (Principal)
@@ -54,6 +55,7 @@ export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props)
         problemEn: problemEn.trim() ? problemEn : undefined,
         actionEn: actionEn.trim() ? actionEn : undefined,
         country,
+        maturityLevel: targetLevel,
       });
 
       onSuccess();
@@ -69,12 +71,38 @@ export function ActionPlanForm({ element, onSuccess, onCancel, country }: Props)
       <Stack gap="sm">
         <TextInput label={t('form.pillar')} value={element.pillar?.name ?? ''} readOnly disabled />
         <TextInput label={t('form.element')} value={element.name} readOnly disabled />
-        <TextInput
-          label={t('form.foundation')}
-          value={String(element.foundation_score)}
-          readOnly
-          disabled
-        />
+
+        <Group grow>
+          <TextInput
+            label={t('form.foundation')}
+            value={String(element.foundation_score)}
+            readOnly
+            disabled
+          />
+          {targetLevel && (
+            <TextInput
+              label={t('form.targetLevel', 'Maturity Target')}
+              value={t(`maturity.levels.${targetLevel}`)}
+              readOnly
+              disabled
+              rightSection={
+                <Badge
+                  variant="filled"
+                  color={
+                    targetLevel === 'FOUNDATION' ? 'gray' :
+                      targetLevel === 'BRONZE' ? 'orange' :
+                        targetLevel === 'SILVER' ? 'gray.6' :
+                          targetLevel === 'GOLD' ? 'yellow' :
+                            'violet'
+                  }
+                  size="xs"
+                >
+                  {targetLevel}
+                </Badge>
+              }
+            />
+          )}
+        </Group>
 
         {/* Bloco IDIOMA LOCAL */}
         <Group mt="md" mb={0}>

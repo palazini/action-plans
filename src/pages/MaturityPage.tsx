@@ -24,6 +24,7 @@ import {
     Accordion,
     Divider,
     Alert,
+    Modal,
 } from '@mantine/core';
 import {
     IconTrophy,
@@ -36,10 +37,14 @@ import {
     IconChevronRight,
     IconInfoCircle,
     IconAlertCircle,
+    IconPlus,
+    IconClipboardList,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppSettings } from '../contexts/AppSettingsContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { ActionPlanForm } from '../components/action-plans/ActionPlanForm';
 import { fetchPillarsWithLevelScores, updateLevelScore, fetchMaturityStats } from '../services/api';
 import type { MaturityLevel, ElementWithLevelScores } from '../types';
 import { MATURITY_LEVELS } from '../types';
@@ -224,9 +229,11 @@ function LevelCard({
 function ElementRow({
     element,
     onSelect,
+    activeLevel,
 }: {
     element: ElementWithLevelScores;
     onSelect: () => void;
+    activeLevel: MaturityLevel;
 }) {
     // Calculate current level (highest with 100%)
     const getCurrentLevel = (): MaturityLevel => {
@@ -269,9 +276,17 @@ function ElementRow({
                 const isLocked = idx > currentLevelIndex + 1;
                 const isCurrent = idx === currentLevelIndex + 1 || (idx === 0 && currentLevelIndex === -1);
 
-                // Better colors for visibility
                 const { t } = useTranslation();
+
+                // Check if this level needs attention (Active Global Level + Score < 100 + No Plan)
+                const isTargetGlobalLevel = level === activeLevel;
+                const activeLevelIndex = MATURITY_LEVELS.indexOf(activeLevel);
+                const isOverdue = idx < activeLevelIndex && !isComplete;
+                const needsAttention = (isTargetGlobalLevel || isOverdue) && !isComplete && !element.hasActivePlan;
+
                 const getBadgeColor = () => {
+                    if (needsAttention) return 'red';
+                    if (isOverdue) return 'orange';
                     if (!isCurrent) return 'gray';
                     switch (level) {
                         case 'FOUNDATION': return 'dark';
@@ -283,10 +298,18 @@ function ElementRow({
                     }
                 };
 
+                const getTooltip = () => {
+                    if (isLocked) return t('maturity.unlockTooltip', 'Complete previous level to unlock');
+                    if (!needsAttention) return '';
+                    if (isOverdue) return t('maturity.overdue', 'Overdue: Global focus is ahead');
+                    if (isTargetGlobalLevel) return t('maturity.missingPlan', 'Action Plan Required');
+                    return '';
+                }
+
                 return (
                     <Table.Td key={level} style={{ textAlign: 'center', width: 80 }}>
                         {isLocked ? (
-                            <Tooltip label={t('maturity.unlockTooltip', 'Complete previous level to unlock')}>
+                            <Tooltip label={getTooltip()}>
                                 <ThemeIcon size="sm" variant="light" color="gray">
                                     <IconLock size={12} />
                                 </ThemeIcon>
@@ -296,14 +319,21 @@ function ElementRow({
                                 <IconCheck size={12} />
                             </ThemeIcon>
                         ) : (
-                            <Badge
-                                size="sm"
-                                variant={isCurrent ? 'filled' : 'outline'}
-                                color={getBadgeColor()}
-                                style={isCurrent ? { fontWeight: 700 } : { color: 'var(--mantine-color-gray-6)' }}
+                            <Tooltip
+                                label={getTooltip()}
+                                disabled={!needsAttention}
+                                color="red"
                             >
-                                {score}%
-                            </Badge>
+                                <Badge
+                                    size="sm"
+                                    variant={isCurrent || needsAttention ? 'filled' : 'outline'}
+                                    color={getBadgeColor()}
+                                    style={isCurrent || needsAttention ? { fontWeight: 700 } : { color: 'var(--mantine-color-gray-6)' }}
+                                    leftSection={needsAttention ? <IconAlertCircle size={10} /> : undefined}
+                                >
+                                    {score}%
+                                </Badge>
+                            </Tooltip>
                         )}
                     </Table.Td>
                 );
@@ -321,11 +351,13 @@ function ElementRow({
 // Detail Drawer Component
 function MaturityDetailDrawer({
     element,
+    pillar,
     country,
     onClose,
     onUpdate,
 }: {
     element: ElementWithLevelScores | null;
+    pillar: any;
     country: string;
     onClose: () => void;
     onUpdate: () => void;
@@ -335,6 +367,9 @@ function MaturityDetailDrawer({
     const [score, setScore] = useState<number>(0);
     const [notes, setNotes] = useState<string>('');
     const queryClient = useQueryClient();
+
+    // Action Plan form state
+    const [showActionPlanForm, setShowActionPlanForm] = useState(false);
 
     const updateMutation = useMutation({
         mutationFn: updateLevelScore,
@@ -348,6 +383,19 @@ function MaturityDetailDrawer({
 
     if (!element) return null;
 
+    // Calculate foundation score for the form adapter
+    const foundationScore = element.levels['FOUNDATION']?.score ?? 0;
+
+    // Adapter for ActionPlanForm (which expects ElementWithRelations)
+    const elementForForm = {
+        ...element,
+        pillar: pillar,
+        foundation_score: foundationScore,
+        action_plans: [], // Mock as we don't display them here
+        is_active: true,
+        country: country
+    };
+
     // Calculate current level
     const getCurrentLevelIndex = (): number => {
         for (let i = MATURITY_LEVELS.length - 1; i >= 0; i--) {
@@ -359,6 +407,16 @@ function MaturityDetailDrawer({
     };
 
     const currentLevelIndex = getCurrentLevelIndex();
+
+    // Determine target level for action plans (first level < 100% or the last one if all complete)
+    const getTargetLevel = (): MaturityLevel => {
+        for (const level of MATURITY_LEVELS) {
+            const s = element.levels[level]?.score ?? 0;
+            if (s < 100) return level;
+        }
+        return 'PLATINUM'; // Fallback if everything is complete
+    };
+    const targetLevel = getTargetLevel();
 
     const handleStartEdit = (level: MaturityLevel) => {
         setEditingLevel(level);
@@ -562,6 +620,50 @@ function MaturityDetailDrawer({
                         );
                     })}
                 </Accordion>
+
+                <Divider />
+
+                {/* Action Plan Section */}
+                <Paper p="md" radius="md" bg="blue.0" style={{ border: '1px solid var(--mantine-color-blue-2)' }}>
+                    <Group justify="space-between" mb={showActionPlanForm ? 'md' : 0}>
+                        <Group gap="xs">
+                            <ThemeIcon size="sm" variant="light" color="blue" radius="xl">
+                                <IconClipboardList size={14} />
+                            </ThemeIcon>
+                            <Text size="sm" fw={600} c="blue.7">
+                                {t('maturity.actionPlans', 'Action Plans')}
+                            </Text>
+                        </Group>
+                        <Button
+                            size="xs"
+                            variant="filled"
+                            color="blue"
+                            leftSection={<IconPlus size={14} />}
+                            onClick={() => setShowActionPlanForm(true)}
+                        >
+                            {t('maturity.createPlan', 'Create Plan')}
+                        </Button>
+                    </Group>
+
+                    <Modal
+                        opened={showActionPlanForm}
+                        onClose={() => setShowActionPlanForm(false)}
+                        title={<Text fw={700}>{t('maturity.createPlan', 'Create Action Plan')}</Text>}
+                        size="lg"
+                        centered
+                    >
+                        <ActionPlanForm
+                            element={elementForForm}
+                            onSuccess={() => {
+                                setShowActionPlanForm(false);
+                                onUpdate();
+                            }}
+                            onCancel={() => setShowActionPlanForm(false)}
+                            country={country}
+                            targetLevel={targetLevel}
+                        />
+                    </Modal>
+                </Paper>
             </Stack>
         </Drawer >
     );
@@ -571,6 +673,7 @@ function MaturityDetailDrawer({
 export function MaturityPage() {
     const { t } = useTranslation();
     const { selectedCountry } = useAuth();
+    const { activeLevel } = useAppSettings();
     const [selectedElement, setSelectedElement] = useState<ElementWithLevelScores | null>(null);
     const [selectedPillarId, setSelectedPillarId] = useState<string | null>(null);
 
@@ -730,13 +833,13 @@ export function MaturityPage() {
                             </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>
-                            {selectedPillar.elements.map(element => (
-                                <ElementRow
-                                    key={element.id}
-                                    element={element}
-                                    onSelect={() => setSelectedElement(element)}
-                                />
-                            ))}
+                            {selectedPillar.elements.map(element => <ElementRow
+                                key={element.id}
+                                element={element}
+                                onSelect={() => setSelectedElement(element)}
+                                activeLevel={activeLevel}
+                            />
+                            )}
                         </Table.Tbody>
                     </Table>
                 </Card>
@@ -745,6 +848,7 @@ export function MaturityPage() {
             {/* Detail Drawer */}
             <MaturityDetailDrawer
                 element={selectedElement}
+                pillar={selectedPillar}
                 country={selectedCountry ?? 'Global'}
                 onClose={() => setSelectedElement(null)}
                 onUpdate={() => refetch()}

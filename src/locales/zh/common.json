@@ -235,7 +235,8 @@
     "problemEn": "問題（英文）",
     "problemEn_placeholder": "描述目前的問題……",
     "actionEn": "行動（英文）",
-    "actionEn_placeholder": "將採取哪些措施來解決問題？"
+    "actionEn_placeholder": "將採取哪些措施來解決問題？",
+    "targetLevel": "目标级别"
   },
   "notifications": {
     "success": "成功"
@@ -264,7 +265,9 @@
     "unlockTooltip": "完成上一级以解锁",
     "overallProgress": "总体进度",
     "starting": "开始",
-    "elementsCount": "{{count}} 个要素"
+    "elementsCount": "{{count}} 个要素",
+    "overdue": "逾期：全球重点在前方",
+    "missingPlan": "需要行动计划"
   },
   "components": {
     "levelBanner": {

@@ -13,8 +13,8 @@ import type {
 } from '../types';
 import { MATURITY_LEVELS } from '../types';
 
-export async function fetchBacklogElements(country: string): Promise<ElementWithRelations[]> {
-  return fetchBacklogByLevel(country, 'FOUNDATION');
+export async function fetchBacklogElements(country: string, level: MaturityLevel = 'FOUNDATION'): Promise<ElementWithRelations[]> {
+  return fetchBacklogByLevel(country, level);
 }
 
 /**
@@ -147,7 +147,7 @@ export async function fetchBacklogByLevel(
  * Estatísticas gerais do dashboard
  * Usa as novas tabelas globais
  */
-export async function fetchDashboardStats(country: string): Promise<DashboardStats> {
+export async function fetchDashboardStats(country: string, level: MaturityLevel = 'FOUNDATION'): Promise<DashboardStats> {
   // Total de elementos globais (ativos apenas)
   const { data: activeElements, error: activeError } = await supabase
     .from('elements_master')
@@ -159,8 +159,8 @@ export async function fetchDashboardStats(country: string): Promise<DashboardSta
   const activeElementIds = new Set((activeElements ?? []).map(e => e.id));
   const totalElements = activeElementIds.size;
 
-  // Buscar backlog (já usa tabelas novas)
-  const backlog = await fetchBacklogElements(country);
+  // Buscar backlog (with level parameter)
+  const backlog = await fetchBacklogElements(country, level);
 
   const gapElements = backlog.length;
   const elementsWithoutPlan = backlog.filter(
@@ -747,6 +747,19 @@ export async function fetchPillarsWithLevelScores(country: string): Promise<{
 
   if (elementsError) throw elementsError;
 
+  // 2.1 Fetch active action plans to determine if elements have plans
+  let plansQuery = supabase
+    .from('action_plans')
+    .select('element_master_id')
+    .not('status', 'in', '("DONE","CANCELLED")');
+
+  if (country !== 'Global') {
+    plansQuery = plansQuery.eq('country', country);
+  }
+
+  const { data: plansData } = await plansQuery;
+  const elementsWithPlans = new Set((plansData ?? []).map((p: any) => p.element_master_id));
+
   // 3. Fetch level scores for the country
   let scoresQuery = supabase
     .from('country_level_scores')
@@ -801,6 +814,7 @@ export async function fetchPillarsWithLevelScores(country: string): Promise<{
           pillar_id: el.pillar_id,
           levels,
           criteria: el.criteria,
+          hasActivePlan: elementsWithPlans.has(el.id),
         };
       });
 
@@ -1001,6 +1015,57 @@ export async function updatePillarStatus(id: string, isActive: boolean): Promise
     .from('pillars_master')
     .update({ is_active: isActive })
     .eq('id', id);
+
+  if (error) throw error;
+}
+
+// ============================================
+// APP SETTINGS API FUNCTIONS
+// ============================================
+
+/**
+ * Fetch the active maturity level from app_settings
+ */
+export async function fetchActiveMaturityLevel(): Promise<MaturityLevel> {
+  const { data, error } = await supabase
+    .from('app_settings')
+    .select('value')
+    .eq('key', 'active_maturity_level')
+    .single();
+
+  if (error) {
+    console.error('Error fetching active maturity level:', error);
+    return 'FOUNDATION'; // Default fallback
+  }
+
+  // Supabase JSONB returns parsed value - handle both string and quoted string cases
+  let level = data.value;
+
+  // If it's a quoted string (legacy format from JSON.stringify), parse it
+  if (typeof level === 'string' && level.startsWith('"') && level.endsWith('"')) {
+    level = level.slice(1, -1);
+  }
+
+  // Validate it's a valid maturity level
+  const validLevels = ['FOUNDATION', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM'];
+  if (validLevels.includes(level)) {
+    return level as MaturityLevel;
+  }
+
+  return 'FOUNDATION';
+}
+
+/**
+ * Update the active maturity level (Admin only)
+ */
+export async function updateActiveMaturityLevel(level: MaturityLevel): Promise<void> {
+  const { error } = await supabase
+    .from('app_settings')
+    .update({
+      value: level, // Store as plain string, not JSON.stringify
+      updated_at: new Date().toISOString()
+    })
+    .eq('key', 'active_maturity_level');
 
   if (error) throw error;
 }
