@@ -44,3 +44,4 @@ i18n.on('languageChanged', (lng) => {
 });
 
 export default i18n;
+// Forced reload for translation updates
