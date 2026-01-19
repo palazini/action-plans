@@ -14,6 +14,7 @@ const BacklogPage = lazy(() => import('./pages/BacklogPage').then(m => ({ defaul
 const ActionPlansPage = lazy(() => import('./pages/ActionPlansPage').then(m => ({ default: m.ActionPlansPage })));
 const MaturityPage = lazy(() => import('./pages/MaturityPage').then(m => ({ default: m.MaturityPage })));
 const AdminPage = lazy(() => import('./pages/AdminPage').then(m => ({ default: m.AdminPage })));
+const PillarManagementPage = lazy(() => import('./pages/PillarManagementPage').then(m => ({ default: m.PillarManagementPage })));
 
 // Loading fallback component
 function PageLoader() {
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="backlog" element={<BacklogPage />} />
             <Route path="plans" element={<ActionPlansPage />} />
             <Route path="admin" element={<AdminPage />} />
+            <Route path="admin/pillars" element={<PillarManagementPage />} />
             <Route path="*" element={<Navigate to="/app" replace />} />
           </Route>
 

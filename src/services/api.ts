@@ -725,6 +725,7 @@ export async function fetchPillarsWithLevelScores(country: string): Promise<{
     id: string;
     code: string;
     name: string;
+    description: string | null;
     is_active: boolean;
     elements: ElementWithLevelScores[];
   }[];
@@ -732,7 +733,7 @@ export async function fetchPillarsWithLevelScores(country: string): Promise<{
   // 1. Fetch all pillars
   const { data: pillarsData, error: pillarsError } = await supabase
     .from('pillars_master')
-    .select('id, code, name_local, name_en, is_active')
+    .select('id, code, name_local, name_en, description_local, description_en, is_active')
     .order('is_active', { ascending: false })
     .order('code', { ascending: true });
 
@@ -807,6 +808,7 @@ export async function fetchPillarsWithLevelScores(country: string): Promise<{
       id: pillar.id,
       code: pillar.code ?? '',
       name: pillar.name_local ?? pillar.name_en ?? '',
+      description: pillar.description_local ?? pillar.description_en ?? null,
       is_active: pillar.is_active ?? false,
       elements: pillarElements,
     };
@@ -959,3 +961,46 @@ export async function fetchAllUsers(): Promise<UserProfile[]> {
   }));
 }
 
+// ============================================
+// PILLAR MANAGEMENT API FUNCTIONS
+// ============================================
+
+export type PillarAdmin = {
+  id: string;
+  code: string;
+  name: string;
+  description: string | null;
+  is_active: boolean;
+};
+
+/**
+ * Fetch all pillars (Admin only) - includes inactive pillars
+ */
+export async function fetchAllPillars(): Promise<PillarAdmin[]> {
+  const { data, error } = await supabase
+    .from('pillars_master')
+    .select('id, code, name_local, name_en, description_local, description_en, is_active')
+    .order('code', { ascending: true });
+
+  if (error) throw error;
+
+  return (data ?? []).map(p => ({
+    id: p.id,
+    code: p.code || '',
+    name: p.name_local || p.name_en || '',
+    description: p.description_local || p.description_en || null,
+    is_active: p.is_active ?? true,
+  }));
+}
+
+/**
+ * Update pillar active status (Admin only)
+ */
+export async function updatePillarStatus(id: string, isActive: boolean): Promise<void> {
+  const { error } = await supabase
+    .from('pillars_master')
+    .update({ is_active: isActive })
+    .eq('id', id);
+
+  if (error) throw error;
+}

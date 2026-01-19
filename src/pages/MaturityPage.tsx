@@ -696,6 +696,23 @@ export function MaturityPage() {
                         </Group>
                     </Group>
 
+                    {/* Pillar Description */}
+                    {selectedPillar.description && (
+                        <Paper p="md" radius="md" bg="blue.0" mb="lg" style={{ border: '1px solid var(--mantine-color-blue-2)' }}>
+                            <Group gap="xs" mb="xs">
+                                <ThemeIcon size="sm" variant="light" color="blue" radius="xl">
+                                    <IconInfoCircle size={14} />
+                                </ThemeIcon>
+                                <Text size="sm" fw={600} c="blue.7">
+                                    {t('maturity.pillarDescription', 'About this Pillar')}
+                                </Text>
+                            </Group>
+                            <Text size="sm" c="dark.6" lh={1.6}>
+                                {selectedPillar.description}
+                            </Text>
+                        </Paper>
+                    )}
+
                     <Table highlightOnHover verticalSpacing="sm">
                         <Table.Thead>
                             <Table.Tr>
