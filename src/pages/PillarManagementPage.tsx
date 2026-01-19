@@ -65,9 +65,9 @@ export function PillarManagementPage() {
             queryClient.invalidateQueries({ queryKey: ['backlog'] });
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
             notifications.show({
-                title: t('pillarManagement.successTitle'),
-                message: t('pillarManagement.successMessage', {
-                    status: variables.isActive ? t('pillarManagement.activated') : t('pillarManagement.deactivated')
+                title: t('pages.pillarManagement.successTitle'),
+                message: t('pages.pillarManagement.successMessage', {
+                    status: variables.isActive ? t('pages.pillarManagement.activated') : t('pages.pillarManagement.deactivated')
                 }),
                 color: variables.isActive ? 'green' : 'orange',
             });
@@ -75,8 +75,8 @@ export function PillarManagementPage() {
         },
         onError: (err: any) => {
             notifications.show({
-                title: t('pillarManagement.errorTitle'),
-                message: err.message || t('pillarManagement.errorMessage'),
+                title: t('pages.pillarManagement.errorTitle'),
+                message: err.message || t('pages.pillarManagement.errorMessage'),
                 color: 'red',
             });
         },
@@ -111,10 +111,10 @@ export function PillarManagementPage() {
             <Alert
                 icon={<IconAlertCircle size={16} />}
                 color="red"
-                title={t('pillarManagement.errorTitle')}
+                title={t('pages.pillarManagement.errorTitle')}
                 variant="filled"
             >
-                {t('pillarManagement.loadError')}
+                {t('pages.pillarManagement.loadError')}
             </Alert>
         );
     }
@@ -137,10 +137,10 @@ export function PillarManagementPage() {
                     </ThemeIcon>
                     <div>
                         <Title order={2} c="dark.8" fw={800}>
-                            {t('pillarManagement.title')}
+                            {t('pages.pillarManagement.title')}
                         </Title>
                         <Text c="dimmed" size="sm">
-                            {t('pillarManagement.subtitle')}
+                            {t('pages.pillarManagement.subtitle')}
                         </Text>
                     </div>
                 </Group>
@@ -149,10 +149,10 @@ export function PillarManagementPage() {
             {/* Summary */}
             <Group gap="md">
                 <Badge size="lg" variant="light" color="green">
-                    {activePillars.length} {t('pillarManagement.active')}
+                    {activePillars.length} {t('pages.pillarManagement.active')}
                 </Badge>
                 <Badge size="lg" variant="light" color="gray">
-                    {inactivePillars.length} {t('pillarManagement.inactive')}
+                    {inactivePillars.length} {t('pages.pillarManagement.inactive')}
                 </Badge>
             </Group>
 
@@ -163,7 +163,7 @@ export function PillarManagementPage() {
                 variant="light"
             >
                 <Text size="sm">
-                    <strong>{t('pillarManagement.attention')}:</strong> {t('pillarManagement.warningMessage')}
+                    <strong>{t('pages.pillarManagement.attention')}:</strong> {t('pages.pillarManagement.warningMessage')}
                 </Text>
             </Alert>
 
@@ -177,11 +177,11 @@ export function PillarManagementPage() {
                 <Table verticalSpacing="md" highlightOnHover>
                     <Table.Thead bg="gray.0">
                         <Table.Tr>
-                            <Table.Th>{t('pillarManagement.code')}</Table.Th>
-                            <Table.Th>{t('pillarManagement.name')}</Table.Th>
-                            <Table.Th>{t('pillarManagement.description')}</Table.Th>
-                            <Table.Th>{t('pillarManagement.status')}</Table.Th>
-                            <Table.Th ta="center">{t('pillarManagement.action')}</Table.Th>
+                            <Table.Th>{t('pages.pillarManagement.code')}</Table.Th>
+                            <Table.Th>{t('pages.pillarManagement.name')}</Table.Th>
+                            <Table.Th>{t('pages.pillarManagement.description')}</Table.Th>
+                            <Table.Th>{t('pages.pillarManagement.status')}</Table.Th>
+                            <Table.Th ta="center">{t('pages.pillarManagement.action')}</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
@@ -214,7 +214,7 @@ export function PillarManagementPage() {
                                         variant="light"
                                         color={pillar.is_active ? 'green' : 'gray'}
                                     >
-                                        {pillar.is_active ? t('pillarManagement.activeStatus') : t('pillarManagement.inactiveStatus')}
+                                        {pillar.is_active ? t('pages.pillarManagement.activeStatus') : t('pages.pillarManagement.inactiveStatus')}
                                     </Badge>
                                 </Table.Td>
                                 <Table.Td>
@@ -235,7 +235,7 @@ export function PillarManagementPage() {
             </Card>
 
             {/* Divider */}
-            <Divider my="lg" label={t('pillarManagement.globalSettings')} labelPosition="center" />
+            <Divider my="lg" label={t('pages.pillarManagement.globalSettings')} labelPosition="center" />
 
             {/* Maturity Level Control */}
             <Card
@@ -250,8 +250,8 @@ export function PillarManagementPage() {
                             <IconTrophy size={18} />
                         </ThemeIcon>
                         <div>
-                            <Text fw={700}>{t('pillarManagement.activeMaturityLevel')}</Text>
-                            <Text size="xs" c="dimmed">{t('pillarManagement.activeMaturityLevelDesc')}</Text>
+                            <Text fw={700}>{t('pages.pillarManagement.activeMaturityLevel')}</Text>
+                            <Text size="xs" c="dimmed">{t('pages.pillarManagement.activeMaturityLevelDesc')}</Text>
                         </div>
                     </Group>
                     <Badge size="lg" variant="filled" color="orange">
@@ -266,12 +266,12 @@ export function PillarManagementPage() {
                     mb="lg"
                 >
                     <Text size="sm">
-                        <strong>{t('pillarManagement.attention')}:</strong> {t('pillarManagement.levelWarning')}
+                        <strong>{t('pages.pillarManagement.attention')}:</strong> {t('pages.pillarManagement.levelWarning')}
                     </Text>
                 </Alert>
 
                 <Paper p="md" radius="md" bg="gray.0">
-                    <Text size="sm" fw={600} mb="sm">{t('pillarManagement.selectActiveLevel')}</Text>
+                    <Text size="sm" fw={600} mb="sm">{t('pages.pillarManagement.selectActiveLevel')}</Text>
                     <SegmentedControl
                         value={activeLevel}
                         onChange={async (value) => {
@@ -279,14 +279,14 @@ export function PillarManagementPage() {
                             try {
                                 await setActiveLevel(value as MaturityLevel);
                                 notifications.show({
-                                    title: t('pillarManagement.successTitle'),
-                                    message: t('pillarManagement.levelChangeSuccess', { level: value }),
+                                    title: t('pages.pillarManagement.successTitle'),
+                                    message: t('pages.pillarManagement.levelChangeSuccess', { level: value }),
                                     color: 'green',
                                 });
                             } catch (err: any) {
                                 notifications.show({
-                                    title: t('pillarManagement.errorTitle'),
-                                    message: err.message || t('pillarManagement.levelChangeError'),
+                                    title: t('pages.pillarManagement.errorTitle'),
+                                    message: err.message || t('pages.pillarManagement.levelChangeError'),
                                     color: 'red',
                                 });
                             } finally {
@@ -326,7 +326,7 @@ export function PillarManagementPage() {
                         <ThemeIcon color="orange" variant="light">
                             <IconAlertTriangle size={18} />
                         </ThemeIcon>
-                        <Text fw={600}>{t('pillarManagement.confirmDeactivation')}</Text>
+                        <Text fw={600}>{t('pages.pillarManagement.confirmDeactivation')}</Text>
                     </Group>
                 }
                 centered
@@ -334,27 +334,27 @@ export function PillarManagementPage() {
                 <Stack gap="md">
                     <Text size="sm">
                         <Trans
-                            i18nKey="pillarManagement.deactivationMessage"
+                            i18nKey="pages.pillarManagement.deactivationMessage"
                             values={{ code: confirmModal.pillar?.code, name: confirmModal.pillar?.name }}
                             components={{ strong: <strong /> }}
                         />
                     </Text>
                     <Text size="sm" c="dimmed">
-                        {t('pillarManagement.deactivationSubMessage')}
+                        {t('pages.pillarManagement.deactivationSubMessage')}
                     </Text>
                     <Group justify="flex-end" mt="md">
                         <Button
                             variant="subtle"
                             onClick={() => setConfirmModal({ open: false, pillar: null, newStatus: false })}
                         >
-                            {t('pillarManagement.cancel')}
+                            {t('pages.pillarManagement.cancel')}
                         </Button>
                         <Button
                             color="orange"
                             onClick={confirmDeactivation}
                             loading={mutation.isPending}
                         >
-                            {t('pillarManagement.deactivate')}
+                            {t('pages.pillarManagement.deactivate')}
                         </Button>
                     </Group>
                 </Stack>

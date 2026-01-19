@@ -295,7 +295,7 @@ export function MainLayout() {
                 style={{ borderRadius: theme.radius.sm, marginBottom: 4 }}
               />
               <NavLink
-                label={<Text fw={600} size="sm">Gerenciar Pilares</Text>}
+                label={<Text fw={600} size="sm">{t('pages.pillarManagement.title')}</Text>}
                 leftSection={<IconChecklist size={20} stroke={1.5} />}
                 active={location.pathname === '/app/admin/pillars'}
                 variant="light"
