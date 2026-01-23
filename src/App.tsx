@@ -24,17 +24,23 @@ function PageLoader() {
   );
 }
 
+// Maintenance Mode Active
+import MaintenancePage from './pages/MaintenancePage';
+
+export default function App() {
+  return <MaintenancePage />;
+}
+
+/*
+// Original Routes - Disabled for Maintenance
 export default function App() {
   return (
     <ErrorBoundary>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Public Routes - Login é a página principal */}
           <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<Navigate to="/" replace />} />
           <Route path="/register" element={<RegisterPage />} />
-
-          {/* Protected Routes */}
           <Route
             path="/app"
             element={
@@ -50,11 +56,10 @@ export default function App() {
             <Route path="admin/pillars" element={<PillarManagementPage />} />
             <Route path="*" element={<Navigate to="/app" replace />} />
           </Route>
-
-          {/* Catch all redirect to landing */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </ErrorBoundary>
   );
 }
+*/

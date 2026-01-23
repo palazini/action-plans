@@ -32,3 +32,4 @@ schema.sql
 setup_novo_projeto.sql
 
 mudarsenha.js
+debug_connection.js
