@@ -1,5 +1,4 @@
 //src/App.tsx
-/*
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Center, Loader } from '@mantine/core';
@@ -24,17 +23,17 @@ function PageLoader() {
     </Center>
   );
 }
-*/
 
 // Maintenance Mode Active
-import MaintenancePage from './pages/MaintenancePage';
+// import MaintenancePage from './pages/MaintenancePage';
 
+/*
 export default function App() {
   return <MaintenancePage />;
 }
+*/
 
-/*
-// Original Routes - Disabled for Maintenance
+// Original Routes - Enabled for Dev
 export default function App() {
   return (
     <ErrorBoundary>
@@ -64,4 +63,3 @@ export default function App() {
     </ErrorBoundary>
   );
 }
-*/
