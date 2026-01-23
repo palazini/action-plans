@@ -30,3 +30,5 @@ backup.sql
 backup_completo.sql
 schema.sql
 setup_novo_projeto.sql
+
+mudarsenha.js
