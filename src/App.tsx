@@ -1,4 +1,5 @@
 //src/App.tsx
+/*
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Center, Loader } from '@mantine/core';
@@ -23,6 +24,7 @@ function PageLoader() {
     </Center>
   );
 }
+*/
 
 // Maintenance Mode Active
 import MaintenancePage from './pages/MaintenancePage';
