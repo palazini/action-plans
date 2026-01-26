@@ -19,7 +19,7 @@ import {
     UnstyledButton,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { notifications } from '@mantine/notifications';
@@ -54,6 +54,7 @@ const LANGUAGES = [
 export function RegisterPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const submitLockRef = useRef(false);
     const { t, i18n } = useTranslation();
 
     const form = useForm({
@@ -85,20 +86,32 @@ export function RegisterPage() {
     const username = generateUsername(form.values.fullName);
 
     const handleRegister = async (values: typeof form.values) => {
+        // 🔒 HARD LOCK – impede múltiplos submits reais
+        if (submitLockRef.current) return;
+
+        const username = generateUsername(values.fullName);
         if (!username) return;
 
+        // 🧪 (Opcional DEV) Log para confirmar que só dispara uma vez
+        console.count('SIGNUP_ATTEMPT');
+
+        submitLockRef.current = true;
         setLoading(true);
+
         const email = `${username}@ci.aplans.com`;
 
         try {
+            // ⏳ atraso mínimo anti-spam (opcional mas recomendado)
+            await new Promise((r) => setTimeout(r, 500));
+
             const { error } = await supabase.auth.signUp({
-                email: email,
+                email,
                 password: values.password,
                 options: {
                     data: {
                         full_name: values.fullName,
                         country: values.plant,
-                        username: username,
+                        username,
                         role: 'user',
                     },
                 },
@@ -112,16 +125,19 @@ export function RegisterPage() {
                 color: 'green',
             });
 
-            // Navega direto para o app (Supabase auto-loga após registro)
             navigate('/app');
         } catch (error: any) {
             notifications.show({
                 title: t('auth.error'),
-                message: error.message,
+                message: error.message ?? 'Unexpected error',
                 color: 'red',
             });
         } finally {
-            setLoading(false);
+            // 🔓 libera o lock com pequeno delay
+            setTimeout(() => {
+                submitLockRef.current = false;
+                setLoading(false);
+            }, 800);
         }
     };
 
@@ -245,7 +261,14 @@ export function RegisterPage() {
                         background: 'white',
                     }}
                 >
-                    <form onSubmit={form.onSubmit(handleRegister)}>
+                    <form
+                        onSubmit={form.onSubmit(handleRegister)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && loading) {
+                                e.preventDefault();
+                            }
+                        }}
+                    >
                         <Stack gap="md">
                             {/* Seleção de Planta */}
                             <Select
@@ -311,6 +334,7 @@ export function RegisterPage() {
                                 size="md"
                                 type="submit"
                                 loading={loading}
+                                disabled={loading}
                                 color="blue"
                             >
                                 {t('auth.register', 'Create Account')}
