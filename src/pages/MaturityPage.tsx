@@ -645,6 +645,48 @@ function MaturityDetailDrawer({
                         </Button>
                     </Group>
 
+                    {element.action_plans && element.action_plans.length > 0 ? (
+                        <Stack gap="sm" mb="md">
+                            {element.action_plans.map((plan: any) => (
+                                <Paper key={plan.id} p="sm" withBorder bg="white">
+                                    <Group justify="space-between" mb="xs">
+                                        <Badge
+                                            size="sm"
+                                            color={
+                                                plan.status === 'DONE' ? 'teal' :
+                                                    plan.status === 'IN_PROGRESS' ? 'blue' :
+                                                        plan.status === 'CANCELLED' ? 'gray' : 'yellow'
+                                            }
+                                        >
+                                            {t(`status.${plan.status}`, plan.status) as string}
+                                        </Badge>
+                                        <Text size="xs" c="dimmed">
+                                            {plan.created_at ? new Date(plan.created_at).toLocaleDateString() : '-'}
+                                        </Text>
+                                    </Group>
+
+                                    <Text size="sm" fw={600} lineClamp={1} mb={4}>
+                                        {plan.problem_pt || plan.problem || plan.problem_en || 'No problem description'}
+                                    </Text>
+
+                                    <Text size="xs" c="dimmed" mb="xs">
+                                        {t('form.owner') as string}: {plan.owner_name}
+                                    </Text>
+
+                                    {plan.due_date && (
+                                        <Text size="xs" c={new Date(plan.due_date) < new Date() && plan.status !== 'DONE' ? 'red' : 'dimmed'}>
+                                            {t('form.dueDate') as string}: {new Date(plan.due_date).toLocaleDateString()}
+                                        </Text>
+                                    )}
+                                </Paper>
+                            ))}
+                        </Stack>
+                    ) : (
+                        <Text size="sm" c="dimmed" ta="center" py="md">
+                            {t('maturity.noPlans', 'No action plans found for this element.')}
+                        </Text>
+                    )}
+
                     <Modal
                         opened={showActionPlanForm}
                         onClose={() => setShowActionPlanForm(false)}

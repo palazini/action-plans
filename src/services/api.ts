@@ -792,7 +792,22 @@ export async function fetchPillarsWithLevelScores(country: string): Promise<{
   // 2.1 Fetch active action plans to determine if elements have plans
   let plansQuery = supabase
     .from('action_plans')
-    .select('element_master_id')
+    .select(`
+      id, 
+      element_master_id,
+      problem,
+      solution,
+      problem_pt,
+      problem_en,
+      action_pt,
+      action_en,
+      status,
+      due_date,
+      owner_name,
+      maturity_level,
+      created_at,
+      updated_at
+    `)
     .not('status', 'in', '("DONE","CANCELLED")');
 
   if (country !== 'Global') {
@@ -800,6 +815,16 @@ export async function fetchPillarsWithLevelScores(country: string): Promise<{
   }
 
   const { data: plansData } = await plansQuery;
+
+  // Map element_id -> plans[]
+  const plansMap = new Map<string, any[]>();
+  (plansData ?? []).forEach((plan: any) => {
+    if (!plansMap.has(plan.element_master_id)) {
+      plansMap.set(plan.element_master_id, []);
+    }
+    plansMap.get(plan.element_master_id)!.push(plan);
+  });
+
   const elementsWithPlans = new Set((plansData ?? []).map((p: any) => p.element_master_id));
 
   // 3. Fetch level scores for the country
@@ -857,6 +882,7 @@ export async function fetchPillarsWithLevelScores(country: string): Promise<{
           levels,
           criteria: el.criteria,
           hasActivePlan: elementsWithPlans.has(el.id),
+          action_plans: plansMap.get(el.id) ?? [],
         };
       });
 
