@@ -1,44 +1,21 @@
 import {
-    TextInput,
-    PasswordInput,
     Paper,
     Title,
     Text,
     Container,
-    Button,
-    Box,
     Anchor,
     Group,
     Stack,
     ThemeIcon,
     rem,
-    Alert,
-    Select,
+    Box,
     Image,
     Menu,
     UnstyledButton,
 } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
-import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
-import { IconUserPlus, IconArrowLeft, IconUser, IconLock, IconInfoCircle, IconBuildingFactory, IconChevronDown } from '@tabler/icons-react';
-
-// Lista de plantas disponíveis
-const AVAILABLE_PLANTS = [
-    { value: 'Argentina', label: 'Argentina', flagCode: 'ar', region: 'Americas' },
-    { value: 'Brazil', label: 'Brazil', flagCode: 'br', region: 'Americas' },
-    { value: 'Brazil (Hiter)', label: 'Brazil (Hiter)', flagCode: 'br', region: 'Americas' },
-    { value: 'China', label: 'China', flagCode: 'cn', region: 'Asia' },
-    { value: 'France', label: 'France', flagCode: 'fr', region: 'Europe' },
-    { value: 'Germany (Gestra)', label: 'Germany (Gestra)', flagCode: 'de', region: 'Europe' },
-    { value: 'India', label: 'India', flagCode: 'in', region: 'Asia' },
-    { value: 'Italy', label: 'Italy', flagCode: 'it', region: 'Europe' },
-    { value: 'UK', label: 'UK', flagCode: 'gb', region: 'Europe' },
-    { value: 'USA', label: 'USA', flagCode: 'us', region: 'Americas' },
-];
+import { IconArrowLeft, IconUserOff, IconChevronDown } from '@tabler/icons-react';
 
 // Idiomas disponíveis
 const LANGUAGES = [
@@ -53,114 +30,7 @@ const LANGUAGES = [
 
 export function RegisterPage() {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const submitLockRef = useRef(false);
     const { t, i18n } = useTranslation();
-
-    const form = useForm({
-        initialValues: {
-            fullName: '',
-            password: '',
-            confirmPassword: '',
-            plant: '',
-        },
-        validate: {
-            fullName: (val) => (val.length < 2 ? t('auth.nameTooShort') : null),
-            password: (val) =>
-                val.length <= 6 ? t('auth.passwordTooShort') : null,
-            confirmPassword: (val, values) =>
-                val !== values.password ? t('auth.passwordsDoNotMatch') : null,
-            plant: (val) => (!val ? t('auth.selectPlant', 'Select a plant') : null),
-        },
-    });
-
-    // Auto-generate username
-    const generateUsername = (name: string) => {
-        if (!name) return '';
-        const parts = name.trim().toLowerCase().split(/\s+/);
-        if (parts.length === 0) return '';
-        if (parts.length === 1) return parts[0];
-        return `${parts[0]}.${parts[parts.length - 1]}`;
-    };
-
-    const username = generateUsername(form.values.fullName);
-
-    const handleRegister = async (values: typeof form.values) => {
-        // 🔒 HARD LOCK – impede múltiplos submits reais
-        if (submitLockRef.current) return;
-
-        const username = generateUsername(values.fullName);
-        if (!username) return;
-
-        // 🧪 (Opcional DEV) Log para confirmar que só dispara uma vez
-        console.count('SIGNUP_ATTEMPT');
-
-        submitLockRef.current = true;
-        setLoading(true);
-
-        const email = `${username}@ci.aplans.com`;
-
-        try {
-            // ⏳ atraso mínimo anti-spam (opcional mas recomendado)
-            await new Promise((r) => setTimeout(r, 500));
-
-            const { error } = await supabase.auth.signUp({
-                email,
-                password: values.password,
-                options: {
-                    data: {
-                        full_name: values.fullName,
-                        country: values.plant,
-                        username,
-                        role: 'user',
-                    },
-                },
-            });
-
-            if (error) throw error;
-
-            notifications.show({
-                title: t('notifications.success'),
-                message: t('auth.successRegistration'),
-                color: 'green',
-            });
-
-            navigate('/app');
-        } catch (error: any) {
-            notifications.show({
-                title: t('auth.error'),
-                message: error.message ?? 'Unexpected error',
-                color: 'red',
-            });
-        } finally {
-            // 🔓 libera o lock com pequeno delay
-            setTimeout(() => {
-                submitLockRef.current = false;
-                setLoading(false);
-            }, 800);
-        }
-    };
-
-    // Custom render para o select de plantas
-    const renderPlantOption = ({ option }: { option: { value: string; label?: string } }) => {
-        const plant = AVAILABLE_PLANTS.find(p => p.value === option.value);
-        if (!plant) return option.value;
-
-        return (
-            <Group gap="sm">
-                <Image
-                    src={`https://flagcdn.com/w20/${plant.flagCode}.png`}
-                    w={20}
-                    h={14}
-                    radius={2}
-                />
-                <div>
-                    <Text size="sm" fw={500}>{plant.label}</Text>
-                    <Text size="xs" c="dimmed">{plant.region}</Text>
-                </div>
-            </Group>
-        );
-    };
 
     const currentLang = LANGUAGES.find(l => i18n.language?.startsWith(l.code)) || LANGUAGES[0];
 
@@ -239,17 +109,14 @@ export function RegisterPage() {
                         size={80}
                         radius="xl"
                         variant="light"
-                        color="blue"
+                        color="gray"
                     >
-                        <IconUserPlus size={40} stroke={1.5} />
+                        <IconUserOff size={40} stroke={1.5} />
                     </ThemeIcon>
                     <Box ta="center">
                         <Title order={2} fw={800} c="dark.8" style={{ letterSpacing: -0.5 }}>
-                            {t('auth.createAccount', 'Create Account')}
+                            {t('auth.registrationDisabled', 'Registration Unavailable')}
                         </Title>
-                        <Text c="dimmed" size="sm" mt={5} fw={500}>
-                            {t('auth.joinYourPlant', 'Join your plant team')}
-                        </Text>
                     </Box>
                 </Stack>
 
@@ -259,88 +126,16 @@ export function RegisterPage() {
                     radius="lg"
                     style={{
                         background: 'white',
+                        textAlign: 'center'
                     }}
                 >
-                    <form
-                        onSubmit={form.onSubmit(handleRegister)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' && loading) {
-                                e.preventDefault();
-                            }
-                        }}
-                    >
-                        <Stack gap="md">
-                            {/* Seleção de Planta */}
-                            <Select
-                                label={t('auth.selectYourPlant', 'Select your Plant')}
-                                placeholder={t('auth.choosePlant', 'Choose plant...')}
-                                leftSection={<IconBuildingFactory size={16} />}
-                                data={AVAILABLE_PLANTS}
-                                renderOption={renderPlantOption}
-                                size="md"
-                                required
-                                searchable
-                                {...form.getInputProps('plant')}
-                            />
+                    <Text size="md" c="dimmed" mb="lg">
+                        {t('auth.registrationMessage', 'Please contact gabriel.palazini@br.spiraxsarco.com to request access. It is no longer possible to register directly through the platform.')}
+                    </Text>
 
-                            <TextInput
-                                label={t('auth.fullName')}
-                                placeholder="Ex: John Smith"
-                                leftSection={<IconUser size={16} />}
-                                size="md"
-                                required
-                                {...form.getInputProps('fullName')}
-                            />
-
-                            {username && (
-                                <Alert
-                                    variant="light"
-                                    color="blue"
-                                    title={t('auth.generatedUsername', 'Generated Username')}
-                                    icon={<IconInfoCircle size={16} />}
-                                >
-                                    <Group justify="space-between" align="center">
-                                        <Text size="lg" fw={700} c="blue.7" style={{ fontFamily: 'monospace' }}>
-                                            {username}
-                                        </Text>
-                                        <Text size="xs" c="dimmed">
-                                            {t('auth.loginWithThis', 'Use this to login')}
-                                        </Text>
-                                    </Group>
-                                </Alert>
-                            )}
-
-                            <PasswordInput
-                                label={t('auth.password')}
-                                placeholder="******"
-                                leftSection={<IconLock size={16} />}
-                                required
-                                size="md"
-                                mt="xs"
-                                {...form.getInputProps('password')}
-                            />
-                            <PasswordInput
-                                label={t('auth.confirmPassword')}
-                                placeholder="******"
-                                leftSection={<IconLock size={16} />}
-                                required
-                                size="md"
-                                {...form.getInputProps('confirmPassword')}
-                            />
-
-                            <Button
-                                fullWidth
-                                mt="xl"
-                                size="md"
-                                type="submit"
-                                loading={loading}
-                                disabled={loading}
-                                color="blue"
-                            >
-                                {t('auth.register', 'Create Account')}
-                            </Button>
-                        </Stack>
-                    </form>
+                    <Text size="sm" fw={600} c="blue">
+                        gabriel.palazini@br.spiraxsarco.com
+                    </Text>
 
                     <Box mt="xl" style={{ borderTop: `1px solid ${rem('#f1f3f5')}` }} pt="lg">
                         <Group justify="center">
