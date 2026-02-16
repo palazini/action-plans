@@ -25,27 +25,8 @@ export async function fetchBacklogByLevel(
   country: string,
   level: MaturityLevel
 ): Promise<ElementWithRelations[]> {
-  // 1. Buscar scores do país para o nível específico com score < 100
-  let scoresQuery = supabase
-    .from('country_level_scores')
-    .select('element_id, country, score, notes, level')
-    .eq('level', level)
-    .lt('score', 100);
-
-  if (country !== 'Global') {
-    scoresQuery = scoresQuery.eq('country', country);
-  }
-
-  const { data: scoresData, error: scoresError } = await scoresQuery;
-  if (scoresError) throw scoresError;
-
-  const scores = (scoresData ?? []) as any[];
-  if (scores.length === 0) return [];
-
-  // 2. Buscar elementos globais correspondentes
-  const elementIds = scores.map(s => s.element_id);
-
-  const { data: elementsData, error: elementsError } = await supabase
+  // 1. Fetch ALL active elements first (to ensure we catch unscored ones)
+  const { data: activeElements, error: elementsError } = await supabase
     .from('elements_master')
     .select(`
       id,
@@ -54,7 +35,7 @@ export async function fetchBacklogByLevel(
       name_en,
       pillar_id,
       is_active,
-      pillar:pillars_master (
+      pillar:pillars_master!inner (
         id,
         code,
         name_local,
@@ -63,11 +44,31 @@ export async function fetchBacklogByLevel(
         is_active
       )
     `)
-    .in('id', elementIds);
+    .eq('is_active', true)
+    .eq('pillars_master.is_active', true);
 
   if (elementsError) throw elementsError;
 
-  // 3. Buscar action_plans relacionados (filtrar pelo nível)
+  const elements = (activeElements ?? []) as any[];
+  if (elements.length === 0) return [];
+
+  const elementIds = elements.map(e => e.id);
+
+  // 2. Fetch existing scores for this level/country
+  let scoresQuery = supabase
+    .from('country_level_scores')
+    .select('element_id, country, score, notes, level')
+    .eq('level', level)
+    .in('element_id', elementIds);
+
+  if (country !== 'Global') {
+    scoresQuery = scoresQuery.eq('country', country);
+  }
+
+  const { data: scoresData, error: scoresError } = await scoresQuery;
+  if (scoresError) throw scoresError;
+
+  // 3. Fetch action_plans
   const { data: plansData, error: plansError } = await supabase
     .from('action_plans')
     .select(`
@@ -83,61 +84,81 @@ export async function fetchBacklogByLevel(
       maturity_level
     `)
     .in('element_master_id', elementIds)
+    // For backlog, usually we iterate over gaps. 
+    // If we want plans for a specific level, we verify matching level or general plans?
+    // The original code had .eq('maturity_level', level); 
+    // but some plans might be generic? Assuming strict level for now as per original.
     .eq('maturity_level', level);
 
   if (plansError) throw plansError;
 
-  // 4. Criar mapa de scores
+  // 4. Create maps
   const scoresMap = new Map<string, { score: number; notes: string | null; country: string }>();
-  for (const s of scores) {
+  for (const s of (scoresData ?? [])) {
+    // If Global is used, we have multiple countries, but usually this function is called for a specific country
     const key = `${s.element_id}_${s.country}`;
     scoresMap.set(key, { score: s.score, notes: s.notes, country: s.country });
   }
 
-  // 5. Criar mapa de planos por element_master_id
   const plansMap = new Map<string, any[]>();
   for (const plan of (plansData ?? [])) {
-    const key = plan.element_master_id;
+    // If specific country requested, filter plans by country
+    if (country !== 'Global' && plan.country !== country) continue;
+
+    const key = `${plan.element_master_id}_${plan.country}`;
     if (!plansMap.has(key)) {
       plansMap.set(key, []);
     }
     plansMap.get(key)!.push(plan);
   }
 
-  // 6. Montar resultado
-  const elements = (elementsData ?? []) as any[];
+  // 5. Build Result
   const result: ElementWithRelations[] = [];
 
-  for (const el of elements) {
-    const matchingScores = scores.filter(s => s.element_id === el.id);
+  // If country is 'Global', we'd theoretically need to iterate over all countries x activeElements.
+  // But usually `fetchBacklogByLevel` is called for a specific country in the dashboard.
+  // If called for 'Global', the original logic iterated over SCORES to find gaps.
+  // If we want to support Global Backlog with implicit gaps, we need a list of active countries from somewhere.
+  // Assuming for now this is mostly used for single-country dashboard given the user request ("Overview quando estou no meu pais").
 
-    for (const scoreEntry of matchingScores) {
+  const targetCountries = country === 'Global'
+    ? Array.from(new Set((scoresData ?? []).map((s: any) => s.country))) // Fallback for Global: only existing score countries
+    : [country];
+
+  for (const targetCountry of targetCountries) {
+    for (const el of elements) {
       const pillarRaw = el.pillar;
       const pillar = Array.isArray(pillarRaw) ? pillarRaw[0] : pillarRaw;
 
-      // Skip if pillar is inactive
+      // Skip inactive (already filtered by query, but double check)
       if (pillar && pillar.is_active === false) continue;
 
-      // Skip if element itself is inactive
-      if (el.is_active === false) continue;
+      // Get score
+      const scoreKey = `${el.id}_${targetCountry}`;
+      const scoreEntry = scoresMap.get(scoreKey);
+      const score = scoreEntry ? scoreEntry.score : 0; // Default to 0 if missing
 
-      result.push({
-        id: el.id,
-        code: el.code,
-        name: el.name_local ?? el.name_en ?? '',
-        foundation_score: scoreEntry.score, // Using 'score' from level_scores
-        notes: scoreEntry.notes,
-        country: scoreEntry.country,
-        pillar: pillar ? {
-          id: pillar.id,
-          code: pillar.code,
-          name: pillar.name_local ?? pillar.name_en ?? '',
-          description: pillar.description_local
-        } : null,
-        action_plans: (plansMap.get(el.id) ?? []).filter(p =>
-          p.country === scoreEntry.country
-        ),
-      });
+      // Check Gap Condition (< 100)
+      if (score < 100) {
+        const planKey = `${el.id}_${targetCountry}`;
+        const plans = plansMap.get(planKey) ?? [];
+
+        result.push({
+          id: el.id,
+          code: el.code,
+          name: el.name_local ?? el.name_en ?? '',
+          foundation_score: score,
+          notes: scoreEntry?.notes ?? null,
+          country: targetCountry,
+          pillar: pillar ? {
+            id: pillar.id,
+            code: pillar.code,
+            name: pillar.name_local ?? pillar.name_en ?? '',
+            description: pillar.description_local
+          } : null,
+          action_plans: plans
+        });
+      }
     }
   }
 
@@ -295,7 +316,7 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
     if (plan.status === 'DONE') countryEntry.completed += 1;
   }
 
-  // 5. Agrupar por país com métricas expandidas
+  // 5. Agrupar por país com métricas expandidas (Iterar sobre TODOS os elementos x Países)
   type CountryData = GlobalCountryStats & {
     foundationScoreSum: number;
     foundationScoreCount: number;
@@ -303,13 +324,24 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
   };
 
   const map = new Map<string, CountryData>();
+
+  // Create a map of scores for quick lookup: `${country}_${elementId}` -> score
+  const scoresLookup = new Map<string, number>();
   const scores = (scoresData ?? []) as any[];
 
+  // Identify all countries that have at least one score
+  // If a country has absolutely no scores yet, it won't appear in the dashboard 
+  // until at least one score is recorded (or we decide to fetch a list of all active countries elsewhere)
+  const countries = new Set<string>();
   for (const score of scores) {
-    const country = score.country;
-    if (!country) continue;
-    if (!activeElementIds.has(score.element_id)) continue;
+    if (score.country) {
+      countries.add(score.country);
+      scoresLookup.set(`${score.country}_${score.element_id}`, score.score);
+    }
+  }
 
+  // Iterate over each country found
+  for (const country of countries) {
     if (!map.has(country)) {
       map.set(country, {
         country,
@@ -322,55 +354,64 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
         foundationAvgScore: 0,
         foundationCompleteCount: 0,
         foundationScoreSum: 0,
-        foundationScoreCount: 0,
+        foundationScoreCount: 0, // Will be totalElements
         pillarSummary: [],
         pillarData: new Map(),
       });
     }
 
     const stats = map.get(country)!;
-    const foundationScore = score.score ?? 0;
 
-    // Accumulate for average
-    stats.foundationScoreSum += foundationScore;
-    stats.foundationScoreCount += 1;
+    // Iterate over ALL active elements to ensure full coverage
+    for (const element of (activeElements ?? [])) {
+      const elementId = element.id;
 
-    if (foundationScore === 100) {
-      stats.foundationCompleteCount += 1;
-    }
+      // Get score or default to 0 if missing
+      const scoreKey = `${country}_${elementId}`;
+      const foundationScore = scoresLookup.get(scoreKey) ?? 0;
 
-    // Pillar tracking
-    const pillarInfo = elementPillarMap.get(score.element_id);
-    if (pillarInfo) {
-      if (!stats.pillarData.has(pillarInfo.pillarId)) {
-        stats.pillarData.set(pillarInfo.pillarId, {
-          gapCount: 0,
-          scoreSum: 0,
-          scoreCount: 0,
-          code: pillarInfo.code,
-          name: pillarInfo.name,
-        });
+      // Accumulate for average
+      stats.foundationScoreSum += foundationScore;
+      stats.foundationScoreCount += 1;
+
+      if (foundationScore === 100) {
+        stats.foundationCompleteCount += 1;
       }
-      const pd = stats.pillarData.get(pillarInfo.pillarId)!;
-      pd.scoreSum += foundationScore;
-      pd.scoreCount += 1;
+
+      // Pillar tracking
+      const pillarInfo = elementPillarMap.get(elementId);
+      if (pillarInfo) {
+        if (!stats.pillarData.has(pillarInfo.pillarId)) {
+          stats.pillarData.set(pillarInfo.pillarId, {
+            gapCount: 0,
+            scoreSum: 0,
+            scoreCount: 0,
+            code: pillarInfo.code,
+            name: pillarInfo.name,
+          });
+        }
+        const pd = stats.pillarData.get(pillarInfo.pillarId)!;
+        pd.scoreSum += foundationScore;
+        pd.scoreCount += 1;
+
+        if (foundationScore < 100) {
+          pd.gapCount += 1;
+        }
+      }
+
+      // GAP: foundation_score < 100
       if (foundationScore < 100) {
-        pd.gapCount += 1;
-      }
-    }
+        stats.gapElements += 1;
 
-    // GAP: foundation_score < 100
-    if (foundationScore < 100) {
-      stats.gapElements += 1;
+        const planKey = `${elementId}_${country}`;
+        const planInfo = plansMap.get(planKey);
 
-      const planKey = `${score.element_id}_${country}`;
-      const planInfo = plansMap.get(planKey);
-
-      if (!planInfo || planInfo.total === 0) {
-        stats.elementsWithoutPlan += 1;
-      } else {
-        stats.elementsWithPlan += 1;
-        stats.completedActionPlans += planInfo.completed;
+        if (!planInfo || planInfo.total === 0) {
+          stats.elementsWithoutPlan += 1;
+        } else {
+          stats.elementsWithPlan += 1;
+          // Note: completedActionPlans is handled globally per country below
+        }
       }
     }
   }
@@ -380,6 +421,7 @@ export async function fetchGlobalCountryStats(): Promise<GlobalCountryStats[]> {
 
   for (const [country, stats] of map) {
     // Calculate foundation average
+    // foundationScoreCount should be equal to totalElements based on loop above
     stats.foundationAvgScore = stats.foundationScoreCount > 0
       ? Math.round(stats.foundationScoreSum / stats.foundationScoreCount)
       : 0;
